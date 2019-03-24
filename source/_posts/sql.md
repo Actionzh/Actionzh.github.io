@@ -15,3 +15,5 @@ REPLACE语句会返回一个数，来指示受影响的行的数目。该数是�
 ### insert into ... on duplicate key update  
 insert语句的末尾添加on duplicate key update语法：如果插入行出现**唯一索引或者主键**重复时，则执行旧的update；如果不会导致唯一索引或者主键重复时，就直接添加新行。
 https://blog.csdn.net/qq_41070393/article/details/82422632
+附加条件：
+https://blog.csdn.net/hellozhxy/article/details/80945553
