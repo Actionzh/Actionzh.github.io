@@ -66,6 +66,73 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-webService" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/16/webService/" class="article-date">
+  <time datetime="2019-04-16T10:53:08.000Z" itemprop="datePublished">2019-04-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/16/webService/">webservice</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、序言"><a href="#一、序言" class="headerlink" title="一、序言"></a>一、序言</h2><p>　　大家或多或少都听过 WebService（Web服务），有一段时间很多计算机期刊、书籍和网站都大肆的提及和宣传WebService技术，其中不乏很多吹嘘和做广告的成 分。但是不得不承认的是WebService真的是一门新兴和有前途的技术，那么WebService到底是什么？何时应该用？</p>
+<p>　　当前的应用程序开发逐步的呈现了两种迥然不同的倾向：一种是基于浏览器的瘦客户端应用程序，一种是基于浏览器的富客户端应用程序（RIA），当然后一种技术相对来说更加的时髦一些（如现在很流行的Html5技术），这里主要讲前者。</p>
+<p>　　基于浏览器的瘦客户端应用程序并不是 因为瘦客户能够提供更好的用户界面，而是因为它能够避免花在桌面应用程序发布上的高成本。发布桌面应用程序成本很高，一半是因为应用程序安装和配置的问 题，另一半是因为客户和服务器之间通信的问题。传统的Windows富客户应用程序使用DCOM来与服务器进行通信和调用远程对象。配置好DCOM使其在 一个大型的网络中正常工作将是一个极富挑战性的工作，同时也是许多IT工程师的噩梦。事实上，许多IT工程师宁愿忍受浏览器所带来的功能限制，也不愿在局 域网上去运行一个DCOM。关于客户端与服务器的通信问题，一个完美的解决方法是使用HTTP协议来通信。这是因为任何运行Web浏览器的机器都在使用 HTTP协议。同时，当前许多防火墙也配置为只允许HTTP连接。许多商用程序还面临另一个问题，那就是与其他程序的互操作性。如果所有的应用程序都是使 用COM或.NET语言写的，并且都运行在Windows平台上，那就天下太平了。然而，事实上大多数商业数据仍然在大型主机上以非关系文件(VSAM) 的形式存放，并由COBOL语言编写的大型机程序访问。而且，目前还有很多商用程序继续在使用C++、Java、Visual Basic和其他各种各样 的语言编写。现在，除了最简单的程序之外，所有的应用程序都需要与运行在其他异构平台上的应用程序集成并进行数据交换。这样的任务通常都是由特殊的方法， 如文件传输和分析，消息队列，还有仅适用于某些情况的的API，如IBM的高级程序到程序交流(APPC)等来完成的。在以前，没有一个应用程序通信标 准，是独立于平台、组建模型和编程语言的。只有通过Web Service，客户端和服务器才能够自由的用HTTP进行通信，不论两个程序的平台和编程语言是什么。</p>
+<h2 id="二、WebService到底是什么"><a href="#二、WebService到底是什么" class="headerlink" title="二、WebService到底是什么"></a>二、WebService到底是什么</h2><p>   一言以蔽之：<strong>WebService是一种跨编程语言和跨操作系统平台的远程调用技术。</strong></p>
+<p>   所谓跨编程语言和跨操作平台，就是说服务端程序采用java编写，客户端程序则可以采用其他编程语言编写，反之亦然！跨操作系统平台则是指服务端程序和客户端程序可以在不同的操作系统上运行。</p>
+<pre><code>所谓远程调用，就是一台计算机a上 的一个程序可以调用到另外一台计算机b上的一个对象的方法，譬如，银联提供给商场的pos刷卡系统，商场的POS机转账调用的转账方法的代码其实是跑在银 行服务器上。再比如，amazon，天气预报系统，淘宝网，校内网，百度等把自己的系统服务以webservice服务的形式暴露出来，让第三方网站和程 序可以调用这些服务功能，这样扩展了自己系统的市场占有率，往大的概念上吹，就是所谓的SOA应用。
+</code></pre><p>   其实可以从多个角度来理解 WebService，从表面上看，WebService就是一个应用程序向外界暴露出一个能通过Web进行调用的API，也就是说能用编程的方法通过 Web来调用这个应用程序。我们把调用这个WebService的应用程序叫做客户端，而把提供这个WebService的应用程序叫做服务端。从深层次 看，WebService是建立可互操作的分布式应用程序的新平台，是一个平台，是一套标准。它定义了应用程序如何在Web上实现互操作性，你可以用任何 你喜欢的语言，在任何你喜欢的平台上写Web service ，只要我们可以通过Web service标准对这些服务进行查询和访问。 </p>
+<p>   WebService平台需要一套协议来实现分布式应用程序的创建。任何平台都有它的数据表示方法和类型系统。要实现互操作性，WebService平台 必须提供一套标准的类型系统，用于沟通不同平台、编程语言和组件模型中的不同类型系统。Web service平台必须提供一种标准来描述 Web service，让客户可以得到足够的信息来调用这个Web service。最后，我们还必须有一种方法来对这个Web service进行远 程调用,这种方法实际是一种远程过程调用协议(RPC)。为了达到互操作性，这种RPC协议还必须与平台和编程语言无关。</p>
+<h2 id="三、WebService平台技术"><a href="#三、WebService平台技术" class="headerlink" title="三、WebService平台技术"></a>三、WebService平台技术</h2><p>  XML+XSD,SOAP和WSDL就是构成WebService平台的三大技术。</p>
+<h3 id="3-1、XML-XSD"><a href="#3-1、XML-XSD" class="headerlink" title="3.1、XML+XSD"></a>3.1、XML+XSD</h3><p>　　WebService采用HTTP协议传输数据，采用XML格式封装数据（即XML中说明调用远程服务对象的哪个方法，传递的参数是什么，以及服务对象的 返回结果是什么）。XML是WebService平台中表示数据的格式。除了易于建立和易于分析外，XML主要的优点在于它既是平台无关的，又是厂商无关 的。无关性是比技术优越性更重要的：软件厂商是不会选择一个由竞争对手所发明的技术的。 </p>
+<p>　　XML解决了数据表示的问题，但它没有定义一套标准的数据类型，更没有说怎么去扩展这套数据类型。例如，整形数到底代表什么？16位，32位，64位？这 些细节对实现互操作性很重要。XML Schema(XSD)就是专门解决这个问题的一套标准。它定义了一套标准的数据类型，并给出了一种语言来扩展这套数据类型。WebService平台就 是用XSD来作为其数据类型系统的。当你用某种语言(如VB.NET或C#)来构造一个Web service时，为了符合WebService标准，所 有你使用的数据类型都必须被转换为XSD类型。你用的工具可能已经自动帮你完成了这个转换，但你很可能会根据你的需要修改一下转换过程。</p>
+<h3 id="3-2、SOAP"><a href="#3-2、SOAP" class="headerlink" title="3.2、SOAP"></a>3.2、SOAP</h3><p>   WebService通过HTTP协议发送请求和接收结果时，发送的请求内容和结果内容都采用XML格式封装，并增加了一些特定的HTTP消息头，以说明 HTTP消息的内容格式，这些特定的HTTP消息头和XML内容格式就是SOAP协议。SOAP提供了标准的RPC方法来调用Web Service。</p>
+<p>  <strong>SOAP协议 = HTTP协议 + XML数据格式</strong></p>
+<p>  SOAP协议定义了SOAP消息的格式，SOAP协议是基于HTTP协议的，SOAP也是基于XML和XSD的，XML是SOAP的数据编码方式。打个比 喻：HTTP就是普通公路，XML就是中间的绿色隔离带和两边的防护栏，SOAP就是普通公路经过加隔离带和防护栏改造过的高速公路。</p>
+<h3 id="3-3、WSDL"><a href="#3-3、WSDL" class="headerlink" title="3.3、WSDL"></a>3.3、WSDL</h3><p>　　好比我们去商店买东西，首先要知道商店里有什么东西可买，然后再来购买，商家的做法就是张贴广告海报。 WebService也一样，WebService客户端要调用一个WebService服务，首先要有知道这个服务的地址在哪，以及这个服务里有什么方 法可以调用，所以，WebService务器端首先要通过一个WSDL文件来说明自己家里有啥服务可以对外调用，服务是什么（服务中有哪些方法，方法接受 的参数是什么，返回值是什么），服务的网络地址用哪个url地址表示，服务通过什么方式来调用。</p>
+<p>　　WSDL(Web Services Description Language)就是这样一个基于XML的语言，用于描述Web Service及其函数、参数和返回值。它是WebService客户端和服务器端都 能理解的标准格式。因为是基于XML的，所以WSDL既是机器可阅读的，又是人可阅读的，这将是一个很大的好处。一些最新的开发工具既能根据你的 Web service生成WSDL文档，又能导入WSDL文档，生成调用相应WebService的代理类代码。</p>
+<p>　　WSDL 文件保存在Web服务器上，通过一个url地址就可以访问到它。客户端要调用一个WebService服务之前，要知道该服务的WSDL文件的地址。 WebService服务提供商可以通过两种方式来暴露它的WSDL文件地址：1.注册到UDDI服务器，以便被人查找；2.直接告诉给客户端调用者。</p>
+<h2 id="四、WebService开发"><a href="#四、WebService开发" class="headerlink" title="四、WebService开发"></a>四、WebService开发</h2><p>　　WebService开发可以分为服务器端开发和客户端开发两个方面</p>
+<h3 id="4-1、服务端开发"><a href="#4-1、服务端开发" class="headerlink" title="4.1、服务端开发"></a>4.1、服务端开发</h3><p>　　把公司内部系统的业务方法发布成WebService服务，供远程合作单位和个人调用。(借助一些WebService框架可以很轻松地把自己的业务对象发布成WebService服务，Java方面的典型WebService框架包括：axis，xfire，cxf 等，java ee服务器通常也支持发布WebService服务，例如JBoss。)</p>
+<h3 id="4-2、客户端开发"><a href="#4-2、客户端开发" class="headerlink" title="4.2、客户端开发"></a>4.2、客户端开发</h3><p>　　调用别人发布的WebService服务，大多数人从事的开发都属于这个方面，例如，调用天气预报WebService服务。（使用厂 商的WSDL2Java之类的工具生成静态调用的代理类代码；使用厂商提供的客户端编程API类；使用SUN公司早期标准的jax-rpc开发包；使用 SUN公司最新标准的jax-ws开发包。当然SUN已被ORACLE收购)</p>
+<h3 id="4-3、WebService-的工作调用原理"><a href="#4-3、WebService-的工作调用原理" class="headerlink" title="4.3、WebService 的工作调用原理"></a>4.3、WebService 的工作调用原理</h3><p>   对客户端而言，我们给这各类WebService客户端API传递wsdl文件的url地址，这些API就会创建出底层的代理类，我调用 这些代理，就可以访问到webservice服务。代理类把客户端的方法调用变成soap格式的请求数据再通过HTTP协议发出去，并把接收到的soap 数据变成返回值返回。对服务端而言，各类WebService框架的本质就是一个大大的Servlet，当远程调用客户端给它通过http协议发送过来 soap格式的请求数据时，它分析这个数据，就知道要调用哪个java类的哪个方法，于是去查找或创建这个对象，并调用其方法，再把方法返回的结果包装成 soap格式的数据，通过http响应消息回给客户端。</p>
+<h2 id="五、适用场合"><a href="#五、适用场合" class="headerlink" title="五、适用场合"></a>五、适用场合</h2><h3 id="1、跨防火墙通信"><a href="#1、跨防火墙通信" class="headerlink" title="1、跨防火墙通信"></a>1、跨防火墙通信</h3><p>　　如果应用程序有成千上万的用户，而且分布在世界各地，那么客户端和服务器之间的通信将是一个棘手的问题。因为客户端和服务器之间通常会有防火墙或者代理服 务器。在这种情况下，使用DCOM就不是那么简单，通常也不便于把客户端程序发布到数量如此庞大的每一个用户手中。传统的做法是，选择用浏览器作为客户 端，写下一大堆ASP页面，把应用程序的中间层暴露给最终用户。这样做的结果是开发难度大，程序很难维护。如果中间层组件换成WebService的话， 就可以从用户界面直接调用中间层组件。从大多数人的经验来看，在一个用户界面和中间层有较多交互的应用程序中，使用WebService这种结构，可以节 省花在用户界面编程上20%的开发时间。</p>
+<h3 id="2、应用程序集成"><a href="#2、应用程序集成" class="headerlink" title="2、应用程序集成"></a>2、应用程序集成</h3><p>　　企业级的应用程序开发者都知道，企业里经常都要把用不同语言写成的、在不同平台上运行的各种程序集成起来，而这种集成将花费很大的开发力量。应用程序经常 需要从运行在IBM主机上的程序中获取数据；或者把数据发送到主机或UNIX应用程序中去。即使在同一个平台上，不同软件厂商生产的各种软件也常常需要集 成起来。通过WebService，可以很容易的集成不同结构的应用程序。</p>
+<h3 id="3、B2B集成"><a href="#3、B2B集成" class="headerlink" title="3、B2B集成"></a>3、B2B集成</h3><p>　　用WebService集成应用程序，可以使公司内部的商务处理更加自动化。但当交易跨越供应商和客户、突破公司的界限时会怎么样呢？跨公司的商务交易集成通常叫做B2B集成。WebService是B2B集成成功的关键。通过WebService，公司可以把关键的商务应用“暴露”给指定的供应商和客户。例如，把电子下单系统和电子发票系统“暴露”出来，客户就可以以电子的方式发送订单，供应商则可以以电子的方式发送原料采购发票。当然，这并不是一个 新的概念，EDI(电子文档交换)早就是这样了。但是，WebService的实现要比EDI简单得多，而且WebService运行在Internet 上，在世界任何地方都可轻易实现，其运行成本就相对较低。不过，WebService并不像EDI那样，是文档交换或B2B集成的完整解决方案。 WebService只是B2B集成的一个关键部分，还需要许多其它的部分才能实现集成。</p>
+<p>　　用WebService来实现B2B集成的最大好处在于可以轻易实现互操作性。只要把商务逻辑“暴露”出来，成为WebService，就可以让任何指定 的合作伙伴调用这些商务逻辑，而不管他们的系统在什么平台上运行，使用什么开发语言。这样就大大减少了花在B2B集成上的时间和成本，让许多原本无法承受 EDI的中小企业也能实现B2B集成。</p>
+<h3 id="4、软件和数据重用"><a href="#4、软件和数据重用" class="headerlink" title="4、软件和数据重用"></a>4、软件和数据重用</h3><pre><code>软件重用是一个很大的主题，重用的形式很多，重用的程度有大有小。最基本的形式是源代码模块或者类一级的重用，一种形式是二进制形式的组件重用。采用 WebService应用程序可以用标准的方法把功能和数据“暴露”出来，供其它应用程序使用，达到业务级重用。
+</code></pre><h2 id="六、不适用场合"><a href="#六、不适用场合" class="headerlink" title="六、不适用场合"></a>六、不适用场合</h2><h3 id="1、单机应用程序"><a href="#1、单机应用程序" class="headerlink" title="1、单机应用程序"></a>1、单机应用程序</h3><pre><code>目前，企业和个人还使用着很多桌面应用程序。其中一些只需要与本机上的其它程序通信。在这种情况下，最好就不要用WebService，只要用本地的 API就可以了。COM非常适合于在这种情况下工作，因为它既小又快。运行在同一台服务器上的服务器软件也是这样。最好直接用COM或其它本地的API来 进行应用程序间的调用。当然WebService也能用在这些场合，但那样不仅消耗太大，而且不会带来任何好处。
+</code></pre><h3 id="2、局域网的同构应用程序"><a href="#2、局域网的同构应用程序" class="headerlink" title="2、局域网的同构应用程序"></a>2、局域网的同构应用程序</h3><pre><code>在许多应用中，所有的程序都是用VB或VC开发的，都在Windows平台下使用COM，都运行在同一个局域网上。例如，有两个服务器应用程序需要相互通 信，或者有一个Win32或WinForm的客户程序要连接局域网上另一个服务器的程序。在这些程序里，使用DCOM会比SOAP/HTTP有效得多。与 此相类似，如果一个.NET程序要连接到局域网上的另一个.NET程序，应该使用.NETremoting。有趣的是，在.NETremoting 中，也可以指定使用SOAP/HTTP来进行WebService调用。不过最好还是直接通过TCP进行RPC调用，那样会有效得多。
+</code></pre><p>　　转载网上的一篇讲得比较好的文章，具体链接地址忘记了，原作者要是要是看到还望提醒一声，我好加上去。</p>
+<p>链接：<a href="https://www.cnblogs.com/xdp-gacl/category/629559.html" target="_blank" rel="noopener">https://www.cnblogs.com/xdp-gacl/category/629559.html</a></p>
+<p>cxf:<br><a href="https://www.cnblogs.com/frankliiu-java/articles/1641949.html" target="_blank" rel="noopener">https://www.cnblogs.com/frankliiu-java/articles/1641949.html</a><br><a href="https://www.cnblogs.com/jiyukai/p/9249103.html" target="_blank" rel="noopener">https://www.cnblogs.com/jiyukai/p/9249103.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/16/webService/" data-id="cjyvglqq9001js4urje1coy9b" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Java 8stream" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/16/Java 8stream/" class="article-date">
@@ -137,112 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/16/Java 8stream/" data-id="cjyvgh1lm000mq4urykng09a5" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-0411" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/16/0411/" class="article-date">
-  <time datetime="2019-04-16T10:53:08.000Z" itemprop="datePublished">2019-04-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/16/0411/">总结0411</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>RetryTemplate<br>ps aux,ps -ef<br>kill -9</p>
-<p>apache ab 压力测试<br>ab -n 100 -c 100 url</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/16/0411/" data-id="cjyvgh1ky0005q4ur8wri2o8a" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-webService" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/16/webService/" class="article-date">
-  <time datetime="2019-04-16T10:53:08.000Z" itemprop="datePublished">2019-04-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/16/webService/">webservice</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、序言"><a href="#一、序言" class="headerlink" title="一、序言"></a>一、序言</h2><p>　　大家或多或少都听过 WebService（Web服务），有一段时间很多计算机期刊、书籍和网站都大肆的提及和宣传WebService技术，其中不乏很多吹嘘和做广告的成 分。但是不得不承认的是WebService真的是一门新兴和有前途的技术，那么WebService到底是什么？何时应该用？</p>
-<p>　　当前的应用程序开发逐步的呈现了两种迥然不同的倾向：一种是基于浏览器的瘦客户端应用程序，一种是基于浏览器的富客户端应用程序（RIA），当然后一种技术相对来说更加的时髦一些（如现在很流行的Html5技术），这里主要讲前者。</p>
-<p>　　基于浏览器的瘦客户端应用程序并不是 因为瘦客户能够提供更好的用户界面，而是因为它能够避免花在桌面应用程序发布上的高成本。发布桌面应用程序成本很高，一半是因为应用程序安装和配置的问 题，另一半是因为客户和服务器之间通信的问题。传统的Windows富客户应用程序使用DCOM来与服务器进行通信和调用远程对象。配置好DCOM使其在 一个大型的网络中正常工作将是一个极富挑战性的工作，同时也是许多IT工程师的噩梦。事实上，许多IT工程师宁愿忍受浏览器所带来的功能限制，也不愿在局 域网上去运行一个DCOM。关于客户端与服务器的通信问题，一个完美的解决方法是使用HTTP协议来通信。这是因为任何运行Web浏览器的机器都在使用 HTTP协议。同时，当前许多防火墙也配置为只允许HTTP连接。许多商用程序还面临另一个问题，那就是与其他程序的互操作性。如果所有的应用程序都是使 用COM或.NET语言写的，并且都运行在Windows平台上，那就天下太平了。然而，事实上大多数商业数据仍然在大型主机上以非关系文件(VSAM) 的形式存放，并由COBOL语言编写的大型机程序访问。而且，目前还有很多商用程序继续在使用C++、Java、Visual Basic和其他各种各样 的语言编写。现在，除了最简单的程序之外，所有的应用程序都需要与运行在其他异构平台上的应用程序集成并进行数据交换。这样的任务通常都是由特殊的方法， 如文件传输和分析，消息队列，还有仅适用于某些情况的的API，如IBM的高级程序到程序交流(APPC)等来完成的。在以前，没有一个应用程序通信标 准，是独立于平台、组建模型和编程语言的。只有通过Web Service，客户端和服务器才能够自由的用HTTP进行通信，不论两个程序的平台和编程语言是什么。</p>
-<h2 id="二、WebService到底是什么"><a href="#二、WebService到底是什么" class="headerlink" title="二、WebService到底是什么"></a>二、WebService到底是什么</h2><p>   一言以蔽之：<strong>WebService是一种跨编程语言和跨操作系统平台的远程调用技术。</strong></p>
-<p>   所谓跨编程语言和跨操作平台，就是说服务端程序采用java编写，客户端程序则可以采用其他编程语言编写，反之亦然！跨操作系统平台则是指服务端程序和客户端程序可以在不同的操作系统上运行。</p>
-<pre><code>所谓远程调用，就是一台计算机a上 的一个程序可以调用到另外一台计算机b上的一个对象的方法，譬如，银联提供给商场的pos刷卡系统，商场的POS机转账调用的转账方法的代码其实是跑在银 行服务器上。再比如，amazon，天气预报系统，淘宝网，校内网，百度等把自己的系统服务以webservice服务的形式暴露出来，让第三方网站和程 序可以调用这些服务功能，这样扩展了自己系统的市场占有率，往大的概念上吹，就是所谓的SOA应用。
-</code></pre><p>   其实可以从多个角度来理解 WebService，从表面上看，WebService就是一个应用程序向外界暴露出一个能通过Web进行调用的API，也就是说能用编程的方法通过 Web来调用这个应用程序。我们把调用这个WebService的应用程序叫做客户端，而把提供这个WebService的应用程序叫做服务端。从深层次 看，WebService是建立可互操作的分布式应用程序的新平台，是一个平台，是一套标准。它定义了应用程序如何在Web上实现互操作性，你可以用任何 你喜欢的语言，在任何你喜欢的平台上写Web service ，只要我们可以通过Web service标准对这些服务进行查询和访问。 </p>
-<p>   WebService平台需要一套协议来实现分布式应用程序的创建。任何平台都有它的数据表示方法和类型系统。要实现互操作性，WebService平台 必须提供一套标准的类型系统，用于沟通不同平台、编程语言和组件模型中的不同类型系统。Web service平台必须提供一种标准来描述 Web service，让客户可以得到足够的信息来调用这个Web service。最后，我们还必须有一种方法来对这个Web service进行远 程调用,这种方法实际是一种远程过程调用协议(RPC)。为了达到互操作性，这种RPC协议还必须与平台和编程语言无关。</p>
-<h2 id="三、WebService平台技术"><a href="#三、WebService平台技术" class="headerlink" title="三、WebService平台技术"></a>三、WebService平台技术</h2><p>  XML+XSD,SOAP和WSDL就是构成WebService平台的三大技术。</p>
-<h3 id="3-1、XML-XSD"><a href="#3-1、XML-XSD" class="headerlink" title="3.1、XML+XSD"></a>3.1、XML+XSD</h3><p>　　WebService采用HTTP协议传输数据，采用XML格式封装数据（即XML中说明调用远程服务对象的哪个方法，传递的参数是什么，以及服务对象的 返回结果是什么）。XML是WebService平台中表示数据的格式。除了易于建立和易于分析外，XML主要的优点在于它既是平台无关的，又是厂商无关 的。无关性是比技术优越性更重要的：软件厂商是不会选择一个由竞争对手所发明的技术的。 </p>
-<p>　　XML解决了数据表示的问题，但它没有定义一套标准的数据类型，更没有说怎么去扩展这套数据类型。例如，整形数到底代表什么？16位，32位，64位？这 些细节对实现互操作性很重要。XML Schema(XSD)就是专门解决这个问题的一套标准。它定义了一套标准的数据类型，并给出了一种语言来扩展这套数据类型。WebService平台就 是用XSD来作为其数据类型系统的。当你用某种语言(如VB.NET或C#)来构造一个Web service时，为了符合WebService标准，所 有你使用的数据类型都必须被转换为XSD类型。你用的工具可能已经自动帮你完成了这个转换，但你很可能会根据你的需要修改一下转换过程。</p>
-<h3 id="3-2、SOAP"><a href="#3-2、SOAP" class="headerlink" title="3.2、SOAP"></a>3.2、SOAP</h3><p>   WebService通过HTTP协议发送请求和接收结果时，发送的请求内容和结果内容都采用XML格式封装，并增加了一些特定的HTTP消息头，以说明 HTTP消息的内容格式，这些特定的HTTP消息头和XML内容格式就是SOAP协议。SOAP提供了标准的RPC方法来调用Web Service。</p>
-<p>  <strong>SOAP协议 = HTTP协议 + XML数据格式</strong></p>
-<p>  SOAP协议定义了SOAP消息的格式，SOAP协议是基于HTTP协议的，SOAP也是基于XML和XSD的，XML是SOAP的数据编码方式。打个比 喻：HTTP就是普通公路，XML就是中间的绿色隔离带和两边的防护栏，SOAP就是普通公路经过加隔离带和防护栏改造过的高速公路。</p>
-<h3 id="3-3、WSDL"><a href="#3-3、WSDL" class="headerlink" title="3.3、WSDL"></a>3.3、WSDL</h3><p>　　好比我们去商店买东西，首先要知道商店里有什么东西可买，然后再来购买，商家的做法就是张贴广告海报。 WebService也一样，WebService客户端要调用一个WebService服务，首先要有知道这个服务的地址在哪，以及这个服务里有什么方 法可以调用，所以，WebService务器端首先要通过一个WSDL文件来说明自己家里有啥服务可以对外调用，服务是什么（服务中有哪些方法，方法接受 的参数是什么，返回值是什么），服务的网络地址用哪个url地址表示，服务通过什么方式来调用。</p>
-<p>　　WSDL(Web Services Description Language)就是这样一个基于XML的语言，用于描述Web Service及其函数、参数和返回值。它是WebService客户端和服务器端都 能理解的标准格式。因为是基于XML的，所以WSDL既是机器可阅读的，又是人可阅读的，这将是一个很大的好处。一些最新的开发工具既能根据你的 Web service生成WSDL文档，又能导入WSDL文档，生成调用相应WebService的代理类代码。</p>
-<p>　　WSDL 文件保存在Web服务器上，通过一个url地址就可以访问到它。客户端要调用一个WebService服务之前，要知道该服务的WSDL文件的地址。 WebService服务提供商可以通过两种方式来暴露它的WSDL文件地址：1.注册到UDDI服务器，以便被人查找；2.直接告诉给客户端调用者。</p>
-<h2 id="四、WebService开发"><a href="#四、WebService开发" class="headerlink" title="四、WebService开发"></a>四、WebService开发</h2><p>　　WebService开发可以分为服务器端开发和客户端开发两个方面</p>
-<h3 id="4-1、服务端开发"><a href="#4-1、服务端开发" class="headerlink" title="4.1、服务端开发"></a>4.1、服务端开发</h3><p>　　把公司内部系统的业务方法发布成WebService服务，供远程合作单位和个人调用。(借助一些WebService框架可以很轻松地把自己的业务对象发布成WebService服务，Java方面的典型WebService框架包括：axis，xfire，cxf 等，java ee服务器通常也支持发布WebService服务，例如JBoss。)</p>
-<h3 id="4-2、客户端开发"><a href="#4-2、客户端开发" class="headerlink" title="4.2、客户端开发"></a>4.2、客户端开发</h3><p>　　调用别人发布的WebService服务，大多数人从事的开发都属于这个方面，例如，调用天气预报WebService服务。（使用厂 商的WSDL2Java之类的工具生成静态调用的代理类代码；使用厂商提供的客户端编程API类；使用SUN公司早期标准的jax-rpc开发包；使用 SUN公司最新标准的jax-ws开发包。当然SUN已被ORACLE收购)</p>
-<h3 id="4-3、WebService-的工作调用原理"><a href="#4-3、WebService-的工作调用原理" class="headerlink" title="4.3、WebService 的工作调用原理"></a>4.3、WebService 的工作调用原理</h3><p>   对客户端而言，我们给这各类WebService客户端API传递wsdl文件的url地址，这些API就会创建出底层的代理类，我调用 这些代理，就可以访问到webservice服务。代理类把客户端的方法调用变成soap格式的请求数据再通过HTTP协议发出去，并把接收到的soap 数据变成返回值返回。对服务端而言，各类WebService框架的本质就是一个大大的Servlet，当远程调用客户端给它通过http协议发送过来 soap格式的请求数据时，它分析这个数据，就知道要调用哪个java类的哪个方法，于是去查找或创建这个对象，并调用其方法，再把方法返回的结果包装成 soap格式的数据，通过http响应消息回给客户端。</p>
-<h2 id="五、适用场合"><a href="#五、适用场合" class="headerlink" title="五、适用场合"></a>五、适用场合</h2><h3 id="1、跨防火墙通信"><a href="#1、跨防火墙通信" class="headerlink" title="1、跨防火墙通信"></a>1、跨防火墙通信</h3><p>　　如果应用程序有成千上万的用户，而且分布在世界各地，那么客户端和服务器之间的通信将是一个棘手的问题。因为客户端和服务器之间通常会有防火墙或者代理服 务器。在这种情况下，使用DCOM就不是那么简单，通常也不便于把客户端程序发布到数量如此庞大的每一个用户手中。传统的做法是，选择用浏览器作为客户 端，写下一大堆ASP页面，把应用程序的中间层暴露给最终用户。这样做的结果是开发难度大，程序很难维护。如果中间层组件换成WebService的话， 就可以从用户界面直接调用中间层组件。从大多数人的经验来看，在一个用户界面和中间层有较多交互的应用程序中，使用WebService这种结构，可以节 省花在用户界面编程上20%的开发时间。</p>
-<h3 id="2、应用程序集成"><a href="#2、应用程序集成" class="headerlink" title="2、应用程序集成"></a>2、应用程序集成</h3><p>　　企业级的应用程序开发者都知道，企业里经常都要把用不同语言写成的、在不同平台上运行的各种程序集成起来，而这种集成将花费很大的开发力量。应用程序经常 需要从运行在IBM主机上的程序中获取数据；或者把数据发送到主机或UNIX应用程序中去。即使在同一个平台上，不同软件厂商生产的各种软件也常常需要集 成起来。通过WebService，可以很容易的集成不同结构的应用程序。</p>
-<h3 id="3、B2B集成"><a href="#3、B2B集成" class="headerlink" title="3、B2B集成"></a>3、B2B集成</h3><p>　　用WebService集成应用程序，可以使公司内部的商务处理更加自动化。但当交易跨越供应商和客户、突破公司的界限时会怎么样呢？跨公司的商务交易集成通常叫做B2B集成。WebService是B2B集成成功的关键。通过WebService，公司可以把关键的商务应用“暴露”给指定的供应商和客户。例如，把电子下单系统和电子发票系统“暴露”出来，客户就可以以电子的方式发送订单，供应商则可以以电子的方式发送原料采购发票。当然，这并不是一个 新的概念，EDI(电子文档交换)早就是这样了。但是，WebService的实现要比EDI简单得多，而且WebService运行在Internet 上，在世界任何地方都可轻易实现，其运行成本就相对较低。不过，WebService并不像EDI那样，是文档交换或B2B集成的完整解决方案。 WebService只是B2B集成的一个关键部分，还需要许多其它的部分才能实现集成。</p>
-<p>　　用WebService来实现B2B集成的最大好处在于可以轻易实现互操作性。只要把商务逻辑“暴露”出来，成为WebService，就可以让任何指定 的合作伙伴调用这些商务逻辑，而不管他们的系统在什么平台上运行，使用什么开发语言。这样就大大减少了花在B2B集成上的时间和成本，让许多原本无法承受 EDI的中小企业也能实现B2B集成。</p>
-<h3 id="4、软件和数据重用"><a href="#4、软件和数据重用" class="headerlink" title="4、软件和数据重用"></a>4、软件和数据重用</h3><pre><code>软件重用是一个很大的主题，重用的形式很多，重用的程度有大有小。最基本的形式是源代码模块或者类一级的重用，一种形式是二进制形式的组件重用。采用 WebService应用程序可以用标准的方法把功能和数据“暴露”出来，供其它应用程序使用，达到业务级重用。
-</code></pre><h2 id="六、不适用场合"><a href="#六、不适用场合" class="headerlink" title="六、不适用场合"></a>六、不适用场合</h2><h3 id="1、单机应用程序"><a href="#1、单机应用程序" class="headerlink" title="1、单机应用程序"></a>1、单机应用程序</h3><pre><code>目前，企业和个人还使用着很多桌面应用程序。其中一些只需要与本机上的其它程序通信。在这种情况下，最好就不要用WebService，只要用本地的 API就可以了。COM非常适合于在这种情况下工作，因为它既小又快。运行在同一台服务器上的服务器软件也是这样。最好直接用COM或其它本地的API来 进行应用程序间的调用。当然WebService也能用在这些场合，但那样不仅消耗太大，而且不会带来任何好处。
-</code></pre><h3 id="2、局域网的同构应用程序"><a href="#2、局域网的同构应用程序" class="headerlink" title="2、局域网的同构应用程序"></a>2、局域网的同构应用程序</h3><pre><code>在许多应用中，所有的程序都是用VB或VC开发的，都在Windows平台下使用COM，都运行在同一个局域网上。例如，有两个服务器应用程序需要相互通 信，或者有一个Win32或WinForm的客户程序要连接局域网上另一个服务器的程序。在这些程序里，使用DCOM会比SOAP/HTTP有效得多。与 此相类似，如果一个.NET程序要连接到局域网上的另一个.NET程序，应该使用.NETremoting。有趣的是，在.NETremoting 中，也可以指定使用SOAP/HTTP来进行WebService调用。不过最好还是直接通过TCP进行RPC调用，那样会有效得多。
-</code></pre><p>　　转载网上的一篇讲得比较好的文章，具体链接地址忘记了，原作者要是要是看到还望提醒一声，我好加上去。</p>
-<p>链接：<a href="https://www.cnblogs.com/xdp-gacl/category/629559.html" target="_blank" rel="noopener">https://www.cnblogs.com/xdp-gacl/category/629559.html</a></p>
-<p>cxf:<br><a href="https://www.cnblogs.com/frankliiu-java/articles/1641949.html" target="_blank" rel="noopener">https://www.cnblogs.com/frankliiu-java/articles/1641949.html</a><br><a href="https://www.cnblogs.com/jiyukai/p/9249103.html" target="_blank" rel="noopener">https://www.cnblogs.com/jiyukai/p/9249103.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/16/webService/" data-id="cjyvgh1nm001kq4urco0eeeo9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/16/Java 8stream/" data-id="cjyvglqp5000ns4urfjhp2lvt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -302,7 +264,7 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/16/wsdl/" data-id="cjyvgh1nn001lq4urbjhvze6c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/16/wsdl/" data-id="cjyvglqqb001ls4ur3o0sgap2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -430,45 +392,7 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/16/跨域/" data-id="cjyvgh1nv001qq4urrdnewgkf" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-0415" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/15/0415/" class="article-date">
-  <time datetime="2019-04-15T10:53:08.000Z" itemprop="datePublished">2019-04-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/15/0415/">总结0415</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>git reset (–mixed) HEAD~1<br>回退一个版本,且会将暂存区的内容和本地已提交的内容全部恢复到未暂存的状态,不影响原来本地文件(未提交的也<br>不受影响)<br>git reset –soft HEAD~1<br>回退一个版本,不清空暂存区,将已提交的内容恢复到暂存区,不影响原来本地的文件(未提交的也不受影响)<br>git reset –hard HEAD~1<br>回退一个版本,清空暂存区,将已提交的内容的版本恢复到本地,本地的文件也将被恢复的版本替换</p>
-<p>git stash<br>git stash pop<br>git stash list</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/15/0415/" data-id="cjyvgh1l20007q4ur8ta921p8" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/16/跨域/" data-id="cjyvglqrb001ps4urydail5h4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -683,7 +607,45 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/15/springboot日志框架/" data-id="cjyvgh1nl001jq4urgs2br745" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/15/springboot日志框架/" data-id="cjyvglqq8001is4urcjriy0a2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-0415" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/15/0415/" class="article-date">
+  <time datetime="2019-04-15T10:53:08.000Z" itemprop="datePublished">2019-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/15/0415/">总结0415</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>git reset (–mixed) HEAD~1<br>回退一个版本,且会将暂存区的内容和本地已提交的内容全部恢复到未暂存的状态,不影响原来本地文件(未提交的也<br>不受影响)<br>git reset –soft HEAD~1<br>回退一个版本,不清空暂存区,将已提交的内容恢复到暂存区,不影响原来本地的文件(未提交的也不受影响)<br>git reset –hard HEAD~1<br>回退一个版本,清空暂存区,将已提交的内容的版本恢复到本地,本地的文件也将被恢复的版本替换</p>
+<p>git stash<br>git stash pop<br>git stash list</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/15/0415/" data-id="cjyvglqol0006s4urrpieln35" class="article-share-link">Share</a>
       
       
     </footer>
@@ -724,7 +686,7 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/10/1904/" data-id="cjyvgh1la000bq4uroqyk4yud" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/10/1904/" data-id="cjyvglqou000as4ur1hjrjs9r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -765,7 +727,7 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/10/0408/" data-id="cjyvgh1kv0003q4ur8qrcow4e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/10/0408/" data-id="cjyvglqoh0005s4urgq9lawm7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -802,7 +764,46 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/04/0404/" data-id="cjyvgh1kx0004q4urihlg3eyb" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/04/0404/" data-id="cjyvglqp1000hs4ur9robh239" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-jinshuju流程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/03/jinshuju流程/" class="article-date">
+  <time datetime="2019-04-03T15:40:16.000Z" itemprop="datePublished">2019-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/03/jinshuju流程/">总结0403(金数据linkflow分析)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-connect"><a href="#1-connect" class="headerlink" title="1.connect"></a>1.connect</h3><p>1.1根据code和state获取token,得到token,refresh_token,和期限等信息-&gt;用accesstoken获取profile<br>1.2将email作为channelId,查数据库是否已存在channeldto<br>不存在则重新构建channeldto和channedto.property<br>1.3事务执行channeldto插入数据库，同时将access_token和refresh_token插入redis,accesstoken设置redis过期时间</p>
+<h3 id="2-getaccesstoken根据channelId"><a href="#2-getaccesstoken根据channelId" class="headerlink" title="2.getaccesstoken根据channelId"></a>2.getaccesstoken根据channelId</h3><p>从redis获取accesstoken如果为空，则获取refreshtoken,并从新请求获取token信息，并设置进入redis(refreshToken每次都更新进channel.property的数据库字段中)</p>
+<h3 id="3-handleSubmit-String-channelId-JsonNode-responseBody"><a href="#3-handleSubmit-String-channelId-JsonNode-responseBody" class="headerlink" title="3.handleSubmit(String channelId, JsonNode responseBody)"></a>3.handleSubmit(String channelId, JsonNode responseBody)</h3><p>1.根据JinshujuSubmitDTO获取FormMappingDTO<br>2.判断是否是微信过来的用户，曾经关注过的用户取出contact; 未关注过的新建用户创建匿名用户<br>3.既是匿名用户又没有表单映射，退出<br>匿名访问情况下先通过表单的值查询是否有已存在用户（通过邮箱和手机号）<br>4.根据channeldto和submitdto创建EventDTO<br>5.用channelId和contactDTO调用<br>==contactFacade.save==：<br>保存contactDTO，更新渠道账号信息ContactIdentityDTO<br>循环获取contactdto的event,调用：<br>==eventService.create(eventDTO)==：<br>保存event，循环子事件，调用rabbitMq消息</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/03/jinshuju流程/" data-id="cjyvglqpg000ys4urmnh17m4h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -848,10 +849,6 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
       <ul>
         
           <li>
-            <a href="/2019/08/03/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2019/08/03/0707-md/">0707.md</a>
           </li>
         
@@ -865,6 +862,10 @@ WSDL (Web Services Description Language,Web服务描述语言)是一种XML Appli
         
           <li>
             <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/paxos算法/">paxos算法</a>
           </li>
         
       </ul>

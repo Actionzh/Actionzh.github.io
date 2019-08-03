@@ -66,45 +66,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-jinshuju流程" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/03/jinshuju流程/" class="article-date">
-  <time datetime="2019-04-03T15:40:16.000Z" itemprop="datePublished">2019-04-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/03/jinshuju流程/">总结0403(金数据linkflow分析)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-connect"><a href="#1-connect" class="headerlink" title="1.connect"></a>1.connect</h3><p>1.1根据code和state获取token,得到token,refresh_token,和期限等信息-&gt;用accesstoken获取profile<br>1.2将email作为channelId,查数据库是否已存在channeldto<br>不存在则重新构建channeldto和channedto.property<br>1.3事务执行channeldto插入数据库，同时将access_token和refresh_token插入redis,accesstoken设置redis过期时间</p>
-<h3 id="2-getaccesstoken根据channelId"><a href="#2-getaccesstoken根据channelId" class="headerlink" title="2.getaccesstoken根据channelId"></a>2.getaccesstoken根据channelId</h3><p>从redis获取accesstoken如果为空，则获取refreshtoken,并从新请求获取token信息，并设置进入redis(refreshToken每次都更新进channel.property的数据库字段中)</p>
-<h3 id="3-handleSubmit-String-channelId-JsonNode-responseBody"><a href="#3-handleSubmit-String-channelId-JsonNode-responseBody" class="headerlink" title="3.handleSubmit(String channelId, JsonNode responseBody)"></a>3.handleSubmit(String channelId, JsonNode responseBody)</h3><p>1.根据JinshujuSubmitDTO获取FormMappingDTO<br>2.判断是否是微信过来的用户，曾经关注过的用户取出contact; 未关注过的新建用户创建匿名用户<br>3.既是匿名用户又没有表单映射，退出<br>匿名访问情况下先通过表单的值查询是否有已存在用户（通过邮箱和手机号）<br>4.根据channeldto和submitdto创建EventDTO<br>5.用channelId和contactDTO调用<br>==contactFacade.save==：<br>保存contactDTO，更新渠道账号信息ContactIdentityDTO<br>循环获取contactdto的event,调用：<br>==eventService.create(eventDTO)==：<br>保存event，循环子事件，调用rabbitMq消息</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/03/jinshuju流程/" data-id="cjyvgh1mj000xq4uruducg2f0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-0403" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/03/0403/" class="article-date">
@@ -147,7 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/03/0403/" data-id="cjyvgh1l10006q4ur25mj5d3m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/03/0403/" data-id="cjyvglqod0004s4ur4ldqxjrh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -190,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/02/异常处理(0402)/" data-id="cjyvgh1mo0013q4ur4uoxd197" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/02/异常处理(0402)/" data-id="cjyvglqpm0015s4urxursa1ra" class="article-share-link">Share</a>
       
       
     </footer>
@@ -227,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/02/0401/" data-id="cjyvgh1kt0002q4ur0obhy2c6" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/02/0401/" data-id="cjyvglqo30001s4urwzfs28cj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -286,7 +247,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/31/HikariCP/" data-id="cjyvgh1nh001eq4uriqvzsbbl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/31/HikariCP/" data-id="cjyvglqq4001ds4ury9gj7jut" class="article-share-link">Share</a>
       
       
     </footer>
@@ -513,7 +474,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/31/Flyway/" data-id="cjyvgh1nu001oq4urke5f1uue" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/31/Flyway/" data-id="cjyvglqra001ns4ured4bss20" class="article-share-link">Share</a>
       
       
     </footer>
@@ -550,7 +511,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/31/总结/" data-id="cjyvgh1mp0014q4urhrgnrugm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/31/总结/" data-id="cjyvglqpl0013s4urci8fdyls" class="article-share-link">Share</a>
       
       
     </footer>
@@ -587,7 +548,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/31/总结0331/" data-id="cjyvgh1mq0015q4urvx89iu1g" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/31/总结0331/" data-id="cjyvglqpn0016s4ur3fusbe78" class="article-share-link">Share</a>
       
       
     </footer>
@@ -653,7 +614,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/31/activiti/" data-id="cjyvgh1ni001fq4urzf65pohn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/31/activiti/" data-id="cjyvglqq5001es4urci2htsoq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -663,9 +624,9 @@
 
 
   
-    <article id="post-flow(active)" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-flow(ExecutorJob)" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/29/flow(active)/" class="article-date">
+    <a href="/2019/03/29/flow(ExecutorJob)/" class="article-date">
   <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
 </a>
     
@@ -677,7 +638,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/29/flow(active)/">flow(active)流程</a>
+      <a class="article-title" href="/2019/03/29/flow(ExecutorJob)/">flow(ExecutorJob)流程</a>
     </h1>
   
 
@@ -685,13 +646,61 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>active相关旅程。<br>CustomerJourneyController.activate方法：<br>1先保存customerJourney<br>2然后调用customerJourneyService.activate(triggerId)：<br>2.1查询出customerJourney，根据uimodel转换出LinkedJourney，<br>2.2再根据LinkedJourney得到相关得properties加入customerJourney<br>2.3根据customerJourney和linkedJourney进行deploy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy(</span><br><span class="line">[1].bpmnGenerator.generateBPMN-&gt;converter出bpmnModel，[2].bpmnGenerator.getTriggerCondition(triggerNode)-&gt;根据triggerNode得到comditionstring，此处根据根节点workflowEvent得出beanname 从而得到对应得TriggerConditionGenerator接口得具体实现，核心方法generateInternal主要用来返回生成的condition字符串。(所有得trigger generator在此处使用)</span><br><span class="line">[3].customerJourney设置得到的bpmn，triggerType，workflowEvent，condition</span><br><span class="line">[4].根据customerJourneyname和bpmn进行deploy并返回ProcessDefinitionId,并设置到customerJourney中</span><br><span class="line">[5].customerJourney中每个properties都设置processDedfId和triggerId)</span><br></pre></td></tr></table></figure></p>
-<p>2.4 deploy结束返回customerJourney，设置ACTIVE状态，并更新表数据<br>2.5最后保存所有properties节点信息</p>
+        <ol>
+<li>CustomerJourneyExecutorJob.doWork<br>根据body转化出customerJourneyContext，然后调用</li>
+<li>workflowTrigger.trigger<br>调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用</li>
+<li>workflowManager.run(内部为acticiti的runtimeService启动流程)返回processInstanceId,生成CustomerJourneyInstance并入库</li>
+</ol>
+<h4 id="action的逻辑实现调用部分"><a href="#action的逻辑实现调用部分" class="headerlink" title="action的逻辑实现调用部分"></a>action的逻辑实现调用部分</h4><p>看bpmn的xml发现，serviceTask 节点内有activiti:delegateExpression的信息，值为#{TriggerDelegateDispatcher}，#{ActionDelegateDispatcher}联想到spring代码中的delegate，查看代码发现抽象BaseDispatcher的实现有ActionDelegateDispatcher和TriggerDelegateDispatcher证实了想法。</p>
+<p>ActionDelegateDispatcher的executeDelegate方法根据customerJourneyProperty.getEvent()得到beanname，从而得到AbstractDelegate的具体实现的bean对象，最终执行delegate.executeDelegate方法，实现自实现的逻辑（每个action的实现逻辑即在此进行调用和实现）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt; &lt;definitions xmlns=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:activiti=&quot;http://activiti.org/bpmn&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:omgdc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; xmlns:omgdi=&quot;http://www.omg.org/spec/DD/20100524/DI&quot; typeLanguage=&quot;http://www.w3.org/2001/XMLSchema&quot; expressionLanguage=&quot;http://www.w3.org/1999/XPath&quot; targetNamespace=&quot;http://www.activiti.org/processdef&quot;&gt; &lt;process id=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; isExecutable=&quot;true&quot;&gt; &lt;startEvent id=&quot;START&quot;/&gt; &lt;sequenceFlow sourceRef=&quot;START&quot; targetRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot;/&gt; &lt;serviceTask id=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;TriggerDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;conditions&quot;:&quot;ANY&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;endEvent id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;sequenceFlow id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548-flow&quot; sourceRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; targetRef=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;serviceTask id=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;ActionDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;replyMessage&quot;:&#123;&quot;touser&quot;:&quot;#&#123;OPENID&#125;&quot;,&quot;text&quot;:&#123;&quot;content&quot;:&quot;近期活动 Upcoming events:\n\n2018/11/28 &lt;a href=\&quot; \&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 双语教育的模型与实践\nWhittle Talks | Bilingual Models and Practices\n\n2018/12/08 &lt;a href=\&quot;pages/order/order?event_id=82\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 小童书的大说法\nWhittle Talks | The big story behind a book for small children\n\n更多精彩活动，请&lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;查看活动日历&lt;/a &gt;\n\nFind out more in our &lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt; Event Calendar&lt;/a &gt;&quot;&#125;&#125;,&quot;resultVariable&quot;:&quot;gatewayc58&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;sequenceFlow id=&quot;N-7f0dcb94-be72-4999-84dc-256fa65d9fd9&quot; sourceRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; targetRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;/process&gt; &lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;&gt; &lt;bpmndi:BPMNPlane bpmnElement=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; id=&quot;BPMNPlane_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;/&gt; &lt;/bpmndi:BPMNDiagram&gt; &lt;/definitions&gt;</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/29/flow(active)/" data-id="cjyvgh1mg000tq4urp348badm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/29/flow(ExecutorJob)/" data-id="cjyvglqp8000qs4urd4ssxvic" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-flow(triggerJob)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(triggerJob)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/29/flow(triggerJob)/">flow(TriggerJob)流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>customerJourneyTriggerJob.doWork(message)<br>根据routingKey得出eventType和actionType根据名称拼接处QueueWorker的实现bean</li>
+<li>调用QueueWorker.work方法<br>根据body得出EventDTO，根据dto的event得出EventTriggerCallback接口的实现，</li>
+<li>调用EventTriggerCallback.onTrigger<br>根据contactId和eventid 生成CustomerJourneyContext，并调用</li>
+<li>workflowTrigger.trigger<br>根据eventdto的event查出所有customerJourney，验证其condition是否满足，满足则发送p2PMessageProducer.send(EXECUTOR_QUEUE, context) mq消息进行处理</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(triggerJob)/" data-id="cjyvglqpe000ws4urx0isfdmw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -737,10 +746,6 @@
       <ul>
         
           <li>
-            <a href="/2019/08/03/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2019/08/03/0707-md/">0707.md</a>
           </li>
         
@@ -754,6 +759,10 @@
         
           <li>
             <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/paxos算法/">paxos算法</a>
           </li>
         
       </ul>
