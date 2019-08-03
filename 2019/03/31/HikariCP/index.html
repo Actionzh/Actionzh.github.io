@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>HikariCP | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇文章主要实现SpringBoot中使用hikariCP；一 、使用工具   JDK1.8  springToolSuit(STS)  maven二、创建项目1.首先创建一个SpringBoot项目，勾选web，mysql等具体怎样创建可以参考我的上两个博客；传送门2.maven 依赖如下：1）Java 8 maven artifact:  123456&amp;lt;dependency&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HikariCP">
+<meta property="og:url" content="http://yoursite.com/2019/03/31/HikariCP/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="本篇文章主要实现SpringBoot中使用hikariCP；一 、使用工具   JDK1.8  springToolSuit(STS)  maven二、创建项目1.首先创建一个SpringBoot项目，勾选web，mysql等具体怎样创建可以参考我的上两个博客；传送门2.maven 依赖如下：1）Java 8 maven artifact:  123456&amp;lt;dependency&amp;gt;">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/HikariCP/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/HikariCP/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/HikariCP/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/HikariCP/4.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.624Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HikariCP">
+<meta name="twitter:description" content="本篇文章主要实现SpringBoot中使用hikariCP；一 、使用工具   JDK1.8  springToolSuit(STS)  maven二、创建项目1.首先创建一个SpringBoot项目，勾选web，mysql等具体怎样创建可以参考我的上两个博客；传送门2.maven 依赖如下：1）Java 8 maven artifact:  123456&amp;lt;dependency&amp;gt;">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/31/HikariCP/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-HikariCP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/HikariCP/" class="article-date">
+  <time datetime="2019-03-31T09:28:18.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HikariCP
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本篇文章主要实现SpringBoot中使用hikariCP；<br>一 、使用工具 </p>
+<ol>
+<li>JDK1.8 </li>
+<li>springToolSuit(STS) </li>
+<li>maven<br>二、创建项目<br>1.首先创建一个SpringBoot项目，勾选web，mysql等具体怎样创建可以参考我的上两个博客；传送门<br>2.maven 依赖如下：<br>1）Java 8 maven artifact:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.6.1&lt;/version&gt;</span><br><span class="line">    &lt;scope&gt;compile&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>2）Java 7 maven artifact:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;HikariCP-java7&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.4.11&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;compile&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>我的maven依赖为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">        &lt;!-- spring aop --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- spring data jpa --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- hibernate 依赖 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;hibernate-jpa-2.1-api&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0.0.Final&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- JDBC连接数据库，因为要用HikariCP，所以需要将SpringBoot中的tomcat-jdbc排除 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;</span><br><span class="line">            &lt;exclusions&gt;</span><br><span class="line">                &lt;exclusion&gt;</span><br><span class="line">                    &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;</span><br><span class="line">                    &lt;artifactId&gt;tomcat-jdbc&lt;/artifactId&gt;</span><br><span class="line">                &lt;/exclusion&gt;</span><br><span class="line">            &lt;/exclusions&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- HikariCP 连接池依赖，从父依赖获取额版本 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;</span><br><span class="line">            &lt;!-- &lt;scope&gt;runtime&lt;/scope&gt; --&gt;</span><br><span class="line">        &lt;/dependency&gt; </span><br><span class="line"></span><br><span class="line">        &lt;!-- 因为配置了thymeleaf 模板，可以将此注释</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt; --&gt;</span><br><span class="line">        &lt;!-- thymeleaf 模板   默认包含spring-boot-starter-web--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 连接mysql数据库驱动 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- spring boot 内置tomcat --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--@ConfigurationProperties注解--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;</span><br><span class="line">            &lt;optional&gt;true&lt;/optional&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- net json 这个必须配置jdk的版本号 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;net.sf.json-lib&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;json-lib&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.4&lt;/version&gt;</span><br><span class="line">            &lt;classifier&gt;jdk15&lt;/classifier&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream --&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- LEGACYHTML5需要搭配一个额外的库NekoHTML才可用,解决严格的html验证问题 --&gt;</span><br><span class="line">        &lt;dependency&gt;  </span><br><span class="line">            &lt;groupId&gt;net.sourceforge.nekohtml&lt;/groupId&gt;  </span><br><span class="line">            &lt;artifactId&gt;nekohtml&lt;/artifactId&gt;  </span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 单元测试相关依赖 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+<p>SpringBoot父依赖如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;1.5.6.RELEASE&lt;/version&gt;</span><br><span class="line">        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的是，因为用了最新的SpringBoot版本，HikarICP从SpringBoot继承版本，所以JDK需要配置为1.8，如果不是将会出现错误，错误原因将会在下面展示。 </p>
+<p>3.数据库连接配置文件如下(我将数据库连接配置单独写在了一个配置文件，这样找起来比较清晰，文件名为 datasource.properties ，后面的配置类中要用到此名字)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#第一个数据源（多数据源将会在后面介绍,primary表示为第一个数据源）</span><br><span class="line">spring.datasource.primary.dataSourceClassName=com.mysql.jdbc.jdbc2.optional.MysqlDataSource</span><br><span class="line">spring.datasource.primary.dataSourceProperties.serverName=localhost</span><br><span class="line">spring.datasource.primary.dataSourceProperties.portNumber=3306</span><br><span class="line">spring.datasource.primary.dataSourceProperties.databaseName=newrecruit</span><br><span class="line">spring.datasource.primary.username=root</span><br><span class="line">spring.datasource.primary.password=yourpassword</span><br><span class="line"># 下面为连接池的补充设置，应用到上面所有数据源中</span><br><span class="line">#自动提交</span><br><span class="line">spring.datasource.default-auto-commit=true</span><br><span class="line">#指定updates是否自动提交</span><br><span class="line">spring.datasource.auto-commit=true</span><br><span class="line">spring.jpa.show-sql = true</span><br><span class="line">spring.datasource.maximum-pool-size=100</span><br><span class="line">spring.datasource.max-idle=10</span><br><span class="line">spring.datasource.max-wait=10000</span><br><span class="line">spring.datasource.min-idle=5</span><br><span class="line">spring.datasource.initial-size=5</span><br><span class="line">spring.datasource.validation-query=SELECT 1</span><br><span class="line">spring.datasource.test-on-borrow=false</span><br><span class="line">spring.datasource.test-while-idle=true</span><br><span class="line"># 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 </span><br><span class="line">spring.datasource.time-between-eviction-runs-millis=18800</span><br><span class="line"># 配置一个连接在池中最小生存的时间，单位是毫秒 </span><br><span class="line">spring.datasource.minEvictableIdleTimeMillis=300000</span><br><span class="line"></span><br><span class="line"># Hibernate ddl auto (create, create-drop, update)</span><br><span class="line">spring.jpa.hibernate.ddl-auto=update  </span><br><span class="line">#spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect  </span><br><span class="line">spring.jpa.hibernate.naming_strategy=org.hibernate.cfg.ImprovedNamingStrategy  </span><br><span class="line">#spring.jpa.database=org.hibernate.dialect.MySQL5InnoDBDialect </span><br><span class="line">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect</span><br></pre></td></tr></table></figure></p>
+<p>数据库配置文件写好以后，开始写配置类 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc.config;</span><br><span class="line"></span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;</span><br><span class="line">import org.springframework.boot.context.properties.ConfigurationProperties;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.context.annotation.Primary;</span><br><span class="line">import org.springframework.context.annotation.PropertySource;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * &lt;p&gt;Company: &lt;/p&gt; </span><br><span class="line">  * @Description: </span><br><span class="line">  * @Create Date: 2017年8月13日下午11:59:49</span><br><span class="line">  * @Version: V1.00 </span><br><span class="line">  * @Author: 追到乌云的尽头找太阳</span><br><span class="line">  */</span><br><span class="line">@Configuration</span><br><span class="line">@PropertySource(&quot;classpath:datasource.properties&quot;)</span><br><span class="line">public class DataSourceConfig &#123;</span><br><span class="line"></span><br><span class="line">    private Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;primaryDataSource&quot;)</span><br><span class="line">    @Primary</span><br><span class="line">    @Qualifier(&quot;primaryDataSource&quot;)</span><br><span class="line">    @ConfigurationProperties(prefix=&quot;spring.datasource.primary&quot; )</span><br><span class="line">    public DataSource primaryDataSource() &#123;</span><br><span class="line">        logger.info(&quot;数据库连接池创建中.......&quot;);</span><br><span class="line">        return DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一个@PropertySource(“classpath:datasource.properties”)注解，就可以免去我们自己写读取配置文件的麻烦<br>第一个数据源的配置类如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;</span><br><span class="line">import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.context.annotation.Primary;</span><br><span class="line">import org.springframework.data.jpa.repository.config.EnableJpaRepositories;</span><br><span class="line">import org.springframework.orm.jpa.JpaTransactionManager;</span><br><span class="line">import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;</span><br><span class="line">import org.springframework.transaction.PlatformTransactionManager;</span><br><span class="line">import org.springframework.transaction.annotation.EnableTransactionManagement;</span><br><span class="line"></span><br><span class="line">import javax.persistence.EntityManager;</span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * &lt;p&gt;Company: 信息技术研究所 &lt;/p&gt; </span><br><span class="line">  * @Description: 第一个数据源的配置类</span><br><span class="line">  * @Create Date: 2017年5月11日下午9:22:12</span><br><span class="line">  * @Version: V1.00 </span><br><span class="line">  * @Author: 追到乌云的尽头找太阳</span><br><span class="line">  */</span><br><span class="line">@Configuration</span><br><span class="line">@EnableTransactionManagement</span><br><span class="line">@EnableJpaRepositories(</span><br><span class="line">        entityManagerFactoryRef=&quot;entityManagerFactoryPrimary&quot;,</span><br><span class="line">        transactionManagerRef=&quot;transactionManagerPrimary&quot;,</span><br><span class="line">        basePackages= &#123; &quot;com.zlc.dao&quot; &#125;) //设置Repository所在位置</span><br><span class="line">public class PrimaryDataSouceConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired @Qualifier(&quot;primaryDataSource&quot;)</span><br><span class="line">    private DataSource primaryDataSource;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;entityManagerPrimary&quot;)</span><br><span class="line">    public EntityManager entityManager(EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;entityManagerFactoryPrimary&quot;)</span><br><span class="line">    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return builder</span><br><span class="line">                .dataSource(primaryDataSource)</span><br><span class="line">                .properties(getVendorProperties(primaryDataSource))</span><br><span class="line">                .packages(&quot;com.zlc.entity&quot;) //设置实体类所在位置</span><br><span class="line">                .persistenceUnit(&quot;primaryPersistenceUnit&quot;)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JpaProperties jpaProperties;</span><br><span class="line"></span><br><span class="line">    private Map&lt;String, String&gt; getVendorProperties(DataSource dataSource) &#123;</span><br><span class="line">        return jpaProperties.getHibernateProperties(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;transactionManagerPrimary&quot;)</span><br><span class="line">    public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面有连个需要注意的地方，一个是JPA所在的包名： basePackages= { “com.b505.dao” }) //设置Repository所在位置，一定不能写错，一个JPA实体类所在的位置： .packages(“com.b505.entity”) //设置实体类所在位置。</p>
+<p>我们在main方法中我们可以检查一下（一定要注意SpringBoot项目的结构，因为SpringBoot是自动扫描并注册类注册到Spring的上下文中所以main所在的类的包名一定是最大的，这样用其他注解的类才能正常注册，我的项目结构如下）：<br><img src="/2019/03/31/HikariCP/1.png" alt="1"></p>
+<p>如果你的controller写在了com.zlca.web；那么项目编译不会产生错误，但是此web层的映射全都不能用，因为没有注册到Spring中。SpringBoot是扫描@SpringBootApplication下的类以及此注解的子文件夹下的类；<br>main方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc;</span><br><span class="line"></span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.ResultSet;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line"></span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line"></span><br><span class="line">import com.zaxxer.hikari.HikariDataSource;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;p&gt;Company: 信息技术研究所 &lt;/p&gt; </span><br><span class="line"> * @Description: 程序的入口</span><br><span class="line"> * @Create Date: 2017年9月14日下午1:11:05</span><br><span class="line"> * @Version: V1.00 </span><br><span class="line"> * @Author: 追到乌云的尽头找太阳</span><br><span class="line"> */</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class RecruitmentApp &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext applicationContext = SpringApplication.run(</span><br><span class="line">                RecruitmentApp.class, args);</span><br><span class="line">        DataSource dataSource = applicationContext.getBean(DataSource.class);</span><br><span class="line">        System.out.println(&quot;datasource is :&quot; + dataSource);</span><br><span class="line">        //检查数据库是否是hikar数据库连接池</span><br><span class="line">        if (!(dataSource instanceof HikariDataSource)) &#123;</span><br><span class="line">            System.err.println(&quot; Wrong datasource type :&quot;</span><br><span class="line">                    + dataSource.getClass().getCanonicalName());</span><br><span class="line">            System.exit(-1);</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            Connection connection = dataSource.getConnection();</span><br><span class="line">            ResultSet rs = connection.createStatement()</span><br><span class="line">                    .executeQuery(&quot;SELECT 1&quot;);</span><br><span class="line">            if (rs.first()) &#123;</span><br><span class="line"></span><br><span class="line">                System.out.println(&quot;Connection OK!&quot;);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                System.out.println(&quot;Something is wrong&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            // connection.close();</span><br><span class="line">            // System.exit(0);</span><br><span class="line"></span><br><span class="line">        &#125; catch (SQLException e) &#123;</span><br><span class="line">            System.out.println(&quot;FAILED&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.exit(-2);</span><br><span class="line">            // TODO: handle exception</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>HIkariCP已经配置好了，启动main；<br><img src="/2019/03/31/HikariCP/2.png" alt="2"></p>
+<p>完工；这里需要注意的一点，如果是用jdk1.7，则会出现如下错误：<br><img src="/2019/03/31/HikariCP/3.png" alt="3"><br><img src="/2019/03/31/HikariCP/4.png" alt="4"></p>
+<p>这个就是本博客一开始中说的jdk版本和Hikari的版本要对应上。此错误只需要将JDK换成1.8即可。</p>
+<p>参考：<br><a href="https://blog.csdn.net/chen15369337607/article/details/78142751" target="_blank" rel="noopener">https://blog.csdn.net/chen15369337607/article/details/78142751</a><br><a href="https://blog.csdn.net/clementad/article/details/46928621" target="_blank" rel="noopener">https://blog.csdn.net/clementad/article/details/46928621</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/HikariCP/" data-id="cjyvgh1nh001eq4uriqvzsbbl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/02/0401/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          总结0402
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/31/Flyway/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flyway</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

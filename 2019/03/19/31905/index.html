@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Github的webhooks | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GitHub的webhooks设置包括 url设置 ,Content type设置(application/json或application/x-www-form-urlencoded请求内容方式), secret设置(可选,采用HMAC 方式加密) ,event设置(全选，或部分)，页面如下：  点击add webhook则设置成功，同时github会发出ping请求测试填写的url是否可用，请">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Github的webhooks">
+<meta property="og:url" content="http://yoursite.com/2019/03/19/31905/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="GitHub的webhooks设置包括 url设置 ,Content type设置(application/json或application/x-www-form-urlencoded请求内容方式), secret设置(可选,采用HMAC 方式加密) ,event设置(全选，或部分)，页面如下：  点击add webhook则设置成功，同时github会发出ping请求测试填写的url是否可用，请">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/19/31905/h1.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/19/31905/h2.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/19/31905/h3.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/19/31905/h4.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/19/31905/h5.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.593Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Github的webhooks">
+<meta name="twitter:description" content="GitHub的webhooks设置包括 url设置 ,Content type设置(application/json或application/x-www-form-urlencoded请求内容方式), secret设置(可选,采用HMAC 方式加密) ,event设置(全选，或部分)，页面如下：  点击add webhook则设置成功，同时github会发出ping请求测试填写的url是否可用，请">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/19/31905/h1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-31905" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31905/" class="article-date">
+  <time datetime="2019-03-19T06:46:11.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Github的webhooks
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GitHub的webhooks设置包括 url设置 ,Content type设置(application/json或application/x-www-form-urlencoded请求内容方式), secret设置(可选,采用HMAC 方式加密) ,event设置(全选，或部分)，页面如下：</p>
+<p><img src="/2019/03/19/31905/h1.png" alt="h1"></p>
+<p>点击add webhook则设置成功，同时github会发出ping请求测试填写的url是否可用，请求如下：</p>
+<p><img src="/2019/03/19/31905/h2.png" alt="h2"></p>
+<p>之后当所设置的event发生时，github则会向设置的url发送请求，所有请求全部为post方式，并且记录请求发送内容和url返回的情况，页面如下：</p>
+<p><img src="/2019/03/19/31905/h3.png" alt="h3"></p>
+<p>无论hook请求是否成功，都会有列表记录，并且都有重发按钮进行请求重新发送，页面如下：</p>
+<p><img src="/2019/03/19/31905/h4.png" alt="h4"></p>
+<p><img src="/2019/03/19/31905/h5.png" alt="h5"></p>
+<p>GitHub官网介绍：<a href="https://developer.github.com/webhooks/" target="_blank" rel="noopener">webhooks</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31905/" data-id="cjyvgh1le000eq4urcrhyp2pr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/19/31906/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Joda-Time
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/19/31904/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Jackson使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

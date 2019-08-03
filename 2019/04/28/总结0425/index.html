@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>总结0425 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.spring cloud 监控springboot admin2.限流12345678910限流算法：1.漏桶算法：2.令牌桶算法：单点应用没问题，但是集群情况不行3.计数器算法:会有临界问题，通过滑动窗口解决应用级限流分布式限流接入层限流redis+lua：实现服务级的限流 3.redis key失效Redis key过期的方式有三种：  被动删除：当读/写一个已经过期的key时，会触发惰性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结0425">
+<meta property="og:url" content="http://yoursite.com/2019/04/28/总结0425/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="1.spring cloud 监控springboot admin2.限流12345678910限流算法：1.漏桶算法：2.令牌桶算法：单点应用没问题，但是集群情况不行3.计数器算法:会有临界问题，通过滑动窗口解决应用级限流分布式限流接入层限流redis+lua：实现服务级的限流 3.redis key失效Redis key过期的方式有三种：  被动删除：当读/写一个已经过期的key时，会触发惰性">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.681Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="总结0425">
+<meta name="twitter:description" content="1.spring cloud 监控springboot admin2.限流12345678910限流算法：1.漏桶算法：2.令牌桶算法：单点应用没问题，但是集群情况不行3.计数器算法:会有临界问题，通过滑动窗口解决应用级限流分布式限流接入层限流redis+lua：实现服务级的限流 3.redis key失效Redis key过期的方式有三种：  被动删除：当读/写一个已经过期的key时，会触发惰性">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-总结0425" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/28/总结0425/" class="article-date">
+  <time datetime="2019-04-27T16:27:50.000Z" itemprop="datePublished">2019-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      总结0425
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.spring cloud 监控<br>springboot admin<br>2.限流<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">限流算法：</span><br><span class="line">1.漏桶算法：</span><br><span class="line">2.令牌桶算法：单点应用没问题，但是集群情况不行</span><br><span class="line">3.计数器算法:会有临界问题，通过滑动窗口解决</span><br><span class="line"></span><br><span class="line">应用级限流</span><br><span class="line">分布式限流</span><br><span class="line">接入层限流</span><br><span class="line"></span><br><span class="line">redis+lua：实现服务级的限流</span><br></pre></td></tr></table></figure></p>
+<p>3.redis key失效<br>Redis key过期的方式有三种：</p>
+<ul>
+<li>被动删除：当读/写一个已经过期的key时，会触发惰性删除策略，直接删除掉这个过期key</li>
+<li>主动删除：由于惰性删除策略无法保证冷数据被及时删掉，所以Redis会定期主动淘汰一批已过期的key</li>
+<li>当前已用内存超过maxmemory限定时，触发主动清理策略<br><a href="https://www.cnblogs.com/chenpingzhao/p/5022467.html" target="_blank" rel="noopener">https://www.cnblogs.com/chenpingzhao/p/5022467.html</a></li>
+</ul>
+<p>4.日志表，redis<br>5.bloom filter 实现排行榜<br>6.redis实现的功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.缓存数据</span><br><span class="line">2.计数器</span><br><span class="line">3.限流，基于令牌桶算法</span><br><span class="line">4.分布式锁</span><br></pre></td></tr></table></figure></p>
+<p>7.redis的bitmap，zset</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/28/总结0425/" data-id="cjyvgh1ms0018q4urdn9467pd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/16/elastic-job/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          elastic-job
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/23/总结0422/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">总结0422</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

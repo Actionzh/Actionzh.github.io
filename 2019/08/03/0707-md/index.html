@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>0707.md | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.内网穿透ngroK2. 单一应用架构：  当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。 此时，用于简化增删改查工作量的 数据访问框架(ORM) 是关键。  垂直应用架构：  当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。 此时，用于加速前端页面开发的 Web框架(MVC) 是关键。  分布式服务架构：  当垂">
+<meta property="og:type" content="article">
+<meta property="og:title" content="0707.md">
+<meta property="og:url" content="http://yoursite.com/2019/08/03/0707-md/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="1.内网穿透ngroK2. 单一应用架构：  当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。 此时，用于简化增删改查工作量的 数据访问框架(ORM) 是关键。  垂直应用架构：  当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。 此时，用于加速前端页面开发的 Web框架(MVC) 是关键。  分布式服务架构：  当垂">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/285763/201803/285763-20180323181537569-1503126306.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="0707.md">
+<meta name="twitter:description" content="1.内网穿透ngroK2. 单一应用架构：  当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。 此时，用于简化增删改查工作量的 数据访问框架(ORM) 是关键。  垂直应用架构：  当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。 此时，用于加速前端页面开发的 Web框架(MVC) 是关键。  分布式服务架构：  当垂">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/285763/201803/285763-20180323181537569-1503126306.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-0707-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/03/0707-md/" class="article-date">
+  <time datetime="2019-08-03T07:29:30.000Z" itemprop="datePublished">2019-08-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      0707.md
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.内网穿透ngroK<br>2.<img src="https://images2018.cnblogs.com/blog/285763/201803/285763-20180323181537569-1503126306.png" alt></p>
+<p><strong>单一应用架构</strong>：</p>
+<ul>
+<li>当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。</li>
+<li>此时，用于简化增删改查工作量的 <strong>数据访问框架(ORM)</strong> 是关键。</li>
+</ul>
+<p><strong>垂直应用架构</strong>：</p>
+<ul>
+<li>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。</li>
+<li>此时，用于加速前端页面开发的 <strong>Web框架(MVC)</strong> 是关键。</li>
+</ul>
+<p><strong>分布式服务架构</strong>：</p>
+<ul>
+<li>当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。</li>
+<li>此时，用于提高业务复用及整合的 <strong>分布式服务框架(RPC)</strong> 是关键。</li>
+</ul>
+<p><strong>流动计算架构：</strong></p>
+<ul>
+<li>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个调度中心基于访问压力实时管理集群容量，提高集群利用率。</li>
+<li>此时，用于提高机器利用率的 <strong>资源调度和治理中心(SOA)</strong> 是关键。</li>
+</ul>
+<p>微服务架构：随着敏捷开发、持续交付、DevOps理论的发展和实践，以及基于Docker等轻量级容器(LXC)部署应用和服务的成熟，微服务架构开始流行，逐渐成为应用架构的未来演进方向。通过服务的原子化拆分，以及微服务的独立打包、部署和升级，小团队敏捷缴费，应用的交付周期将缩短，运维成本也将大幅下降。</p>
+<p>3.spring声明式事务和编程式事务<br>spring事务注入方式：<br><a href="https://blog.csdn.net/yaerfeng/article/details/28390773" target="_blank" rel="noopener">https://blog.csdn.net/yaerfeng/article/details/28390773</a></p>
+<p>4.spring事务传播行为：<br>| 事务传播行为类型 | 说明<br>-|-|-<br>PROPAGATION_REQUIRED | 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。 |<br>PROPAGATION_SUPPORTS | 支持当前事务，如果当前没有事务，就以非事务方式执行。<br>PROPAGATION_MANDATORY| 使用当前的事务，如果当前没有事务，就抛出异常。<br>PROPAGATION_REQUIRES_NEW | 新建事务，如果当前存在事务，把当前事务挂起。<br>PROPAGATION_NOT_SUPPORTED | 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。<br>PROPAGATION_NEVER| 以非事务方式执行，如果当前存在事务，则抛出异常。<br>PROPAGATION_NESTED | 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则执行与PROPAGATION_REQUIRED类似的操作。</p>
+<p> 5.5种io模型<br> Stevens在文章中一共比较了五种IO Model：</p>
+<pre><code>* blocking IO  阻塞io
+* nonblocking IO  费阻塞io
+* IO multiplexing  io多路复用
+* signal driven IO
+* asynchronous IO   异步io
+* [https://www.cnblogs.com/findumars/p/6361627.html](https://www.cnblogs.com/findumars/p/6361627.html)
+</code></pre><p>6.pmml</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/08/03/0707-md/" data-id="cjyvgh1l60009q4urq5ih90b1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/08/03/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/16/Collectors-toMap的问题/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Collectors.toMap的问题</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

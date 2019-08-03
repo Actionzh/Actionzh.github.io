@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>flow(ExecutorJob)流程 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="CustomerJourneyExecutorJob.doWork根据body转化出customerJourneyContext，然后调用 workflowTrigger.trigger调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用 workflowManager.run(内部为acticiti的r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flow(ExecutorJob)流程">
+<meta property="og:url" content="http://yoursite.com/2019/03/29/flow(ExecutorJob)/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="CustomerJourneyExecutorJob.doWork根据body转化出customerJourneyContext，然后调用 workflowTrigger.trigger调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用 workflowManager.run(内部为acticiti的r">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flow(ExecutorJob)流程">
+<meta name="twitter:description" content="CustomerJourneyExecutorJob.doWork根据body转化出customerJourneyContext，然后调用 workflowTrigger.trigger调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用 workflowManager.run(内部为acticiti的r">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-flow(ExecutorJob)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(ExecutorJob)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      flow(ExecutorJob)流程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>CustomerJourneyExecutorJob.doWork<br>根据body转化出customerJourneyContext，然后调用</li>
+<li>workflowTrigger.trigger<br>调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用</li>
+<li>workflowManager.run(内部为acticiti的runtimeService启动流程)返回processInstanceId,生成CustomerJourneyInstance并入库</li>
+</ol>
+<h4 id="action的逻辑实现调用部分"><a href="#action的逻辑实现调用部分" class="headerlink" title="action的逻辑实现调用部分"></a>action的逻辑实现调用部分</h4><p>看bpmn的xml发现，serviceTask 节点内有activiti:delegateExpression的信息，值为#{TriggerDelegateDispatcher}，#{ActionDelegateDispatcher}联想到spring代码中的delegate，查看代码发现抽象BaseDispatcher的实现有ActionDelegateDispatcher和TriggerDelegateDispatcher证实了想法。</p>
+<p>ActionDelegateDispatcher的executeDelegate方法根据customerJourneyProperty.getEvent()得到beanname，从而得到AbstractDelegate的具体实现的bean对象，最终执行delegate.executeDelegate方法，实现自实现的逻辑（每个action的实现逻辑即在此进行调用和实现）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt; &lt;definitions xmlns=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:activiti=&quot;http://activiti.org/bpmn&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:omgdc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; xmlns:omgdi=&quot;http://www.omg.org/spec/DD/20100524/DI&quot; typeLanguage=&quot;http://www.w3.org/2001/XMLSchema&quot; expressionLanguage=&quot;http://www.w3.org/1999/XPath&quot; targetNamespace=&quot;http://www.activiti.org/processdef&quot;&gt; &lt;process id=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; isExecutable=&quot;true&quot;&gt; &lt;startEvent id=&quot;START&quot;/&gt; &lt;sequenceFlow sourceRef=&quot;START&quot; targetRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot;/&gt; &lt;serviceTask id=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;TriggerDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;conditions&quot;:&quot;ANY&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;endEvent id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;sequenceFlow id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548-flow&quot; sourceRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; targetRef=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;serviceTask id=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;ActionDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;replyMessage&quot;:&#123;&quot;touser&quot;:&quot;#&#123;OPENID&#125;&quot;,&quot;text&quot;:&#123;&quot;content&quot;:&quot;近期活动 Upcoming events:\n\n2018/11/28 &lt;a href=\&quot; \&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 双语教育的模型与实践\nWhittle Talks | Bilingual Models and Practices\n\n2018/12/08 &lt;a href=\&quot;pages/order/order?event_id=82\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 小童书的大说法\nWhittle Talks | The big story behind a book for small children\n\n更多精彩活动，请&lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;查看活动日历&lt;/a &gt;\n\nFind out more in our &lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt; Event Calendar&lt;/a &gt;&quot;&#125;&#125;,&quot;resultVariable&quot;:&quot;gatewayc58&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;sequenceFlow id=&quot;N-7f0dcb94-be72-4999-84dc-256fa65d9fd9&quot; sourceRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; targetRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;/process&gt; &lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;&gt; &lt;bpmndi:BPMNPlane bpmnElement=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; id=&quot;BPMNPlane_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;/&gt; &lt;/bpmndi:BPMNDiagram&gt; &lt;/definitions&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(ExecutorJob)/" data-id="cjyvgh1mf000sq4uriigdd84n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/29/flow(active)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          flow(active)流程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/29/flow(triggerJob)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">flow(TriggerJob)流程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

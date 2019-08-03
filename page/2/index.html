@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Actionzh">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Actionzh">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-springboot配置加载顺序" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/16/springboot配置加载顺序/" class="article-date">
+  <time datetime="2019-06-16T04:00:48.000Z" itemprop="datePublished">2019-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/16/springboot配置加载顺序/">springboot配置加载顺序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用 Spring Boot 会涉及到各种各样的配置，如开发、测试、线上就至少 3 套配置信息了。Spring Boot 可以轻松的帮助我们使用相同的代码就能使开发、测试、线上环境使用不同的配置。</p>
+<p>在 Spring Boot 里面，可以使用以下几种方式来加载配置。本章内容基于 Spring Boot 2.0 进行详解。</p>
+<p>1、properties文件；</p>
+<p>2、YAML文件；</p>
+<p>3、系统环境变量；</p>
+<p>4、命令行参数；</p>
+<p>等等……</p>
+<p>我们可以在 Spring Beans 里面直接使用这些配置文件中加载的值，如：</p>
+<p>1、使用 @Value 注解直接注入对应的值，这能获取到 Spring 中 Environment 的值；</p>
+<p>2、使用 @ConfigurationProperties 注解把对应的值绑定到一个对象；</p>
+<p>3、直接获取注入 Environment 进行获取；</p>
+<p>配置属性的方式很多，Spring boot使用了一种独有的 PropertySource 可以很方便的覆盖属性的值。<br>配置属性加载的顺序如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">1、开发者工具 `Devtools` 全局配置参数；</span><br><span class="line"></span><br><span class="line">2、单元测试上的 `@TestPropertySource` 注解指定的参数；</span><br><span class="line"></span><br><span class="line">3、单元测试上的 `@SpringBootTest` 注解指定的参数；</span><br><span class="line"></span><br><span class="line">4、命令行指定的参数，如 `java -jar springboot.jar --name=&quot;Java技术栈&quot;`；</span><br><span class="line"></span><br><span class="line">5、命令行中的 `SPRING_APPLICATION_JSONJSON` 指定参数, 如 `java -Dspring.application.json=&apos;&#123;&quot;name&quot;:&quot;Java技术栈&quot;&#125;&apos; -jar springboot.jar`</span><br><span class="line"></span><br><span class="line">6、`ServletConfig` 初始化参数；</span><br><span class="line"></span><br><span class="line">7、`ServletContext` 初始化参数；</span><br><span class="line"></span><br><span class="line">8、JNDI参数（如 `java:comp/env/spring.application.json`）；</span><br><span class="line"></span><br><span class="line">9、Java系统参数（来源：`System.getProperties()`）；</span><br><span class="line"></span><br><span class="line">10、操作系统环境变量参数；</span><br><span class="line"></span><br><span class="line">11、`RandomValuePropertySource` 随机数，仅匹配：`ramdom.*`；</span><br><span class="line"></span><br><span class="line">12、JAR包外面的配置文件参数（`application-&#123;profile&#125;.properties（YAML）`）</span><br><span class="line"></span><br><span class="line">13、JAR包里面的配置文件参数（`application-&#123;profile&#125;.properties（YAML）`）</span><br><span class="line"></span><br><span class="line">14、JAR包外面的配置文件参数（`application.properties（YAML）`）</span><br><span class="line"></span><br><span class="line">15、JAR包里面的配置文件参数（`application.properties（YAML）`）</span><br><span class="line"></span><br><span class="line">16、`@Configuration`配置文件上 `@PropertySource` 注解加载的参数；</span><br><span class="line"></span><br><span class="line">17、默认参数（通过 `SpringApplication.setDefaultProperties` 指定）；</span><br></pre></td></tr></table></figure></p>
+<p>数字小的优先级越高，即数字小的会覆盖数字大的参数值，我们来实践下，验证以上配置参数的加载顺序。</p>
+<p>1、在主应用程序中添加 Java 系统参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public CommandLineRunner commandLineRunner() &#123;</span><br><span class="line">    return (args) -&gt; &#123;</span><br><span class="line">        System.setProperty(&quot;name&quot;, &quot;javastack-system-properties&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2、在 application.properties 文件中添加属性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = javastack-application</span><br></pre></td></tr></table></figure></p>
+<p>3、在 application-dev.properties 文件中添加属性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = javastack-application-dev</span><br></pre></td></tr></table></figure></p>
+<p>4、添加测试类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringRunner.class)</span><br><span class="line">@SpringBootTest(value = &#123; &quot;name=javastack-test&quot;, &quot;sex=1&quot; &#125;)</span><br><span class="line">@ActiveProfiles(&quot;dev&quot;)</span><br><span class="line">public class SpringBootBestPracticeApplicationTests &#123;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;name&#125;&quot;)</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void test() &#123;</span><br><span class="line">        System.out.println(&quot;name is &quot; + name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行 test 单元测试，程序输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name is javastack-test</span><br></pre></td></tr></table></figure></p>
+<p>根据以上参数动态调整，发现参数会被正确被覆盖。了解了 Spring Boot 各种配置的加载顺序，如果配置被覆盖了我们就知道是什么问题了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/16/springboot配置加载顺序/" data-id="cjyvgh1mm0010q4urj6tgpuxl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-elastic-job" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/16/elastic-job/" class="article-date">
+  <time datetime="2019-06-16T02:35:34.000Z" itemprop="datePublished">2019-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/16/elastic-job/">elastic-job</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一：概述"><a href="#一：概述" class="headerlink" title="一：概述"></a>一：概述</h3><p>elastic-job是由当当网开源的一种分布式任务调度框架，由李亮牵头开发的，他们的另外一个开源项目是sharding-jdbc</p>
+<p>和xxl-job的中心化调度不同的是，elastic-job采用无中心化设计，核心任务调度逻辑还是采用的quartz，</p>
+<p>不过使用的是基于内存的RAMJobStore，这种架构对分布式内存配置数据的一致性有很高要求。</p>
+<p>elastic-job采用zookeeper作为分布式协调配置中心的方案。（入坑zk推荐阅读《从Paxos到zookeeper分布式一致性原理与实践》）</p>
+<h3 id="二：原理"><a href="#二：原理" class="headerlink" title="二：原理"></a>二：原理</h3><h4 id="作业启动流程"><a href="#作业启动流程" class="headerlink" title="作业启动流程"></a>作业启动流程</h4><p><img src="/2019/06/16/elastic-job/1.png" alt="1"></p>
+<ul>
+<li><p>第一台服务器上线触发主服务器选举。主服务器一旦下线，则重新触发选举，选举过程中阻塞，只有主服务器选举完成，才会执行其他任务。</p>
+</li>
+<li><p>某作业服务器上线时会自动将服务器信息注册到注册中心，下线时会自动更新服务器状态。</p>
+</li>
+<li><p>主节点选举，服务器上下线，分片总数变更均会更新重新分片标记。</p>
+</li>
+<li><p>定时任务触发时，如需重新分片，则通过主服务器分片，分片过程中阻塞，分片结束后才可执行任务。如分片过程中主服务器下线，则先选举主服务器，再分片。</p>
+</li>
+<li><p>为了维持作业运行时的稳定性，运行过程中只会标记分片状态，不会重新分片。分片仅可能发生在下次任务触发前。</p>
+</li>
+<li><p>每次分片都会按服务器<code>IP</code>排序，保证分片结果不会产生较大波动。</p>
+</li>
+<li><p>实现失效转移功能，在某台服务器执行完毕后主动抓取未分配的分片，并且在某台服务器下线后主动寻找可用的服务器执行任务。</p>
+</li>
+</ul>
+<h4 id="作业执行流程"><a href="#作业执行流程" class="headerlink" title="作业执行流程"></a>作业执行流程</h4><p><img src="/2019/06/16/elastic-job/2.png" alt="2"></p>
+<h3 id="三：实现"><a href="#三：实现" class="headerlink" title="三：实现"></a>三：实现</h3><p>比如有两个作业服务器实例，namespace为tms-crontab，内部配置了一个名为testJob的定时任务，分片数为2</p>
+<h4 id="启动阶段"><a href="#启动阶段" class="headerlink" title="启动阶段"></a>启动阶段</h4><p>当作业服务器A启动时，会去zk创建任务，zk目录数据结构如下</p>
+<p><img src="/2019/06/16/elastic-job/3.png" alt="3"></p>
+<p>首先会在根目录下创建namespace的目录，即tms-crontab</p>
+<p>然后在tms-crontab下创建任务名为testJob的目录</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>目录</th>
+<th>是否临时节点</th>
+<th>目录说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/leader</td>
+<td>否</td>
+<td>用于leader选举，leader的主要作用是分配分片到作业服务器</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/leader/election/latch</td>
+<td>否</td>
+<td>主节点选举的分布式锁</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/leader/election/instance</td>
+<td>是</td>
+<td>leader服务器IP地址一旦该节点被删除将会触发重新选举重新选举的过程中一切主节点相关的操作都将阻塞</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/leader/sharding/necessary</td>
+<td>否</td>
+<td>此节点存在表示任务下次执行之前需要让leader做重新分片虽然这个节点不是临时节点，但是它不是一直存在的，重新分片完就会被删除掉如果有新的作业服务器加入到集群中来，或者有作业服务器下线，则会创建这个节点</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/servers/{IP}</td>
+<td>否</td>
+<td>作业服务器信息，子节点是作业服务器的IP地址。可在IP地址节点写入DISABLED表示该服务器禁用。</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/config</td>
+<td>否</td>
+<td>存放作业配置信息，json结构</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>/tms-crontab/testJob/instances/{instanceId}</td>
+<td>是</td>
+<td>当前作业运行实例的主键。作业运行实例主键由作业运行服务器的IP地址和PID构成。作业运行实例主键均为临时节点，当作业实例上线时注册，下线时自动清理。注册中心监控这些节点的变化来协调分布式作业的分片以及高可用。可在作业运行实例节点写入TRIGGER表示该实例立即执行一次</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>在创建这些节点的同时，会注册某些zk目录的监听，比较重要的监听有</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>监听类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/tms-crontab/testJob/instances</td>
+<td>子节点创建与删除</td>
+<td>这个目录的子目录发生变化说明有新作业服务器加入或者下线这个时候需要写重新分片标志，即创建/tms-crontab/testJob/leader/sharding/necessary目录</td>
+</tr>
+<tr>
+<td>/tms-crontab/testJob/leader/election/instance</td>
+<td>删除</td>
+<td>此临时节点目录被删除说明leader下线，所以要做重新选举leader，选举完之后同样要写重新分片标志</td>
+</tr>
+<tr>
+<td>/tms-crontab/testJob/config</td>
+<td>修改</td>
+<td>此节点内容变化说明任务配置变更了，所有的作业服务都需要更新最新配置到内存如果分片数量配置发生变更，则需要写重新分片标志</td>
+</tr>
+<tr>
+<td>/tms-crontab/testJob/servers/{IP}</td>
+<td>修改</td>
+<td>写入DISABLED表示该服务器禁用，变更成任意其他内容说明任务启用</td>
+</tr>
+<tr>
+<td>/tms-crontab/testJob/instances/{instanceId}</td>
+<td>修改</td>
+<td>写入TRIGGER表示该实例立即执行一次，触发之后会清空这个值</td>
+</tr>
+</tbody>
+</table>
+<p>之后会调用Quartz的API来发布定时任务执行完以上核心逻辑以后，作业服务器A就算启动完成了后面启动作业服务器B当B启动时，发现需要的目录已经创建好了，而且已经有leader节点了，那么B会自动成为从节点，并把本实例写入到/tms-crontab/testJob/instances/instanceB目录下如果重新分片标志目录不存在，就创建该目录，即前面所说的/tms-crontab/testJob/leader/sharding/necessary目录如果作业服务器B的jobTest任务配置是覆盖模式，那么会直接写入该配置到/tms-crontab/testJob/config目录，作业服务器A的监听器会收到此目录修改事件，从而更新自己内存里的配置数据。</p>
+<p>作业服务器B启动完成</p>
+<h4 id="运行阶段"><a href="#运行阶段" class="headerlink" title="运行阶段"></a>运行阶段</h4><p>当任务到达运行时间点，Quartz就会启动该任务</p>
+<p>执行逻辑是先去zk查询分片标志是否存在，即是否存在/tms-crontab/testJob/leader/sharding/necessary目录</p>
+<p>如果存在，则先让leader做任务分片，按照任务配置的分片数，尽可能均匀的分配给每个作业服务器。</p>
+<p>分配完成的zk目录如下</p>
+<p><img src="/2019/06/16/elastic-job/4.png" alt="4"></p>
+<p>比原先刚启动的时候多了/tms-crontab/testJob/sharding目录，这个目录下的数据结构就是某个分片应该由哪个作业服务器来执行。</p>
+<p>分片完成之后，作业服务器会去sharding目录根据自己的instance取对应的分片配置作为任务运行的参数，然后运行业务逻辑。</p>
+<p>执行完成之后，如果配置了日志数据库，则会写入任务运行日志。</p>
+<p>这样一个定时任务就执行完成了。</p>
+<h4 id="失效转移"><a href="#失效转移" class="headerlink" title="失效转移"></a>失效转移</h4><p>所谓失效转移，就是在执行任务的过程中遇见异常的情况，这个分片任务可以在其他节点再次执行。</p>
+<p>elastic-job的任务配置有个failover，如果开启设置为true的时候且monitorExecution也为true时，才会启动真正的失效转移。</p>
+<p>作业服务器监听到zk的instance节点删除事件。如果任务配置了failover等于true，其中某个instance与zk失去联系或被删除，并且失效的节点又不是本身，就会触发失效转移逻辑。</p>
+<p>首先，在某个任务实例失效时，elastic-job会在leader节点下面创建failover节点以及items节点。</p>
+<p>items节点下会有失效任务实例的原本应该做的分片好。比如，失效的任务实例原来负责分片1。那么items节点下就会有名字叫1的子节点，就代表分片1需要转移到其他节点上去运行。如下图：<br><img src="/2019/06/16/elastic-job/5.png" alt="5"></p>
+<p>然后，由于每个存活着的任务实例都会收到zk节点丢失的事件，哪个分片失效也已经在leader节点的failover子节点下。</p>
+<p>所以这些或者的任务实例就会争抢这个分片任务来执行。为了保证不重复执行，elastic-job使用了curator的LeaderLatch类来进行选举执行。</p>
+<p>在获得执行权后，就会在sharding节点的分片上添加failover节点，并写上任务实例，表示这个故障任务迁移到某一个任务实例上去完成。如下图中的sharding节点上的分片1：</p>
+<p><img src="/2019/06/16/elastic-job/6.png" alt="6"></p>
+<p>执行完成后，会把相应的节点和数据删除，避免下一次重复执行。</p>
+<h4 id="任务错过"><a href="#任务错过" class="headerlink" title="任务错过"></a>任务错过</h4><p>elastic-job的任务错过机制是错过就错过了，不会补偿。从源码来看其实是设置了quartz的org.quartz.jobStore.misfireThreshold配置为1</p>
+<p>而且如果配置的任务是1分钟执行一次，但是任务执行时间为10分钟，那么这10分钟内，这个任务不会再触发。等完成之后才会触发下一次，具体的控制逻辑就不细讲了</p>
+<p><img src="/2019/06/16/elastic-job/7.png" alt="7"></p>
+<h3 id="四：优点与缺点"><a href="#四：优点与缺点" class="headerlink" title="四：优点与缺点"></a>四：优点与缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>无中心化设计，更容易封装成简单易用的定时任务工具</p>
+<p>基于内存的单机RAMJobstore比基于数据库的JobstoreTX更加轻量高效</p>
+<p>支持任务分片，支持故障转移</p>
+<p>有UI操作界面</p>
+<p>代码质量非常高</p>
+<h4 id="缺点或缺陷"><a href="#缺点或缺陷" class="headerlink" title="缺点或缺陷"></a>缺点或缺陷</h4><p>不支持动态增加任务</p>
+<p>不支持一次性延时任务</p>
+<p>如果用UI暂停了某个定时任务，把作业服务器重启，那么这个任务又恢复成启动状态了</p>
+<p>任务是强制分片执行的，没有随机选择一个作业服务器执行完整业务逻辑的功能。那么使用起来的话，可能只会让分片0执行完整的业务逻辑，而且每次都是固定的作业服务器执行，这样可能会导致某台机器压力大</p>
+<p>界面功能比较弱，目前只有日志展示、暂停任务、手工触发一次任务和停止任务的功能</p>
+<p>由于是无中心的化的，所以写数据库日志这块比较的蛋疼。如果写本服务配置的数据库，那么会导致很多数据库都有这两张日志表，而且有的服务压根就没数据库。如果是多配置一个数据源，那么很多项目会有两个datasource，挺占资源的。或直接直接不记日志</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/16/elastic-job/" data-id="cjyvgh1nj001gq4urem2gw5b1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结0425" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/28/总结0425/" class="article-date">
+  <time datetime="2019-04-27T16:27:50.000Z" itemprop="datePublished">2019-04-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/28/总结0425/">总结0425</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.spring cloud 监控<br>springboot admin<br>2.限流<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">限流算法：</span><br><span class="line">1.漏桶算法：</span><br><span class="line">2.令牌桶算法：单点应用没问题，但是集群情况不行</span><br><span class="line">3.计数器算法:会有临界问题，通过滑动窗口解决</span><br><span class="line"></span><br><span class="line">应用级限流</span><br><span class="line">分布式限流</span><br><span class="line">接入层限流</span><br><span class="line"></span><br><span class="line">redis+lua：实现服务级的限流</span><br></pre></td></tr></table></figure></p>
+<p>3.redis key失效<br>Redis key过期的方式有三种：</p>
+<ul>
+<li>被动删除：当读/写一个已经过期的key时，会触发惰性删除策略，直接删除掉这个过期key</li>
+<li>主动删除：由于惰性删除策略无法保证冷数据被及时删掉，所以Redis会定期主动淘汰一批已过期的key</li>
+<li>当前已用内存超过maxmemory限定时，触发主动清理策略<br><a href="https://www.cnblogs.com/chenpingzhao/p/5022467.html" target="_blank" rel="noopener">https://www.cnblogs.com/chenpingzhao/p/5022467.html</a></li>
+</ul>
+<p>4.日志表，redis<br>5.bloom filter 实现排行榜<br>6.redis实现的功能<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.缓存数据</span><br><span class="line">2.计数器</span><br><span class="line">3.限流，基于令牌桶算法</span><br><span class="line">4.分布式锁</span><br></pre></td></tr></table></figure></p>
+<p>7.redis的bitmap，zset</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/28/总结0425/" data-id="cjyvgh1ms0018q4urdn9467pd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结0422" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/23/总结0422/" class="article-date">
+  <time datetime="2019-04-23T15:01:41.000Z" itemprop="datePublished">2019-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/23/总结0422/">总结0422</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.CaseFormat<br>可以将其他格式转换为驼峰写法等。<br>com.google.common.base.CaseFormat是一种实用工具类，以提供不同的ASCII字符格式之间的转换。<br>例：<br>System.out.println(CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, “test-data”));<br>2.springbatch<br>3.# <a href="https://www.cnblogs.com/gongshaobo93/p/4277054.html" target="_blank" rel="noopener">RowMapper</a><br>4.ftp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> chroot_local_user=YES  --改为YES chroot_local_user=YES将所有用户限定在主目录内</span><br><span class="line"> chroot_list_enable=YES  --改为YES  chroot_list_enable=YES表示要启用chroot_list_file   # (default follows)</span><br><span class="line"></span><br><span class="line"> chroot_list_file=/etc/vsftpd/chroot_list --注释放开 chroot_list_file这时列出的是那些“不会被限制在主目录下”的用户。</span><br><span class="line">  userlist_deny=NO  --新增</span><br><span class="line"></span><br><span class="line">userlist_enable=YES --默认是YES</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/23/总结0422/" data-id="cjyvgh1mq0016q4urddk0n6wm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结0423" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/23/总结0423/" class="article-date">
+  <time datetime="2019-04-23T15:00:31.000Z" itemprop="datePublished">2019-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/23/总结0423/">总结0423</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.ftp相关操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ftpClient = new FTPClient();</span><br><span class="line">ftpClient.connect(ftpHost); ftpClient.login(ftpUserName, ftpPassword); // 以二进制进行传输 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE); // 用被动模式传输 ftpClient.enterLocalPassiveMode(); // 中文支持 ftpClient.setControlEncoding(&quot;UTF-8&quot;); // 设置默认超时时间 ftpClient.setDefaultTimeout(DEFAULT_TIMEOUT);</span><br><span class="line">//上传文件</span><br><span class="line">ftpClient.storeFile(String remote, InputStream local)；</span><br><span class="line">//切换工作路径（操作之前需要切换）</span><br><span class="line">ftpClient.changeWorkingDirectory(String pathname)</span><br><span class="line">//获取文件流</span><br><span class="line">ftpClient.retrieveFileStream(String remote)</span><br><span class="line">//创建路径</span><br><span class="line">ftpClient.makeDirectory(String pathname)；</span><br></pre></td></tr></table></figure></p>
+<p>2.jssdk<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">联系人是多个渠道账号合并出的一个人</span><br><span class="line"></span><br><span class="line">自定义渠道连接:</span><br><span class="line">获取jssdk代码，插入head中：</span><br><span class="line">1.系统事件统计：sdk会自动统计pv事件</span><br><span class="line">2.可以创建动态组：比如用户范围跟网页</span><br><span class="line">创建事件分析，同动态组</span><br><span class="line">3.识别联系人，需要实现相关的js代码：</span><br><span class="line">window.LFAPP.identify(&#123;&#125;）；</span><br><span class="line">4.新增自定义事件：先创建自定义事件，然后代码中写入js:</span><br><span class="line">window.linkflow.sendEvent(&#123;&#125;);</span><br><span class="line"></span><br><span class="line">私有App，获取App Key和App Secret,然后获取Access Token来访问open api 得到Linkflow的资源</span><br></pre></td></tr></table></figure></p>
+<p>3.gzip和zip转化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//解压gzip</span><br><span class="line">public static final byte[] unGzip(byte[] data) throws IOException &#123;</span><br><span class="line">    GZIPInputStream zin = new GZIPInputStream(new ByteArrayInputStream(data));</span><br><span class="line">  ByteArrayOutputStream out = new ByteArrayOutputStream();</span><br><span class="line"> try &#123;</span><br><span class="line">        data = new byte[10240];</span><br><span class="line"> int len;</span><br><span class="line"> while ((len = zin.read(data)) != -1) &#123;</span><br><span class="line">            out.write(data, 0, len);</span><br><span class="line">  &#125;</span><br><span class="line">        return out.toByteArray();</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">        zin.close();</span><br><span class="line">  out.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//解压zip</span><br><span class="line">public static final byte[] unzip(byte[] data) throws IOException &#123;</span><br><span class="line">    byte[] b = null;</span><br><span class="line"> try &#123;</span><br><span class="line">        ByteArrayInputStream bis = new ByteArrayInputStream(data);</span><br><span class="line">  ZipInputStream zip = new ZipInputStream(bis);</span><br><span class="line"> while (zip.getNextEntry() != null) &#123;</span><br><span class="line">            byte[] buf = new byte[1024];</span><br><span class="line"> int num = -1;</span><br><span class="line">  ByteArrayOutputStream baos = new ByteArrayOutputStream();</span><br><span class="line"> while ((num = zip.read(buf, 0, buf.length)) != -1) &#123;</span><br><span class="line">                baos.write(buf, 0, num);</span><br><span class="line">  &#125;</span><br><span class="line">            b = baos.toByteArray();</span><br><span class="line">  baos.flush();</span><br><span class="line">  baos.close();</span><br><span class="line">  &#125;</span><br><span class="line">        zip.close();</span><br><span class="line">  bis.close();</span><br><span class="line">  &#125; catch (Exception ex) &#123;</span><br><span class="line">        ex.printStackTrace();</span><br><span class="line">  &#125;</span><br><span class="line">    return b; &#125;</span><br><span class="line"></span><br><span class="line">//压缩为gzip</span><br><span class="line">public static final byte[] gzip(byte[] data) throws IOException &#123;</span><br><span class="line">    ByteArrayOutputStream out = new ByteArrayOutputStream();</span><br><span class="line">  GZIPOutputStream zout = new GZIPOutputStream(out);</span><br><span class="line">  zout.write(data);</span><br><span class="line">  zout.close();</span><br><span class="line"> return out.toByteArray(); &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/23/总结0423/" data-id="cjyvgh1mr0017q4urzmahch33" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-dev流程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/dev流程/" class="article-date">
+  <time datetime="2019-04-21T14:50:45.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/21/dev流程/">dev流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2019/04/21/dev流程/dev%E6%B5%81%E7%A8%8B/1.png" alt="1"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/dev流程/" data-id="cjyvgh1lw000pq4ur0bdc97xg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-apirequestcontext" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/apirequestcontext/" class="article-date">
+  <time datetime="2019-04-21T14:48:52.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/21/apirequestcontext/">ApiRequestContext的构建过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="/2019/04/21/apirequestcontext/Context%E6%9E%84%E5%BB%BA.png" alt="Context构建"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/apirequestcontext/" data-id="cjyvgh1ln000nq4urskluq4cm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-springboot启动原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/springboot启动原理/" class="article-date">
+  <time datetime="2019-04-21T10:53:08.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/21/springboot启动原理/">springboot启动原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面几章我们见识了SpringBoot为我们做的自动配置，确实方便快捷，但是对于新手来说，如果不大懂SpringBoot内部启动原理，以后难免会吃亏。所以这次博主就跟你们一起一步步揭开SpringBoot的神秘面纱，让它不在神秘。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>我们开发任何一个Spring Boot项目，都会用到如下的启动类</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BCA9qGoOm9q8wdzFcCPwR5gIo74ofBQss0LHUB2S26DVM4clkzMyHJg/0?wx_fmt=jpeg" alt></p>
+<p>从上面代码可以看出，Annotation定义（@SpringBootApplication）和类定义（SpringApplication.run）最为耀眼，所以要揭开SpringBoot的神秘面纱，我们要从这两位开始就可以了。</p>
+<h1 id="SpringBootApplication背后的秘密"><a href="#SpringBootApplication背后的秘密" class="headerlink" title="SpringBootApplication背后的秘密"></a>SpringBootApplication背后的秘密</h1><p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bk2xiby4fB6oia6DicbvCgaLrpWcqFianU8QtRxuEAqMJODJ3fTLAN2IDYQ/0?wx_fmt=jpeg" alt></p>
+<p>虽然定义使用了多个Annotation进行了原信息标注，但实际上重要的只有三个Annotation：</p>
+<ul>
+<li><p>@Configuration（@SpringBootConfiguration点开查看发现里面还是应用了@Configuration）</p>
+</li>
+<li><p>@EnableAutoConfiguration</p>
+</li>
+<li><p>@ComponentScan</p>
+</li>
+</ul>
+<p>所以，如果我们使用如下的SpringBoot启动类，整个SpringBoot应用依然可以与之前的启动类功能对等：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BHLV5ZoaVkQZRjDDKXtwpqUTxv5EaC0hcBYVYHibWgEvfKBGaz7zstzA/0?wx_fmt=jpeg" alt></p>
+<p>每次写这3个比较累，所以写一个@SpringBootApplication方便点。接下来分别介绍这3个Annotation。</p>
+<h1 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h1><p>这里的@Configuration对我们来说不陌生，它就是JavaConfig形式的Spring Ioc容器的配置类使用的那个@Configuration，SpringBoot社区推荐使用基于JavaConfig的配置形式，所以，这里的启动类标注了@Configuration之后，本身其实也是一个IoC容器的配置类。</p>
+<p>举几个简单例子回顾下，XML跟config配置方式的区别：</p>
+<ul>
+<li><p>表达形式层面</p>
+<p>基于XML配置的方式是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BN7F9ianFgKGA25Fic05awmg6EKcibMvJGhk7qKNwsxPkSQoib2w8wuYGNg/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置方式是这样：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B1FbmsvOnYhOu5aRLyTxOUMrz2ib1vicopsPTWe0NQqUibpZF0e0icbMuTA/0?wx_fmt=jpeg" alt></p>
+<p>任何一个标注了@Configuration的Java类定义都是一个JavaConfig配置类。</p>
+<ul>
+<li><p>注册bean定义层面</p>
+<p>基于XML的配置形式是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B53ZY0oicaZqTdQf9nuiaCT4UL2JN4dN0Lr6pAmZlzhZGz2qkCM9XVMbg/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置形式是这样的：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bgpvv8WKf7nnW7s7v5dGcoP0fxGxtUU9075qU7PTxpPU805mlOLuYYw/0?wx_fmt=jpeg" alt></p>
+<p>任何一个标注了@Bean的方法，其返回值将作为一个bean定义注册到Spring的IoC容器，方法名将默认成该bean定义的id。</p>
+<ul>
+<li><p>表达依赖注入关系层面</p>
+<p>为了表达bean与bean之间的依赖关系，在XML形式中一般是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BYxkMZ3lFOdh7WChbRJibLzRpdFXt4U579icdpjHyicbDey7234opClrDA/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置形式是这样的：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BPPZTLw6oXXdic3MTayNicEoiaY9fblyFE41CqWsRVe77bAYOfmgpyEFgw/0?wx_fmt=jpeg" alt></p>
+<p>如果一个bean的定义依赖其他bean,则直接调用对应的JavaConfig类中依赖bean的创建方法就可以了。</p>
+<h1 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h1><p>@ComponentScan这个注解在Spring中很重要，它对应XML配置中的元素，@ComponentScan的功能其实就是自动扫描并加载符合条件的组件（比如@Component和@Repository等）或者bean定义，最终将这些bean定义加载到IoC容器中。</p>
+<p>我们可以通过basePackages等属性来细粒度的定制@ComponentScan自动扫描的范围，如果不指定，则默认Spring框架实现会从声明@ComponentScan所在类的package进行扫描。</p>
+<blockquote>
+<p>注：所以SpringBoot的启动类最好是放在root package下，因为默认不指定basePackages。</p>
+</blockquote>
+<h1 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h1><p>个人感觉@EnableAutoConfiguration这个Annotation最为重要，所以放在最后来解读，大家是否还记得Spring框架提供的各种名字为@Enable开头的Annotation定义？比如@EnableScheduling、@EnableCaching、@EnableMBeanExport等，@EnableAutoConfiguration的理念和做事方式其实一脉相承，简单概括一下就是，借助@Import的支持，收集和注册特定场景相关的bean定义。</p>
+<ul>
+<li><p>@EnableScheduling是通过@Import将Spring调度框架相关的bean定义都加载到IoC容器。</p>
+</li>
+<li><p>@EnableMBeanExport是通过@Import将JMX相关的bean定义加载到IoC容器。</p>
+</li>
+</ul>
+<p>而@EnableAutoConfiguration也是借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器，仅此而已！</p>
+<p>@EnableAutoConfiguration作为一个复合Annotation,其自身定义关键信息如下：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BZ6ibAMibgXV0VRgRxv9ib0lCiaTKeAH0zdicPZTEibO40ytG19ByhF0yUxbA/0?wx_fmt=jpeg" alt></p>
+<p>其中，最关键的要属@Import(EnableAutoConfigurationImportSelector.class)，借助EnableAutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。就像一只“八爪鱼”一样</p>
+<p>借助于Spring框架原有的一个工具类：SpringFactoriesLoader的支持，@EnableAutoConfiguration可以智能的自动配置功效才得以大功告成！</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bzpgafnn204yshBIL2eFUgbtQSUIdeR57Sk3icPZf3g3biasyRqN4DvkA/0?wx_fmt=jpeg" alt></p>
+<h1 id="自动配置幕后英雄：SpringFactoriesLoader详解"><a href="#自动配置幕后英雄：SpringFactoriesLoader详解" class="headerlink" title="自动配置幕后英雄：SpringFactoriesLoader详解"></a>自动配置幕后英雄：SpringFactoriesLoader详解</h1><p>SpringFactoriesLoader属于Spring框架私有的一种扩展方案，其主要功能就是从指定的配置文件META-INF/spring.factories加载配置。</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bt6PnEx4E95yKOQLia5LZrwiaKMFn0FYmsu5sdODsX8lxoIyFRMaaVbqA/0?wx_fmt=jpeg" alt></p>
+<p>配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,获取对应的一组@Configuration类</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BdBhOVrpZuOXYxgx1N9DsgeIJT0v022JyiaubzEYhuvg5tY1zqUGrtNA/0?wx_fmt=jpeg" alt></p>
+<p>上图就是从SpringBoot的autoconfigure依赖包中的META-INF/spring.factories配置文件中摘录的一段内容，可以很好地说明问题。</p>
+<p>所以，@EnableAutoConfiguration自动配置的魔法骑士就变成了：从classpath中搜寻所有的META-INF/spring.factories配置文件，并将其中org.springframework.boot.autoconfigure.EnableutoConfiguration对应的配置项通过反射（Java Refletion）实例化为对应的标注了@Configuration的JavaConfig形式的IoC容器配置类，然后汇总为一个并加载到IoC容器。</p>
+<h1 id="深入探索SpringApplication执行流程"><a href="#深入探索SpringApplication执行流程" class="headerlink" title="深入探索SpringApplication执行流程"></a>深入探索SpringApplication执行流程</h1><p>SpringApplication的run方法的实现是我们本次旅程的主要线路，该方法的主要流程大体可以归纳如下：</p>
+<p>1） 如果我们使用的是SpringApplication的静态run方法，那么，这个方法里面首先要创建一个SpringApplication对象实例，然后调用这个创建好的SpringApplication的实例方法。在SpringApplication实例初始化的时候，它会提前做几件事情：</p>
+<ul>
+<li><p>根据classpath里面是否存在某个特征类（org.springframework.web.context.ConfigurableWebApplicationContext）来决定是否应该创建一个为Web应用使用的ApplicationContext类型。</p>
+</li>
+<li><p>使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationContextInitializer。</p>
+</li>
+<li><p>使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationListener。</p>
+</li>
+<li><p>推断并设置main方法的定义类。</p>
+</li>
+</ul>
+<p>2） SpringApplication实例初始化完成并且完成设置后，就开始执行run方法的逻辑了，方法执行伊始，首先遍历执行所有通过SpringFactoriesLoader可以查找到并加载的SpringApplicationRunListener。调用它们的started()方法，告诉这些SpringApplicationRunListener，“嘿，SpringBoot应用要开始执行咯！”。</p>
+<p>3） 创建并配置当前Spring Boot应用将要使用的Environment（包括配置要使用的PropertySource以及Profile）。</p>
+<p>4） 遍历调用所有SpringApplicationRunListener的environmentPrepared()的方法，告诉他们：“当前SpringBoot应用使用的Environment准备好了咯！”。</p>
+<p>5） 如果SpringApplication的showBanner属性被设置为true，则打印banner。</p>
+<p>6） 根据用户是否明确设置了applicationContextClass类型以及初始化阶段的推断结果，决定该为当前SpringBoot应用创建什么类型的ApplicationContext并创建完成，然后根据条件决定是否添加ShutdownHook，决定是否使用自定义的BeanNameGenerator，决定是否使用自定义的ResourceLoader，当然，最重要的，将之前准备好的Environment设置给创建好的ApplicationContext使用。</p>
+<p>7） ApplicationContext创建好之后，SpringApplication会再次借助Spring-FactoriesLoader，查找并加载classpath中所有可用的ApplicationContext-Initializer，然后遍历调用这些ApplicationContextInitializer的initialize（applicationContext）方法来对已经创建好的ApplicationContext进行进一步的处理。</p>
+<p>8） 遍历调用所有SpringApplicationRunListener的contextPrepared()方法。</p>
+<p>9） 最核心的一步，将之前通过@EnableAutoConfiguration获取的所有配置以及其他形式的IoC容器配置加载到已经准备完毕的ApplicationContext。</p>
+<p>10） 遍历调用所有SpringApplicationRunListener的contextLoaded()方法。</p>
+<p>11） 调用ApplicationContext的refresh()方法，完成IoC容器可用的最后一道工序。</p>
+<p>12） 查找当前ApplicationContext中是否注册有CommandLineRunner，如果有，则遍历执行它们。</p>
+<p>13） 正常情况下，遍历执行SpringApplicationRunListener的finished()方法、（如果整个过程出现异常，则依然调用所有SpringApplicationRunListener的finished()方法，只不过这种情况下会将异常信息一并传入处理）</p>
+<p>去除事件通知点后，整个流程如下：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BV0WRLh7on3ibclf2rjhmOF3Pn8G8Nh66DMuqicS5O6IibPLALkCibiaxoibw/0?wx_fmt=jpeg" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到此，SpringBoot的核心组件完成了基本的解析，综合来看，大部分都是Spring框架背后的一些概念和实践方式，SpringBoot只是在这些概念和实践上对特定的场景事先进行了固化和升华，而也恰恰是这些固化让我们开发基于Sping框架的应用更加方便高效。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/springboot启动原理/" data-id="cjyvgh1nl001iq4urd9hl9mxj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-logback" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/logback/" class="article-date">
+  <time datetime="2019-04-21T08:01:08.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/21/logback/">logback实践</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、logback介绍"><a href="#一、logback介绍" class="headerlink" title="一、logback介绍"></a>一、logback介绍</h3><p>Logback是由log4j创始人设计的一个开源日志组件。LogBack被分为3个组件，logback-core, logback-classic 和 logback-access。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1\. logback-core:提供了LogBack的核心功能，是另外两个组件的基础。</span><br><span class="line">2\. logback-classic:实现了Slf4j的API，所以当想配合Slf4j使用时，需要引入logback-classic。</span><br><span class="line">3\. logback-access:为了集成Servlet环境而准备的，可提供HTTP-access的日志接口。</span><br></pre></td></tr></table></figure>
+<p>Logback是要与SLF4J结合起来。这两个组件的官方网站如下：</p>
+<p>logback官方网站: <a href="http://logback.qos.ch" target="_blank" rel="noopener">logback官方网站</a></p>
+<p>SLF4J官方网站： <a href="http://www.slf4j.org" target="_blank" rel="noopener">SLF4J官方网站</a></p>
+<ul>
+<li>Slf4j：简单日志门面(Simple Logging Facade for Java)，不是具体的日志解决方案，它只服务于各种各样的日志系统。</li>
+<li>在使用SLF4J的时候，不需要在代码中或配置文件中指定你打算使用那个具体的日志系统。</li>
+</ul>
+<h3 id="二、slf4j-logback是如何绑定的"><a href="#二、slf4j-logback是如何绑定的" class="headerlink" title="二、slf4j + logback是如何绑定的"></a>二、slf4j + logback是如何绑定的</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">1. private static final Logger LOGGER = LoggerFactory.getLogger(LogbackTest.class);</span><br><span class="line"></span><br><span class="line">2. 查看LoggerFactory.getLogger()方法</span><br><span class="line">    public static Logger getLogger(Class&lt;?&gt; clazz) &#123;</span><br><span class="line">        // 获取Logger对象</span><br><span class="line">        Logger logger = getLogger(clazz.getName());</span><br><span class="line">        if (DETECT_LOGGER_NAME_MISMATCH) &#123;</span><br><span class="line">            Class&lt;?&gt; autoComputedCallingClass = Util.getCallingClass();</span><br><span class="line">            if (autoComputedCallingClass != null &amp;&amp; nonMatchingClasses(clazz, autoComputedCallingClass)) &#123;</span><br><span class="line">                Util.report(String.format(&quot;Detected logger name mismatch. Given name: \&quot;%s\&quot;; computed name: \&quot;%s\&quot;.&quot;, logger.getName(),</span><br><span class="line">                                autoComputedCallingClass.getName()));</span><br><span class="line">                Util.report(&quot;See &quot; + LOGGER_NAME_MISMATCH_URL + &quot; for an explanation&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">3. 继续跟进 getLogger()</span><br><span class="line">    /**</span><br><span class="line">     * Return a logger named according to the name parameter using the</span><br><span class="line">     * statically bound &#123;@link ILoggerFactory&#125; instance.</span><br><span class="line">     * </span><br><span class="line">     * @param name</span><br><span class="line">     *            The name of the logger.</span><br><span class="line">     * @return logger</span><br><span class="line">     */</span><br><span class="line">    public static Logger getLogger(String name) &#123;</span><br><span class="line">        // 获取日志工厂</span><br><span class="line">        ILoggerFactory iLoggerFactory = getILoggerFactory();</span><br><span class="line">        // 返回日志对象 </span><br><span class="line">        return iLoggerFactory.getLogger(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">4. 获取工厂实例</span><br><span class="line">    /**</span><br><span class="line">     * Return the &#123;@link ILoggerFactory&#125; instance in use.</span><br><span class="line">     * &lt;p/&gt;</span><br><span class="line">     * &lt;p/&gt;</span><br><span class="line">     * ILoggerFactory instance is bound with this class at compile time.  </span><br><span class="line">     * 编译时绑定工厂实例</span><br><span class="line">     * </span><br><span class="line">     * @return the ILoggerFactory instance in use</span><br><span class="line">     */</span><br><span class="line">    public static ILoggerFactory getILoggerFactory() &#123;</span><br><span class="line">        // 没有初始化情况</span><br><span class="line">        // 双重检测锁</span><br><span class="line">        if (INITIALIZATION_STATE == UNINITIALIZED) &#123;</span><br><span class="line">            synchronized (LoggerFactory.class) &#123;</span><br><span class="line">                if (INITIALIZATION_STATE == UNINITIALIZED) &#123;</span><br><span class="line">                    // 初始化</span><br><span class="line">                    INITIALIZATION_STATE = ONGOING_INITIALIZATION;</span><br><span class="line">                    performInitialization();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        switch (INITIALIZATION_STATE) &#123;</span><br><span class="line">        case SUCCESSFUL_INITIALIZATION:</span><br><span class="line">            return StaticLoggerBinder.getSingleton().getLoggerFactory();</span><br><span class="line">        case NOP_FALLBACK_INITIALIZATION:</span><br><span class="line">            return NOP_FALLBACK_FACTORY;</span><br><span class="line">        case FAILED_INITIALIZATION:</span><br><span class="line">            throw new IllegalStateException(UNSUCCESSFUL_INIT_MSG);</span><br><span class="line">        case ONGOING_INITIALIZATION:</span><br><span class="line">            // support re-entrant behavior.</span><br><span class="line">            // See also http://jira.qos.ch/browse/SLF4J-97</span><br><span class="line">            return SUBST_FACTORY;</span><br><span class="line">        &#125;</span><br><span class="line">        throw new IllegalStateException(&quot;Unreachable code&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">5. 初始化</span><br><span class="line">    private final static void performInitialization() &#123;</span><br><span class="line">        bind();</span><br><span class="line">        if (INITIALIZATION_STATE == SUCCESSFUL_INITIALIZATION) &#123;</span><br><span class="line">            versionSanityCheck();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">6. 绑定</span><br><span class="line">    private final static void bind() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Set&lt;URL&gt; staticLoggerBinderPathSet = null;</span><br><span class="line">            // skip check under android, see also</span><br><span class="line">            // http://jira.qos.ch/browse/SLF4J-328</span><br><span class="line">            if (!isAndroid()) &#123;</span><br><span class="line">                staticLoggerBinderPathSet = findPossibleStaticLoggerBinderPathSet();</span><br><span class="line">                reportMultipleBindingAmbiguity(staticLoggerBinderPathSet);</span><br><span class="line">            &#125;</span><br><span class="line">            // the next line does the binding</span><br><span class="line">            // 真正的绑定，将具体的实现绑定到slf4j</span><br><span class="line">            StaticLoggerBinder.getSingleton();</span><br><span class="line">            INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION;</span><br><span class="line">            reportActualBinding(staticLoggerBinderPathSet);</span><br><span class="line">            fixSubstituteLoggers();</span><br><span class="line">            replayEvents();</span><br><span class="line">            // release all resources in SUBST_FACTORY</span><br><span class="line">            SUBST_FACTORY.clear();</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">7. logback-classic: org.slf4j.impl.StaticLoggerBinder</span><br><span class="line">    public static StaticLoggerBinder getSingleton() &#123;</span><br><span class="line">        return SINGLETON;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">由此可以看出slf4j在编译时就找了具体的日志实现了，也就是 org.slf4j.impl.StaticLoggerBinder。</span><br></pre></td></tr></table></figure>
+<h3 id="三、logback对配置文件的加载"><a href="#三、logback对配置文件的加载" class="headerlink" title="三、logback对配置文件的加载"></a>三、logback对配置文件的加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">1. getSingleton()方法获取logback实例对象，说明在对象之前已经加载了相关的配置文件，跟进 StaticLoggerBinder</span><br><span class="line">    static &#123;</span><br><span class="line">        // 初始化</span><br><span class="line">        SINGLETON.init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean initialized = false;</span><br><span class="line">    private LoggerContext defaultLoggerContext = new LoggerContext();</span><br><span class="line">    private final ContextSelectorStaticBinder contextSelectorBinder = ContextSelectorStaticBinder.getSingleton();</span><br><span class="line"></span><br><span class="line">    private StaticLoggerBinder() &#123;</span><br><span class="line">        defaultLoggerContext.setName(CoreConstants.DEFAULT_CONTEXT_NAME);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static StaticLoggerBinder getSingleton() &#123;</span><br><span class="line">        return SINGLETON;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">2. 查看 init()</span><br><span class="line">    /**</span><br><span class="line">     * Package access for testing purposes.</span><br><span class="line">     */</span><br><span class="line">    void init() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                // 上下文初始化环境 </span><br><span class="line">                new ContextInitializer(defaultLoggerContext).autoConfig();</span><br><span class="line">            &#125; catch (JoranException je) &#123;</span><br><span class="line">                Util.report(&quot;Failed to auto configure default logger context&quot;, je);</span><br><span class="line">            &#125;</span><br><span class="line">            // logback-292</span><br><span class="line">            if (!StatusUtil.contextHasStatusListener(defaultLoggerContext)) &#123;</span><br><span class="line">                StatusPrinter.printInCaseOfErrorsOrWarnings(defaultLoggerContext);</span><br><span class="line">            &#125;</span><br><span class="line">            contextSelectorBinder.init(defaultLoggerContext, KEY);</span><br><span class="line">            initialized = true;</span><br><span class="line">        &#125; catch (Throwable t) &#123;</span><br><span class="line">            // we should never get here</span><br><span class="line">            Util.report(&quot;Failed to instantiate [&quot; + LoggerContext.class.getName() + &quot;]&quot;, t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">3. 跟进autoConfig()</span><br><span class="line">    public void autoConfig() throws JoranException &#123;</span><br><span class="line">        StatusListenerConfigHelper.installIfAsked(loggerContext);</span><br><span class="line">        // 寻找默认配置文件</span><br><span class="line">        URL url = findURLOfDefaultConfigurationFile(true);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            configureByResource(url);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Configurator c = EnvUtil.loadFromServiceLoader(Configurator.class);</span><br><span class="line">            if (c != null) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    c.setContext(loggerContext);</span><br><span class="line">                    c.configure(loggerContext);</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    throw new LogbackException(String.format(&quot;Failed to initialize Configurator: %s using ServiceLoader&quot;, c != null ? c.getClass()</span><br><span class="line">                                    .getCanonicalName() : &quot;null&quot;), e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // 没有找到配置文件，则使用默认的配置器，那么日志只会打印在控制台</span><br><span class="line">                BasicConfigurator basicConfigurator = new BasicConfigurator();</span><br><span class="line">                basicConfigurator.setContext(loggerContext);</span><br><span class="line">                basicConfigurator.configure(loggerContext);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">4. findURLOfDefaultConfigurationFile() logback配置文件加载规则</span><br><span class="line">    public URL findURLOfDefaultConfigurationFile(boolean updateStatus) &#123;</span><br><span class="line">        // 获取当前实例的类加载器，目的是在classpath下寻找配置文件</span><br><span class="line">        ClassLoader myClassLoader = Loader.getClassLoaderOfObject(this);</span><br><span class="line">        // 先找logback.configurationFile文件</span><br><span class="line">        URL url = findConfigFileURLFromSystemProperties(myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback.configurationFile文件没找到，再找logback.groovy</span><br><span class="line">        url = getResource(GROOVY_AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback.groovy没找到，再找logback-test.xml</span><br><span class="line">        url = getResource(TEST_AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback-test.xml没找到，最后找logback.xml</span><br><span class="line">        return getResource(AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>小结：<br>编译期间，完成slf4j的绑定已经logback配置文件的加载。slf4j会在classpath中寻找org/slf4j/impl/StaticLoggerBinder.class(会在具体的日志框架如log4j、logback等中存在)，找到并完成绑定；同时，logback也会在classpath中寻找配置文件，先找logback.configurationFile、没有则找logback.groovy，若logback.groovy也没有，则找logback-test.xml，若logback-test.xml还是没有，则找logback.xml，若连logback.xml也没有，那么说明没有配置logback的配置文件，那么logback则会启用默认的配置(日志信息只会打印在控制台)。</p>
+<h3 id="四、使用步骤"><a href="#四、使用步骤" class="headerlink" title="四、使用步骤"></a>四、使用步骤</h3><p>1.引入slf4j、logback相关依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- slf4j --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;slf4j.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- logback --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-core&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-access&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>2.添加配置文件logback.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义日志文件的存储地址 --&gt;</span><br><span class="line">    &lt;!--</span><br><span class="line">        关于catalina.base解释如下：</span><br><span class="line">            catalina.home指向公用信息的位置，就是bin和lib的父目录。</span><br><span class="line">            catalina.base指向每个Tomcat目录私有信息的位置，就是conf、logs、temp、webapps和work的父目录。</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;property name=&quot;LOG_DIR&quot; value=&quot;$&#123;catalina.base&#125;/logs&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        %p:输出优先级，即DEBUG,INFO,WARN,ERROR,FATAL</span><br><span class="line">        %r:输出自应用启动到输出该日志讯息所耗费的毫秒数</span><br><span class="line">        %t:输出产生该日志事件的线程名</span><br><span class="line">        %f:输出日志讯息所属的类别的类别名</span><br><span class="line">        %c:输出日志讯息所属的类的全名</span><br><span class="line">        %d:输出日志时间点的日期或时间，指定格式的方式： %d&#123;yyyy-MM-dd HH:mm:ss&#125;</span><br><span class="line">        %l:输出日志事件的发生位置，即输出日志讯息的语句在他所在类别的第几行。</span><br><span class="line">        %m:输出代码中指定的讯息，如log(message)中的message</span><br><span class="line">        %n:输出一个换行符号</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符--&gt;</span><br><span class="line">    &lt;property name=&quot;pattern&quot; value=&quot;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125; [%thread] %-5level  %msg%n&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        Appender: 设置日志信息的去向,常用的有以下几个</span><br><span class="line">            ch.qos.logback.core.ConsoleAppender (控制台)</span><br><span class="line">            ch.qos.logback.core.rolling.RollingFileAppender (文件大小到达指定尺寸的时候产生一个新文件)</span><br><span class="line">            ch.qos.logback.core.FileAppender (文件)</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;</span><br><span class="line">        &lt;!-- 字符串System.out（默认）或者System.err --&gt;</span><br><span class="line">        &lt;target&gt;System.out&lt;/target&gt;</span><br><span class="line">        &lt;!-- 对记录事件进行格式化 --&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;SQL_INFO&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;!-- 被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建 --&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/sql_info.log&lt;/file&gt;</span><br><span class="line">        &lt;!-- 当发生滚动时，决定RollingFileAppender的行为，涉及文件移动和重命名。属性class定义具体的滚动策略类 --&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;!-- 必要节点，包含文件名及&quot;%d&quot;转换符，&quot;%d&quot;可以包含一个java.text.SimpleDateFormat指定的时间格式，默认格式是 yyyy-MM-dd --&gt;</span><br><span class="line">            &lt;fileNamePattern&gt;$&#123;LOG_DIR&#125;/sql_info_%d&#123;yyyy-MM-dd&#125;.log.%i.gz&lt;/fileNamePattern&gt;</span><br><span class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;</span><br><span class="line">                &lt;maxFileSize&gt;20MB&lt;/maxFileSize&gt;</span><br><span class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;</span><br><span class="line">            &lt;!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件。假设设置每个月滚动，如果是6，则只保存最近6个月的文件，删除之前的旧文件 --&gt;</span><br><span class="line">            &lt;maxHistory&gt;10&lt;/maxHistory&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;!-- LevelFilter： 级别过滤器，根据日志级别进行过滤 --&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">            &lt;!-- 用于配置符合过滤条件的操作 ACCEPT：日志会被立即处理，不再经过剩余过滤器 --&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;!-- 用于配置不符合过滤条件的操作 DENY：日志将立即被抛弃不再经过其他过滤器 --&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;SQL_ERROR&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/sql_error.log&lt;/file&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;fileNamePattern&gt;$&#123;LOG_DIR&#125;/sql_error_%d&#123;yyyy-MM-dd&#125;.log.%i.gz&lt;/fileNamePattern&gt;</span><br><span class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;</span><br><span class="line">                &lt;maxFileSize&gt;20MB&lt;/maxFileSize&gt;</span><br><span class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;</span><br><span class="line">            &lt;maxHistory&gt;10&lt;/maxHistory&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;ERROR&lt;/level&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;APP_INFO&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/info.log&lt;/file&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;FileNamePattern&gt;$&#123;LOG_DIR&#125;/info.%d&#123;yyyy-MM-dd&#125;.log</span><br><span class="line">            &lt;/FileNamePattern&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder&gt;</span><br><span class="line">            &lt;Pattern&gt;[%date&#123;yyyy-MM-dd HH:mm:ss&#125;] [%-5level] [%thread] [%logger:%line]--%mdc&#123;client&#125; %msg%n&lt;/Pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;FILE&quot; class=&quot;ch.qos.logback.core.FileAppender&quot;&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.core.encoder.LayoutWrappingEncoder&quot;&gt;</span><br><span class="line">            &lt;layout class=&quot;ch.qos.logback.classic.html.HTMLLayout&quot;&gt;</span><br><span class="line">                &lt;property name=&quot;pattern&quot; value=&quot;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125; [%thread] %-5level  %msg%n&quot;/&gt;</span><br><span class="line">                &lt;pattern&gt;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125;%thread%-5level%F&#123;32&#125;%M%L%msg&lt;/pattern&gt;</span><br><span class="line">            &lt;/layout&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/test.html&lt;/file&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。</span><br><span class="line">        &lt;loger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性</span><br><span class="line">        name:</span><br><span class="line">            用来指定受此logger约束的某一个包或者具体的某一个类。</span><br><span class="line">        level:</span><br><span class="line">            用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，</span><br><span class="line">            如果未设置此属性，那么当前logger将会继承上级的级别。</span><br><span class="line">        additivity:</span><br><span class="line">            是否向上级loger传递打印信息。默认是true。</span><br><span class="line">        &lt;logger&gt;可以包含零个或多个&lt;appender-ref&gt;元素，标识这个appender将会添加到这个logger</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;logger name=&quot;java.sql&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;</span><br><span class="line">        &lt;level value=&quot;info&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_INFO&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_ERROR&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">    &lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">    &lt;logger name=&quot;com.souche.LogbackTest&quot; additivity=&quot;false&quot;&gt;</span><br><span class="line">        &lt;level value=&quot;info&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;APP_INFO&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;FILE&quot;/&gt;</span><br><span class="line">    &lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        也是&lt;logger&gt;元素，但是它是根logger。默认debug</span><br><span class="line">        level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，</span><br><span class="line">        &lt;root&gt;可以包含零个或多个&lt;appender-ref&gt;元素，标识这个appender将会添加到这个logger。</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;root level=&quot;info&quot;&gt;</span><br><span class="line">        &lt;level&gt;info&lt;/level&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_INFO&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_ERROR&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;FILE&quot;/&gt;</span><br><span class="line">    &lt;/root&gt;</span><br><span class="line"></span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="五、实际应用"><a href="#五、实际应用" class="headerlink" title="五、实际应用"></a>五、实际应用</h3><p>就举例最近新做的项目弹个X中的应用吧。因为在与前端联调阶段，api自测感觉没啥问题的，然后联调就会有各种问题，没法避免，技术还是太水了，哈哈哈哈……..<br>调详情页的时候，听到有问题就赶紧看日志去，果然报错了。如下:</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11806186-f57f61c096181fc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p>
+<p>错误日志</p>
+<p>有错误信息就能当做本地控制台一样，可以直接看到错误信息。</p>
+<p>Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column ‘saler_phone’ at row 1<br>; SQL []; Data truncation: Data too long for column ‘saler_phone’ at row 1; nested exception is com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column ‘saler_phone’ at row 1</p>
+<p>然后进一步加了log日志</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11806186-1008f8cf2b04796e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p>
+<p>log日志</p>
+<p>传参错了，查了原因，登录失效，然后salerPhone居然还有值，而且多了一位……</p>
+<h3 id="六、为什么使用logback"><a href="#六、为什么使用logback" class="headerlink" title="六、为什么使用logback"></a>六、为什么使用logback</h3><p>logback具有以下优点：</p>
+<ul>
+<li>内核重写、测试充分、初始化内存加载更小，这一切让logback性能和log4j相比有诸多倍的提升</li>
+<li>logback非常自然地直接实现了slf4j，这个严格来说算不上优点，只是这样，再理解slf4j的前提下会很容易理解logback，也同时很容易用其他日志框架替换logbac</li>
+<li>logback有比较齐全的200多页的文档</li>
+<li>logback当配置文件修改了，支持自动重新加载配置文件，扫描过程快且安全，它并不需要另外创建一个扫描线程</li>
+<li>支持自动去除旧的日志文件，可以控制已经产生日志文件的最大数量</li>
+</ul>
+<p>总而言之，如果大家的项目里面需要选择一个日志框架，那么我个人非常建议使用logback。</p>
+<h3 id="七、logback性能大比拼"><a href="#七、logback性能大比拼" class="headerlink" title="七、logback性能大比拼"></a>七、logback性能大比拼</h3><p>log4j、logback、log4j2性能测试，直接引用公司的博客吧。<a href="https://blog.souche.com/logback-log4j-log4j2shi-ce/" target="_blank" rel="noopener">logback log4j log4j2 性能实测</a></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ol>
+<li><a href="https://www.cnblogs.com/EasonJim/p/7800880.html" target="_blank" rel="noopener">Java日志框架-logback的介绍及配置使用方法</a></li>
+<li><a href="https://www.cnblogs.com/youzhibing/p/6849843.html" target="_blank" rel="noopener">从源码来理解slf4j的绑定，以及logback对配置文件的加载</a></li>
+<li><a href="https://www.cnblogs.com/nananana/p/8371805.html" target="_blank" rel="noopener">logback 配置详解和使用</a></li>
+<li><a href="https://blog.csdn.net/haidage/article/details/6794540" target="_blank" rel="noopener">logback.xml常用配置详解 : filter</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU1ODUyMDUzNw==&amp;mid=2247483962&amp;idx=1&amp;sn=ee98ec38dbca13730b6d87e793609acb&amp;chksm=fc24038ccb538a9aad19573c06c987dbdb6d72de407811db469f7d06e5afb095bbe81395ca3e&amp;mpshare=1&amp;scene=23&amp;srcid=0614XsPPbErSxUi2MOzweE0X#rd" target="_blank" rel="noopener">Java 日志框架：logback 详解</a></li>
+<li><a href="https://blog.souche.com/logback-log4j-log4j2shi-ce/" target="_blank" rel="noopener">logback log4j log4j2 性能实测</a></li>
+</ol>
+<p>链接：<a href="https://www.jianshu.com/p/b3dedb8fb61e" target="_blank" rel="noopener">https://www.jianshu.com/p/b3dedb8fb61e</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/logback/" data-id="cjyvgh1nv001pq4urp3d1t7c3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-0417" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/17/0417/" class="article-date">
+  <time datetime="2019-04-17T10:53:08.000Z" itemprop="datePublished">2019-04-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/17/0417/">总结0417</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.Locale<br>国际化<br>Locale 表示地区。每一个Locale对象都代表了一个特定的地理、政治和文化地区。<br>在操作 Date, Calendar等表示日期/时间的对象时，经常会用到；因为不同的区域，时间表示方式都不同。<br><a href="https://blog.csdn.net/qq_27727251/article/details/80077189" target="_blank" rel="noopener">https://blog.csdn.net/qq_27727251/article/details/80077189</a><br>2.retrytemplete<br>3.wrk压测工具<br>4.elastic-job<br>5.hystrixcommend<br>6.声明式和命令式 （Declarative vs Imperative）<br>声明式和命令式是两种编程范式。react是声明式的，jquery那样直接操作dom是命令式<br>命令式编程：命令“机器”如何去做事情(how)，这样不管你想要的是什么(what)，它都会按照你的命令实现。<br>声明式编程：告诉“机器”你想要的是什么(what)，让机器想出如何去做(how)。<br>7.netstat -ano|findstr 8080<br>tasklist | findstr 9268<br>taskkill /pid 1111 /f<br>8.GZip<br>9.MDC（Mapped Diagnostic Context，映射调试上下文）是 log4j 和 logback 提供的一种方便在多线程条件下记录日志的功能。<br>10.swagger<br><a href="https://blog.csdn.net/weixin_37509652/article/details/80094370" target="_blank" rel="noopener">https://blog.csdn.net/weixin_37509652/article/details/80094370</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/17/0417/" data-id="cjyvgh1l40008q4urd8nmu9dg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

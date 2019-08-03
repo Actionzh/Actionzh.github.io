@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>总结0423 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.ftp相关操作12345678910ftpClient = new FTPClient();ftpClient.connect(ftpHost); ftpClient.login(ftpUserName, ftpPassword); // 以二进制进行传输 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE); // 用被动模式传输 ftpClie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结0423">
+<meta property="og:url" content="http://yoursite.com/2019/04/23/总结0423/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="1.ftp相关操作12345678910ftpClient = new FTPClient();ftpClient.connect(ftpHost); ftpClient.login(ftpUserName, ftpPassword); // 以二进制进行传输 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE); // 用被动模式传输 ftpClie">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.681Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="总结0423">
+<meta name="twitter:description" content="1.ftp相关操作12345678910ftpClient = new FTPClient();ftpClient.connect(ftpHost); ftpClient.login(ftpUserName, ftpPassword); // 以二进制进行传输 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE); // 用被动模式传输 ftpClie">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-总结0423" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/23/总结0423/" class="article-date">
+  <time datetime="2019-04-23T15:00:31.000Z" itemprop="datePublished">2019-04-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      总结0423
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.ftp相关操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ftpClient = new FTPClient();</span><br><span class="line">ftpClient.connect(ftpHost); ftpClient.login(ftpUserName, ftpPassword); // 以二进制进行传输 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE); // 用被动模式传输 ftpClient.enterLocalPassiveMode(); // 中文支持 ftpClient.setControlEncoding(&quot;UTF-8&quot;); // 设置默认超时时间 ftpClient.setDefaultTimeout(DEFAULT_TIMEOUT);</span><br><span class="line">//上传文件</span><br><span class="line">ftpClient.storeFile(String remote, InputStream local)；</span><br><span class="line">//切换工作路径（操作之前需要切换）</span><br><span class="line">ftpClient.changeWorkingDirectory(String pathname)</span><br><span class="line">//获取文件流</span><br><span class="line">ftpClient.retrieveFileStream(String remote)</span><br><span class="line">//创建路径</span><br><span class="line">ftpClient.makeDirectory(String pathname)；</span><br></pre></td></tr></table></figure></p>
+<p>2.jssdk<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">联系人是多个渠道账号合并出的一个人</span><br><span class="line"></span><br><span class="line">自定义渠道连接:</span><br><span class="line">获取jssdk代码，插入head中：</span><br><span class="line">1.系统事件统计：sdk会自动统计pv事件</span><br><span class="line">2.可以创建动态组：比如用户范围跟网页</span><br><span class="line">创建事件分析，同动态组</span><br><span class="line">3.识别联系人，需要实现相关的js代码：</span><br><span class="line">window.LFAPP.identify(&#123;&#125;）；</span><br><span class="line">4.新增自定义事件：先创建自定义事件，然后代码中写入js:</span><br><span class="line">window.linkflow.sendEvent(&#123;&#125;);</span><br><span class="line"></span><br><span class="line">私有App，获取App Key和App Secret,然后获取Access Token来访问open api 得到Linkflow的资源</span><br></pre></td></tr></table></figure></p>
+<p>3.gzip和zip转化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">//解压gzip</span><br><span class="line">public static final byte[] unGzip(byte[] data) throws IOException &#123;</span><br><span class="line">    GZIPInputStream zin = new GZIPInputStream(new ByteArrayInputStream(data));</span><br><span class="line">  ByteArrayOutputStream out = new ByteArrayOutputStream();</span><br><span class="line"> try &#123;</span><br><span class="line">        data = new byte[10240];</span><br><span class="line"> int len;</span><br><span class="line"> while ((len = zin.read(data)) != -1) &#123;</span><br><span class="line">            out.write(data, 0, len);</span><br><span class="line">  &#125;</span><br><span class="line">        return out.toByteArray();</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">        zin.close();</span><br><span class="line">  out.close();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//解压zip</span><br><span class="line">public static final byte[] unzip(byte[] data) throws IOException &#123;</span><br><span class="line">    byte[] b = null;</span><br><span class="line"> try &#123;</span><br><span class="line">        ByteArrayInputStream bis = new ByteArrayInputStream(data);</span><br><span class="line">  ZipInputStream zip = new ZipInputStream(bis);</span><br><span class="line"> while (zip.getNextEntry() != null) &#123;</span><br><span class="line">            byte[] buf = new byte[1024];</span><br><span class="line"> int num = -1;</span><br><span class="line">  ByteArrayOutputStream baos = new ByteArrayOutputStream();</span><br><span class="line"> while ((num = zip.read(buf, 0, buf.length)) != -1) &#123;</span><br><span class="line">                baos.write(buf, 0, num);</span><br><span class="line">  &#125;</span><br><span class="line">            b = baos.toByteArray();</span><br><span class="line">  baos.flush();</span><br><span class="line">  baos.close();</span><br><span class="line">  &#125;</span><br><span class="line">        zip.close();</span><br><span class="line">  bis.close();</span><br><span class="line">  &#125; catch (Exception ex) &#123;</span><br><span class="line">        ex.printStackTrace();</span><br><span class="line">  &#125;</span><br><span class="line">    return b; &#125;</span><br><span class="line"></span><br><span class="line">//压缩为gzip</span><br><span class="line">public static final byte[] gzip(byte[] data) throws IOException &#123;</span><br><span class="line">    ByteArrayOutputStream out = new ByteArrayOutputStream();</span><br><span class="line">  GZIPOutputStream zout = new GZIPOutputStream(out);</span><br><span class="line">  zout.write(data);</span><br><span class="line">  zout.close();</span><br><span class="line"> return out.toByteArray(); &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/23/总结0423/" data-id="cjyvgh1mr0017q4urzmahch33" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/23/总结0422/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          总结0422
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/21/dev流程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">dev流程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

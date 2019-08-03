@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>hystrix请求命令 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Hystrix有两个请求命令 HystrixCommand、HystrixObservableCommand。 　　HystrixCommand用在依赖服务返回单个操作结果的时候。又两种执行方式 　　  -execute():同步执行。从依赖的服务返回一个单一的结果对象，或是在发生错误的时候抛出异常。 　　  -queue();异步执行。直接返回一个Future对象，其中包含了服务执行结束时要返回">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hystrix请求命令">
+<meta property="og:url" content="http://yoursite.com/2019/06/16/hystrix请求命令/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="Hystrix有两个请求命令 HystrixCommand、HystrixObservableCommand。 　　HystrixCommand用在依赖服务返回单个操作结果的时候。又两种执行方式 　　  -execute():同步执行。从依赖的服务返回一个单一的结果对象，或是在发生错误的时候抛出异常。 　　  -queue();异步执行。直接返回一个Future对象，其中包含了服务执行结束时要返回">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.652Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hystrix请求命令">
+<meta name="twitter:description" content="Hystrix有两个请求命令 HystrixCommand、HystrixObservableCommand。 　　HystrixCommand用在依赖服务返回单个操作结果的时候。又两种执行方式 　　  -execute():同步执行。从依赖的服务返回一个单一的结果对象，或是在发生错误的时候抛出异常。 　　  -queue();异步执行。直接返回一个Future对象，其中包含了服务执行结束时要返回">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-hystrix请求命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/16/hystrix请求命令/" class="article-date">
+  <time datetime="2019-06-16T10:52:14.000Z" itemprop="datePublished">2019-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      hystrix请求命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Hystrix有两个请求命令 HystrixCommand、HystrixObservableCommand。</p>
+<p>　　HystrixCommand用在依赖服务返回单个操作结果的时候。又两种执行方式</p>
+<p>　　  -execute():同步执行。从依赖的服务返回一个单一的结果对象，或是在发生错误的时候抛出异常。</p>
+<p>　　  -queue();异步执行。直接返回一个Future对象，其中包含了服务执行结束时要返回的单一结果对象。</p>
+<p>　　HystrixObservableCommand 用在依赖服务返回多个操作结果的时候。它也实现了两种执行方式</p>
+<p>　　  -observe():返回Obervable对象，他代表了操作的多个结果，他是一个HotObservable</p>
+<p>　　  -toObservable():同样返回Observable对象，也代表了操作多个结果，但它返回的是一个Cold Observable。</p>
+<h1 id="HystrixCommand："><a href="#HystrixCommand：" class="headerlink" title="HystrixCommand："></a>HystrixCommand：</h1><p><strong>使用方式一：继承的方式</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example;</span><br><span class="line"></span><br><span class="line">import com.netflix.hystrix.HystrixCommand;</span><br><span class="line">import com.netflix.hystrix.HystrixCommandGroupKey;</span><br><span class="line">import com.netflix.hystrix.HystrixCommandKey;</span><br><span class="line">import com.netflix.hystrix.HystrixRequestCache;</span><br><span class="line">import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategyDefault;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by lisen on 2017/12/15.</span><br><span class="line"> * HystrixCommand用在命令服务返回单个操作结果的时候</span><br><span class="line"> */</span><br><span class="line">public class CommandHelloWorld extends HystrixCommand&lt;String&gt; &#123;</span><br><span class="line">    private final String name;</span><br><span class="line"></span><br><span class="line">    public CommandHelloWorld(String name) &#123;</span><br><span class="line">        super(HystrixCommandGroupKey.Factory.asKey(&quot;ExampleGroup&quot;));</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String run() throws Exception &#123;</span><br><span class="line">        int i = 1/0;</span><br><span class="line">        return &quot;Hello &quot; + name + &quot;!&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 降级。Hystrix会在run()执行过程中出现错误、超时、线程池拒绝、断路器熔断等情况时，</span><br><span class="line">     * 执行getFallBack()方法内的逻辑</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    protected String getFallback() &#123;</span><br><span class="line">        return &quot;faild&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>单元测试：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example;</span><br><span class="line"></span><br><span class="line">import org.junit.Test;</span><br><span class="line">import rx.Observable;</span><br><span class="line">import rx.Observer;</span><br><span class="line">import rx.Subscription;</span><br><span class="line">import rx.functions.Action1;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.ExecutionException;</span><br><span class="line">import java.util.concurrent.Future;</span><br><span class="line"></span><br><span class="line">import static org.junit.Assert.assertEquals;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by lisen on 2017/12/15.</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class CommandHelloWorldTest &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试同步执行</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testSynchronous() &#123;</span><br><span class="line">        System.out.println(new CommandHelloWorld(&quot;World&quot;).execute());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试异步执行</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testAsynchronous() throws ExecutionException, InterruptedException &#123;</span><br><span class="line">        Future&lt;String&gt; fWorld = new CommandHelloWorld(&quot;World&quot;).queue();</span><br><span class="line">        System.out.println(fWorld.get());  //一步执行用get()来获取结果</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 虽然HystrixCommand具备了observe()和toObservable()的功能，但是它的实现有一定的局限性，</span><br><span class="line">     * 它返回的Observable只能发射一次数据，所以Hystrix还提供了HystrixObservableCommand,</span><br><span class="line">     * 通过它实现的命令可以获取能发多次的Observable</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testObserve() &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 返回的是Hot Observable,HotObservable，不论 “事件源” 是否有“订阅者”</span><br><span class="line">         * 都会在创建后对事件进行发布。所以对于Hot Observable的每一个“订阅者”都有</span><br><span class="line">         * 可能从“事件源”的中途开始的，并可能只是看到了整个操作的局部过程</span><br><span class="line">         */</span><br><span class="line">        //blocking</span><br><span class="line">        Observable&lt;String&gt; ho = new CommandHelloWorld(&quot;World&quot;).observe();</span><br><span class="line">//        System.out.println(ho.toBlocking().single());</span><br><span class="line"></span><br><span class="line">        //non-blockking</span><br><span class="line">        //- this is a verbose anonymous inner-class approach and doesn&apos;t do assertions</span><br><span class="line">        ho.subscribe(new Observer&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onCompleted() &#123;</span><br><span class="line">                System.out.println(&quot;==============onCompleted&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onError(Throwable e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void onNext(String s) &#123;</span><br><span class="line">                System.out.println(&quot;=========onNext: &quot; + s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        ho.subscribe(new Action1&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(String s) &#123;</span><br><span class="line">                System.out.println(&quot;==================call:&quot; + s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testToObservable() &#123;</span><br><span class="line">        /**</span><br><span class="line">         * Cold Observable在没有 “订阅者” 的时候并不会发布时间，</span><br><span class="line">         * 而是进行等待，知道有 “订阅者” 之后才发布事件，所以对于</span><br><span class="line">         * Cold Observable的订阅者，它可以保证从一开始看到整个操作的全部过程。</span><br><span class="line">         */</span><br><span class="line">        Observable&lt;String&gt; co = new CommandHelloWorld(&quot;World&quot;).toObservable();</span><br><span class="line">        System.out.println(co.toBlocking().single());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>使用方式二：注解的方式；</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example.service;</span><br><span class="line"></span><br><span class="line">import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;</span><br><span class="line">import com.netflix.hystrix.contrib.javanica.annotation.ObservableExecutionMode;</span><br><span class="line">import com.netflix.hystrix.contrib.javanica.command.AsyncResult;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import rx.Observable;</span><br><span class="line">import rx.Subscriber;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.Future;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 用@HystrixCommand的方式来实现</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class UserService &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 同步的方式。</span><br><span class="line">     * fallbackMethod定义降级</span><br><span class="line">     */</span><br><span class="line">    @HystrixCommand(fallbackMethod = &quot;helloFallback&quot;)</span><br><span class="line">    public String getUserId(String name) &#123;</span><br><span class="line">        int i = 1/0; //此处抛异常，测试服务降级</span><br><span class="line">        return &quot;你好:&quot; + name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String helloFallback(String name) &#123;</span><br><span class="line">        return &quot;error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //异步的执行</span><br><span class="line">    @HystrixCommand(fallbackMethod = &quot;getUserNameError&quot;)</span><br><span class="line">    public Future&lt;String&gt; getUserName(final Long id) &#123;</span><br><span class="line">        return new AsyncResult&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public String invoke() &#123;</span><br><span class="line">                int i = 1/0;//此处抛异常,测试服务降级</span><br><span class="line">                return &quot;小明:&quot; + id;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getUserNameError(Long id) &#123;</span><br><span class="line">        return &quot;faile&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>单元测试：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example.service;</span><br><span class="line"></span><br><span class="line">import javafx.application.Application;</span><br><span class="line">import org.hope.hystrix.example.HystrixApplication;</span><br><span class="line">import org.hope.hystrix.example.model.User;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.junit.runner.RunWith;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line">import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.ExecutionException;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">@SpringBootTest(classes = HystrixApplication.class)</span><br><span class="line">public class UserServiceTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private UserService userService;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试同步</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetUserId() &#123;</span><br><span class="line">        System.out.println(&quot;=================&quot; + userService.getUserId(&quot;lisi&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 测试异步</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetUserName() throws ExecutionException, InterruptedException &#123;</span><br><span class="line">        System.out.println(&quot;=================&quot; + userService.getUserName(30L).get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="HystrixObservableCommand："><a href="#HystrixObservableCommand：" class="headerlink" title="HystrixObservableCommand："></a>HystrixObservableCommand：</h1><p><strong>使用方式一：继承的方式</strong></p>
+<p> 　　HystrixObservable通过实现 protected Observable<string> construct() 方法来执行逻辑。通过 重写 resumeWithFallback方法来实现服务降级</string></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example;</span><br><span class="line"></span><br><span class="line">import com.netflix.hystrix.HystrixCommandGroupKey;</span><br><span class="line">import com.netflix.hystrix.HystrixObservableCommand;</span><br><span class="line">import rx.Observable;</span><br><span class="line">import rx.Subscriber;</span><br><span class="line">import rx.schedulers.Schedulers;</span><br><span class="line"></span><br><span class="line">public class ObservableCommandHelloWorld extends HystrixObservableCommand&lt;String&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private final String name;</span><br><span class="line"></span><br><span class="line">    public ObservableCommandHelloWorld(String name) &#123;</span><br><span class="line">        super(HystrixCommandGroupKey.Factory.asKey(&quot;ExampleGroup&quot;));</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Observable&lt;String&gt; construct() &#123;</span><br><span class="line">        return Observable.create(new Observable.OnSubscribe&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(Subscriber&lt;? super String&gt; subscriber) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    if(!subscriber.isUnsubscribed()) &#123;</span><br><span class="line">                        subscriber.onNext(&quot;Hello&quot;);</span><br><span class="line">                        int i = 1 / 0; //模拟异常</span><br><span class="line">                        subscriber.onNext(name + &quot;!&quot;);</span><br><span class="line">                        subscriber.onCompleted();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    subscriber.onError(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribeOn(Schedulers.io());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 服务降级</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    protected Observable&lt;String&gt; resumeWithFallback() &#123;</span><br><span class="line">        return Observable.create(new Observable.OnSubscribe&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(Subscriber&lt;? super String&gt; subscriber) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    if (!subscriber.isUnsubscribed()) &#123;</span><br><span class="line">                        subscriber.onNext(&quot;失败了！&quot;);</span><br><span class="line">                        subscriber.onNext(&quot;找大神来排查一下吧！&quot;);</span><br><span class="line">                        subscriber.onCompleted();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    subscriber.onError(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).subscribeOn(Schedulers.io());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>单元测试：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example;</span><br><span class="line"></span><br><span class="line">import org.junit.Test;</span><br><span class="line">import rx.Observable;</span><br><span class="line"></span><br><span class="line">import java.util.Iterator;</span><br><span class="line"></span><br><span class="line">public class ObservableCommandHelloWorldTest &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testObservable() &#123;</span><br><span class="line">        Observable&lt;String&gt; observable= new ObservableCommandHelloWorld(&quot;World&quot;).observe();</span><br><span class="line"></span><br><span class="line">        Iterator&lt;String&gt; iterator = observable.toBlocking().getIterator();</span><br><span class="line">        while(iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(iterator.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testToObservable() &#123;</span><br><span class="line">        Observable&lt;String&gt; observable= new ObservableCommandHelloWorld(&quot;World&quot;).observe();</span><br><span class="line">        Iterator&lt;String&gt; iterator = observable.toBlocking().getIterator();</span><br><span class="line">        while(iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(iterator.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>使用方式二：注解的方式；</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example.service;</span><br><span class="line"></span><br><span class="line">import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;</span><br><span class="line">import com.netflix.hystrix.contrib.javanica.annotation.ObservableExecutionMode;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import rx.Observable;</span><br><span class="line">import rx.Subscriber;</span><br><span class="line"></span><br><span class="line">@Service</span><br><span class="line">public class ObservableUserService &#123;</span><br><span class="line">    /**</span><br><span class="line">     *  EAGER参数表示使用observe()方式执行</span><br><span class="line">     */</span><br><span class="line">    @HystrixCommand(observableExecutionMode = ObservableExecutionMode.EAGER, fallbackMethod = &quot;observFailed&quot;) //使用observe()执行方式</span><br><span class="line">    public Observable&lt;String&gt; getUserById(final Long id) &#123;</span><br><span class="line">       return Observable.create(new Observable.OnSubscribe&lt;String&gt;() &#123;</span><br><span class="line">           @Override</span><br><span class="line">           public void call(Subscriber&lt;? super String&gt; subscriber) &#123;</span><br><span class="line">               try &#123;</span><br><span class="line">                   if(!subscriber.isUnsubscribed()) &#123;</span><br><span class="line">                       subscriber.onNext(&quot;张三的ID:&quot;);</span><br><span class="line">                       int i = 1 / 0; //抛异常，模拟服务降级</span><br><span class="line">                       subscriber.onNext(String.valueOf(id));</span><br><span class="line">                       subscriber.onCompleted();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125; catch (Exception e) &#123;</span><br><span class="line">                   subscriber.onError(e);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String observFailed(Long id) &#123;</span><br><span class="line">        return &quot;observFailed----&gt;&quot; + id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * LAZY参数表示使用toObservable()方式执行</span><br><span class="line">     */</span><br><span class="line">    @HystrixCommand(observableExecutionMode = ObservableExecutionMode.LAZY, fallbackMethod = &quot;toObserbableError&quot;) //表示使用toObservable()执行方式</span><br><span class="line">    public Observable&lt;String&gt; getUserByName(final String name) &#123;</span><br><span class="line">        return Observable.create(new Observable.OnSubscribe&lt;String&gt;() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void call(Subscriber&lt;? super String&gt; subscriber) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    if(!subscriber.isUnsubscribed()) &#123;</span><br><span class="line">                        subscriber.onNext(&quot;找到&quot;);</span><br><span class="line">                        subscriber.onNext(name);</span><br><span class="line">                        int i = 1/0; ////抛异常，模拟服务降级</span><br><span class="line">                        subscriber.onNext(&quot;了&quot;);</span><br><span class="line">                        subscriber.onCompleted();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    subscriber.onError(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String toObserbableError(String name) &#123;</span><br><span class="line">        return &quot;toObserbableError---&gt;&quot; + name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>单元测试：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package org.hope.hystrix.example.service;</span><br><span class="line"></span><br><span class="line">import org.hope.hystrix.example.HystrixApplication;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.junit.runner.RunWith;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line">import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</span><br><span class="line"></span><br><span class="line">import java.util.Iterator;</span><br><span class="line"></span><br><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">@SpringBootTest(classes = HystrixApplication.class)</span><br><span class="line">public class ObservableUserServiceTest &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ObservableUserService observableUserService;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testObserve() &#123;</span><br><span class="line">        Iterator&lt;String&gt; iterator = observableUserService.getUserById(30L).toBlocking().getIterator();</span><br><span class="line">        while(iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(&quot;===============&quot; + iterator.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testToObservable() &#123;</span><br><span class="line">        Iterator&lt;String&gt; iterator = observableUserService.getUserByName(&quot;王五&quot;).toBlocking().getIterator();</span><br><span class="line">        while(iterator.hasNext()) &#123;</span><br><span class="line">            System.out.println(&quot;===============&quot; + iterator.next());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>总结：</strong><br>　　在实际使用时，我们需要为大多数执行过程中可能会失败的Hystrix命令实现服务降级逻辑，但是也有一些情况可以不去实现降级逻辑，比如：</p>
+<p>　　<strong>执行写操作的命令：</strong></p>
+<p>　　<strong>执行批处理或离线计算的命令：</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/16/hystrix请求命令/" data-id="cjyvgh1nk001hq4ur23im8gh2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/16/Collectors-toMap的问题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Collectors.toMap的问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/16/cas单点登陆/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">cas单点登陆</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

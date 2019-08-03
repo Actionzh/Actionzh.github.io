@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>git处理冲突 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.停止rebase,rebase 是一个状态  git rebase –abort 2.git fetch  git rebase origin/master  远端覆盖本地分支（reset回退版本）  $ git reset origin/master –hard  推送远端  $ git push origin HEAD:refs/for/master 3.//冲突  $ git reset">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git处理冲突">
+<meta property="og:url" content="http://yoursite.com/2019/03/05/git处理冲突/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="1.停止rebase,rebase 是一个状态  git rebase –abort 2.git fetch  git rebase origin/master  远端覆盖本地分支（reset回退版本）  $ git reset origin/master –hard  推送远端  $ git push origin HEAD:refs/for/master 3.//冲突  $ git reset">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.651Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git处理冲突">
+<meta name="twitter:description" content="1.停止rebase,rebase 是一个状态  git rebase –abort 2.git fetch  git rebase origin/master  远端覆盖本地分支（reset回退版本）  $ git reset origin/master –hard  推送远端  $ git push origin HEAD:refs/for/master 3.//冲突  $ git reset">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-git处理冲突" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/05/git处理冲突/" class="article-date">
+  <time datetime="2019-03-05T14:51:59.000Z" itemprop="datePublished">2019-03-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git处理冲突
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.停止rebase,rebase 是一个状态<br>  git rebase –abort</p>
+<p>2.git fetch<br>  git rebase origin/master<br>  远端覆盖本地分支（reset回退版本）<br>  $ git reset origin/master –hard<br>  推送远端<br>  $ git push origin HEAD:refs/for/master</p>
+<p>3.//冲突<br>  $ git reset origin/master –hard<br>  $ git fetch<br>  $ git rebase origin master<br>  处理冲突<br>  $ git staus<br>  $ git rebase –continue<br>  $ git push origin HEAD:refs/for/master</p>
+<p>4.//处理abandon<br>  修改文件<br>  git add .<br>  git commit –amend<br>  git push origin HEAD:refs/for/master</p>
+<p>5.远程分支回滚的三种方法：<br>  自己的分支回滚直接用reset<br>  公共分支回滚用revert<br>  错的太远了直接将代码全部删掉，用正确代码替代</p>
+<p>其他操作：<br>git pull –rebase origin master<br>git rebase –continue<br>git push origin HEAD:refs/for/master<br>git checkout -b name<br>git branch -a<br>git remote add …<br>git remote -v<br>git checkout -b &lt;本地分支名&gt; &lt;远程主机名&gt;/&lt;远程分支名&gt;<br>git checkout filename  恢复工作区<br>git reset filename     恢复暂存区</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/05/git处理冲突/" data-id="cjyvgh1mj000wq4urohk1tq0u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/07/0307/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          总结0307
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

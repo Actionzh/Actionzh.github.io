@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>jdbcTemplate和namedParameterJdbcTemplate | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="我们开发DAO层时用的最多的就是ORM框架(Mybatis,hibernate)了。在有些特殊的情况下,ORM框架的搭建略显笨重,这时最好的选择就是Spring中的jdbcTemplate了。本文对jdbcTemplate进行详解，并且会对具名参数namedParameterJdbcTemplate进行讲解。 jdbcTemplate讲解jdbcTemplate提供的主要方法: execute方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jdbcTemplate和namedParameterJdbcTemplate">
+<meta property="og:url" content="http://yoursite.com/2019/03/19/31903/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="我们开发DAO层时用的最多的就是ORM框架(Mybatis,hibernate)了。在有些特殊的情况下,ORM框架的搭建略显笨重,这时最好的选择就是Spring中的jdbcTemplate了。本文对jdbcTemplate进行详解，并且会对具名参数namedParameterJdbcTemplate进行讲解。 jdbcTemplate讲解jdbcTemplate提供的主要方法: execute方法">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.592Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jdbcTemplate和namedParameterJdbcTemplate">
+<meta name="twitter:description" content="我们开发DAO层时用的最多的就是ORM框架(Mybatis,hibernate)了。在有些特殊的情况下,ORM框架的搭建略显笨重,这时最好的选择就是Spring中的jdbcTemplate了。本文对jdbcTemplate进行详解，并且会对具名参数namedParameterJdbcTemplate进行讲解。 jdbcTemplate讲解jdbcTemplate提供的主要方法: execute方法">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-31903" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31903/" class="article-date">
+  <time datetime="2019-03-19T03:48:34.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      jdbcTemplate和namedParameterJdbcTemplate
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我们开发DAO层时用的最多的就是ORM框架(Mybatis,hibernate)了。在有些特殊的情况下,ORM框架的搭建略显笨重,这时最好的选择就是Spring中的jdbcTemplate了。本文对jdbcTemplate进行详解，并且会对具名参数namedParameterJdbcTemplate进行讲解。</p>
+<h1 id="jdbcTemplate讲解"><a href="#jdbcTemplate讲解" class="headerlink" title="jdbcTemplate讲解"></a>jdbcTemplate讲解</h1><h3 id="jdbcTemplate提供的主要方法"><a href="#jdbcTemplate提供的主要方法" class="headerlink" title="jdbcTemplate提供的主要方法:"></a>jdbcTemplate提供的主要方法:</h3><ul>
+<li>execute方法：可以用于执行任何SQL语句，一般用于执行DDL语句；</li>
+<li>update方法及batchUpdate方法：update方法用于执行新增、修改、删除等语句；batchUpdate方法用于执行批处理相关语句；</li>
+<li>query方法及queryForXXX方法：用于执行查询相关语句；</li>
+<li>call方法：用于执行存储过程、函数相关语句。<h3 id="jdbcTemplate环境搭建"><a href="#jdbcTemplate环境搭建" class="headerlink" title="jdbcTemplate环境搭建:"></a>jdbcTemplate环境搭建:</h3></li>
+</ul>
+<p>1 在spring配置文件中加上jdbcTemplate的bean:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--注入jdbcTemplate--&gt;</span><br><span class="line">&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>注意:在这之前我们需要先配置好数据库数据源dateSource。<br>2.在使用jdbcTemplate类中使用@Autowired进行注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private JdbcTemplate jdbcTemplate;</span><br></pre></td></tr></table></figure>
+<p><strong>1.查询单个对象queryForObject:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testQuery()&#123;</span><br><span class="line">    String sql = &quot;select id,username,password from user where id=?&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    User user = jdbcTemplate.queryForObject(sql, rowMapper,1);</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果: User{id=1, username=’123’, password=’123’}<br><strong>2.查询多个对象query:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testMutiQuery()&#123;</span><br><span class="line">    String sql = &quot;select id,username,password from user&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    List&lt;User&gt; users = jdbcTemplate.query(sql, rowMapper);</span><br><span class="line">    for (User user : users) &#123;</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:<br>User{id=1, username=’123’, password=’123’}<br>User{id=2, username=’1234’, password=’1234’}<br><strong>3.查询count、avg、sum等函数返回唯一值:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testCountQuery()&#123;</span><br><span class="line">    String sql = &quot;select count(*) from user&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    Integer result = jdbcTemplate.queryForObject(sql, Integer.class);</span><br><span class="line">    System.out.println(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:2<br><strong>4.增删改方法测试:</strong><br><strong>新增:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testCreate()&#123;</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (?,?)&quot;;</span><br><span class="line">    int create = jdbcTemplate.update(sql, new Object[]&#123;255, 255&#125;);</span><br><span class="line">    System.out.println(create);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为1,去数据库查看也确实插入这条。</p>
+<p><strong>修改:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testUpdate()&#123;</span><br><span class="line">    String sql = &quot;update user set username=? , password=? where id=?&quot;;</span><br><span class="line">    int update = jdbcTemplate.update(sql, new Object[]&#123;256, 256,3&#125;);</span><br><span class="line">    System.out.println(update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为1,并且确实数据已经修改<br><strong>删除:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testDelete()&#123;</span><br><span class="line">    String sql = &quot;delete from user where id=?&quot;;</span><br><span class="line">    int delete = jdbcTemplate.update(sql, new Object[]&#123;3&#125;);</span><br><span class="line">    System.out.println(delete);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>5.批量操作:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testBatch()&#123;</span><br><span class="line">    List&lt;Object[]&gt; batchArgs=new ArrayList&lt;Object[]&gt;();</span><br><span class="line">    batchArgs.add(new Object[]&#123;777,888&#125;);</span><br><span class="line">    batchArgs.add(new Object[]&#123;666,888&#125;);</span><br><span class="line">    batchArgs.add(new Object[]&#123;555,888&#125;);</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (?,?)&quot;;</span><br><span class="line">    jdbcTemplate.batchUpdate(sql, batchArgs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上方法基本满足了日常我们多DAO层进行的操作,不过当你进行CRUD操作时如果传入的参数不确定,这时候你可能会想起ORM框架的便利。没关系！Spring也为我们提供了这样的操作NamedParameterJdbcTemplate。</p>
+<h1 id="NamedParameterJdbcTemplate讲解"><a href="#NamedParameterJdbcTemplate讲解" class="headerlink" title="NamedParameterJdbcTemplate讲解"></a>NamedParameterJdbcTemplate讲解</h1><p>在经典的 JDBC 用法中, SQL 参数是用占位符 ? 表示,并且受到位置的限制. 定位参数的问题在于, 一旦参数的顺序发生变化, 就必须改变参数绑定.<br>在 Spring JDBC 框架中, 绑定 SQL 参数的另一种选择是使用具名参数(named parameter).<br><strong>那么什么是具名参数？</strong><br>具名参数: SQL 按名称(以冒号开头)而不是按位置进行指定. 具名参数更易于维护, 也提升了可读性. 具名参数由框架类在运行时用占位符取代<br>具名参数只在 NamedParameterJdbcTemplate 中得到支持。NamedParameterJdbcTemplate可以使用全部jdbcTemplate方法,除此之外,我们来看看使用它的具名参数案例:<br><strong>具名新增：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testNamedParameter()&#123;</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (:username,:password)&quot;;</span><br><span class="line">    User u = new User();</span><br><span class="line">    u.setUsername(&quot;555&quot;);</span><br><span class="line">    SqlParameterSource sqlParameterSource=new BeanPropertySqlParameterSource(u);</span><br><span class="line">    namedParameterJdbcTemplate.update(sql,sqlParameterSource);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以根据pojo类的属性值使用JDBC来操作数据库了。<br><strong>获取新增的主键:</strong><br>NamedParameterJdbcTemplate还新增了KeyHolder类,使用它我们可以获得主键,类似Mybatis中的useGeneratedKeys。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line"> public void testKeyHolder()&#123;</span><br><span class="line">     String sql = &quot;insert into user (username,password) values (:username,:password)&quot;;</span><br><span class="line">     User u = new User();</span><br><span class="line">     u.setUsername(&quot;555&quot;);</span><br><span class="line">     SqlParameterSource sqlParameterSource=new BeanPropertySqlParameterSource(u);</span><br><span class="line">     KeyHolder keyHolder = new GeneratedKeyHolder();</span><br><span class="line">     namedParameterJdbcTemplate.update(sql, sqlParameterSource, keyHolder);</span><br><span class="line">     int k = keyHolder.getKey().intValue();</span><br><span class="line">     System.out.println(k);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果就是新增的主键。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31903/" data-id="cjyvgh1ld000dq4urjp087v69" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/19/31904/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Jackson使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/19/31902/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">paxos协议的理解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>springboot启动原理 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言前面几章我们见识了SpringBoot为我们做的自动配置，确实方便快捷，但是对于新手来说，如果不大懂SpringBoot内部启动原理，以后难免会吃亏。所以这次博主就跟你们一起一步步揭开SpringBoot的神秘面纱，让它不在神秘。 正文我们开发任何一个Spring Boot项目，都会用到如下的启动类  从上面代码可以看出，Annotation定义（@SpringBootApplication）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot启动原理">
+<meta property="og:url" content="http://yoursite.com/2019/04/21/springboot启动原理/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="前言前面几章我们见识了SpringBoot为我们做的自动配置，确实方便快捷，但是对于新手来说，如果不大懂SpringBoot内部启动原理，以后难免会吃亏。所以这次博主就跟你们一起一步步揭开SpringBoot的神秘面纱，让它不在神秘。 正文我们开发任何一个Spring Boot项目，都会用到如下的启动类  从上面代码可以看出，Annotation定义（@SpringBootApplication）">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BCA9qGoOm9q8wdzFcCPwR5gIo74ofBQss0LHUB2S26DVM4clkzMyHJg/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bk2xiby4fB6oia6DicbvCgaLrpWcqFianU8QtRxuEAqMJODJ3fTLAN2IDYQ/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BHLV5ZoaVkQZRjDDKXtwpqUTxv5EaC0hcBYVYHibWgEvfKBGaz7zstzA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BN7F9ianFgKGA25Fic05awmg6EKcibMvJGhk7qKNwsxPkSQoib2w8wuYGNg/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B1FbmsvOnYhOu5aRLyTxOUMrz2ib1vicopsPTWe0NQqUibpZF0e0icbMuTA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B53ZY0oicaZqTdQf9nuiaCT4UL2JN4dN0Lr6pAmZlzhZGz2qkCM9XVMbg/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bgpvv8WKf7nnW7s7v5dGcoP0fxGxtUU9075qU7PTxpPU805mlOLuYYw/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BYxkMZ3lFOdh7WChbRJibLzRpdFXt4U579icdpjHyicbDey7234opClrDA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BPPZTLw6oXXdic3MTayNicEoiaY9fblyFE41CqWsRVe77bAYOfmgpyEFgw/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BZ6ibAMibgXV0VRgRxv9ib0lCiaTKeAH0zdicPZTEibO40ytG19ByhF0yUxbA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bzpgafnn204yshBIL2eFUgbtQSUIdeR57Sk3icPZf3g3biasyRqN4DvkA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bt6PnEx4E95yKOQLia5LZrwiaKMFn0FYmsu5sdODsX8lxoIyFRMaaVbqA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BdBhOVrpZuOXYxgx1N9DsgeIJT0v022JyiaubzEYhuvg5tY1zqUGrtNA/0?wx_fmt=jpeg">
+<meta property="og:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BV0WRLh7on3ibclf2rjhmOF3Pn8G8Nh66DMuqicS5O6IibPLALkCibiaxoibw/0?wx_fmt=jpeg">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.657Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springboot启动原理">
+<meta name="twitter:description" content="前言前面几章我们见识了SpringBoot为我们做的自动配置，确实方便快捷，但是对于新手来说，如果不大懂SpringBoot内部启动原理，以后难免会吃亏。所以这次博主就跟你们一起一步步揭开SpringBoot的神秘面纱，让它不在神秘。 正文我们开发任何一个Spring Boot项目，都会用到如下的启动类  从上面代码可以看出，Annotation定义（@SpringBootApplication）">
+<meta name="twitter:image" content="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BCA9qGoOm9q8wdzFcCPwR5gIo74ofBQss0LHUB2S26DVM4clkzMyHJg/0?wx_fmt=jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot启动原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/springboot启动原理/" class="article-date">
+  <time datetime="2019-04-21T10:53:08.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      springboot启动原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面几章我们见识了SpringBoot为我们做的自动配置，确实方便快捷，但是对于新手来说，如果不大懂SpringBoot内部启动原理，以后难免会吃亏。所以这次博主就跟你们一起一步步揭开SpringBoot的神秘面纱，让它不在神秘。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>我们开发任何一个Spring Boot项目，都会用到如下的启动类</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BCA9qGoOm9q8wdzFcCPwR5gIo74ofBQss0LHUB2S26DVM4clkzMyHJg/0?wx_fmt=jpeg" alt></p>
+<p>从上面代码可以看出，Annotation定义（@SpringBootApplication）和类定义（SpringApplication.run）最为耀眼，所以要揭开SpringBoot的神秘面纱，我们要从这两位开始就可以了。</p>
+<h1 id="SpringBootApplication背后的秘密"><a href="#SpringBootApplication背后的秘密" class="headerlink" title="SpringBootApplication背后的秘密"></a>SpringBootApplication背后的秘密</h1><p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bk2xiby4fB6oia6DicbvCgaLrpWcqFianU8QtRxuEAqMJODJ3fTLAN2IDYQ/0?wx_fmt=jpeg" alt></p>
+<p>虽然定义使用了多个Annotation进行了原信息标注，但实际上重要的只有三个Annotation：</p>
+<ul>
+<li><p>@Configuration（@SpringBootConfiguration点开查看发现里面还是应用了@Configuration）</p>
+</li>
+<li><p>@EnableAutoConfiguration</p>
+</li>
+<li><p>@ComponentScan</p>
+</li>
+</ul>
+<p>所以，如果我们使用如下的SpringBoot启动类，整个SpringBoot应用依然可以与之前的启动类功能对等：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BHLV5ZoaVkQZRjDDKXtwpqUTxv5EaC0hcBYVYHibWgEvfKBGaz7zstzA/0?wx_fmt=jpeg" alt></p>
+<p>每次写这3个比较累，所以写一个@SpringBootApplication方便点。接下来分别介绍这3个Annotation。</p>
+<h1 id="Configuration"><a href="#Configuration" class="headerlink" title="@Configuration"></a>@Configuration</h1><p>这里的@Configuration对我们来说不陌生，它就是JavaConfig形式的Spring Ioc容器的配置类使用的那个@Configuration，SpringBoot社区推荐使用基于JavaConfig的配置形式，所以，这里的启动类标注了@Configuration之后，本身其实也是一个IoC容器的配置类。</p>
+<p>举几个简单例子回顾下，XML跟config配置方式的区别：</p>
+<ul>
+<li><p>表达形式层面</p>
+<p>基于XML配置的方式是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BN7F9ianFgKGA25Fic05awmg6EKcibMvJGhk7qKNwsxPkSQoib2w8wuYGNg/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置方式是这样：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B1FbmsvOnYhOu5aRLyTxOUMrz2ib1vicopsPTWe0NQqUibpZF0e0icbMuTA/0?wx_fmt=jpeg" alt></p>
+<p>任何一个标注了@Configuration的Java类定义都是一个JavaConfig配置类。</p>
+<ul>
+<li><p>注册bean定义层面</p>
+<p>基于XML的配置形式是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0B53ZY0oicaZqTdQf9nuiaCT4UL2JN4dN0Lr6pAmZlzhZGz2qkCM9XVMbg/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置形式是这样的：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bgpvv8WKf7nnW7s7v5dGcoP0fxGxtUU9075qU7PTxpPU805mlOLuYYw/0?wx_fmt=jpeg" alt></p>
+<p>任何一个标注了@Bean的方法，其返回值将作为一个bean定义注册到Spring的IoC容器，方法名将默认成该bean定义的id。</p>
+<ul>
+<li><p>表达依赖注入关系层面</p>
+<p>为了表达bean与bean之间的依赖关系，在XML形式中一般是这样：</p>
+</li>
+</ul>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BYxkMZ3lFOdh7WChbRJibLzRpdFXt4U579icdpjHyicbDey7234opClrDA/0?wx_fmt=jpeg" alt></p>
+<p>而基于JavaConfig的配置形式是这样的：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BPPZTLw6oXXdic3MTayNicEoiaY9fblyFE41CqWsRVe77bAYOfmgpyEFgw/0?wx_fmt=jpeg" alt></p>
+<p>如果一个bean的定义依赖其他bean,则直接调用对应的JavaConfig类中依赖bean的创建方法就可以了。</p>
+<h1 id="ComponentScan"><a href="#ComponentScan" class="headerlink" title="@ComponentScan"></a>@ComponentScan</h1><p>@ComponentScan这个注解在Spring中很重要，它对应XML配置中的元素，@ComponentScan的功能其实就是自动扫描并加载符合条件的组件（比如@Component和@Repository等）或者bean定义，最终将这些bean定义加载到IoC容器中。</p>
+<p>我们可以通过basePackages等属性来细粒度的定制@ComponentScan自动扫描的范围，如果不指定，则默认Spring框架实现会从声明@ComponentScan所在类的package进行扫描。</p>
+<blockquote>
+<p>注：所以SpringBoot的启动类最好是放在root package下，因为默认不指定basePackages。</p>
+</blockquote>
+<h1 id="EnableAutoConfiguration"><a href="#EnableAutoConfiguration" class="headerlink" title="@EnableAutoConfiguration"></a>@EnableAutoConfiguration</h1><p>个人感觉@EnableAutoConfiguration这个Annotation最为重要，所以放在最后来解读，大家是否还记得Spring框架提供的各种名字为@Enable开头的Annotation定义？比如@EnableScheduling、@EnableCaching、@EnableMBeanExport等，@EnableAutoConfiguration的理念和做事方式其实一脉相承，简单概括一下就是，借助@Import的支持，收集和注册特定场景相关的bean定义。</p>
+<ul>
+<li><p>@EnableScheduling是通过@Import将Spring调度框架相关的bean定义都加载到IoC容器。</p>
+</li>
+<li><p>@EnableMBeanExport是通过@Import将JMX相关的bean定义加载到IoC容器。</p>
+</li>
+</ul>
+<p>而@EnableAutoConfiguration也是借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器，仅此而已！</p>
+<p>@EnableAutoConfiguration作为一个复合Annotation,其自身定义关键信息如下：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BZ6ibAMibgXV0VRgRxv9ib0lCiaTKeAH0zdicPZTEibO40ytG19ByhF0yUxbA/0?wx_fmt=jpeg" alt></p>
+<p>其中，最关键的要属@Import(EnableAutoConfigurationImportSelector.class)，借助EnableAutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。就像一只“八爪鱼”一样</p>
+<p>借助于Spring框架原有的一个工具类：SpringFactoriesLoader的支持，@EnableAutoConfiguration可以智能的自动配置功效才得以大功告成！</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bzpgafnn204yshBIL2eFUgbtQSUIdeR57Sk3icPZf3g3biasyRqN4DvkA/0?wx_fmt=jpeg" alt></p>
+<h1 id="自动配置幕后英雄：SpringFactoriesLoader详解"><a href="#自动配置幕后英雄：SpringFactoriesLoader详解" class="headerlink" title="自动配置幕后英雄：SpringFactoriesLoader详解"></a>自动配置幕后英雄：SpringFactoriesLoader详解</h1><p>SpringFactoriesLoader属于Spring框架私有的一种扩展方案，其主要功能就是从指定的配置文件META-INF/spring.factories加载配置。</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0Bt6PnEx4E95yKOQLia5LZrwiaKMFn0FYmsu5sdODsX8lxoIyFRMaaVbqA/0?wx_fmt=jpeg" alt></p>
+<p>配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,获取对应的一组@Configuration类</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BdBhOVrpZuOXYxgx1N9DsgeIJT0v022JyiaubzEYhuvg5tY1zqUGrtNA/0?wx_fmt=jpeg" alt></p>
+<p>上图就是从SpringBoot的autoconfigure依赖包中的META-INF/spring.factories配置文件中摘录的一段内容，可以很好地说明问题。</p>
+<p>所以，@EnableAutoConfiguration自动配置的魔法骑士就变成了：从classpath中搜寻所有的META-INF/spring.factories配置文件，并将其中org.springframework.boot.autoconfigure.EnableutoConfiguration对应的配置项通过反射（Java Refletion）实例化为对应的标注了@Configuration的JavaConfig形式的IoC容器配置类，然后汇总为一个并加载到IoC容器。</p>
+<h1 id="深入探索SpringApplication执行流程"><a href="#深入探索SpringApplication执行流程" class="headerlink" title="深入探索SpringApplication执行流程"></a>深入探索SpringApplication执行流程</h1><p>SpringApplication的run方法的实现是我们本次旅程的主要线路，该方法的主要流程大体可以归纳如下：</p>
+<p>1） 如果我们使用的是SpringApplication的静态run方法，那么，这个方法里面首先要创建一个SpringApplication对象实例，然后调用这个创建好的SpringApplication的实例方法。在SpringApplication实例初始化的时候，它会提前做几件事情：</p>
+<ul>
+<li><p>根据classpath里面是否存在某个特征类（org.springframework.web.context.ConfigurableWebApplicationContext）来决定是否应该创建一个为Web应用使用的ApplicationContext类型。</p>
+</li>
+<li><p>使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationContextInitializer。</p>
+</li>
+<li><p>使用SpringFactoriesLoader在应用的classpath中查找并加载所有可用的ApplicationListener。</p>
+</li>
+<li><p>推断并设置main方法的定义类。</p>
+</li>
+</ul>
+<p>2） SpringApplication实例初始化完成并且完成设置后，就开始执行run方法的逻辑了，方法执行伊始，首先遍历执行所有通过SpringFactoriesLoader可以查找到并加载的SpringApplicationRunListener。调用它们的started()方法，告诉这些SpringApplicationRunListener，“嘿，SpringBoot应用要开始执行咯！”。</p>
+<p>3） 创建并配置当前Spring Boot应用将要使用的Environment（包括配置要使用的PropertySource以及Profile）。</p>
+<p>4） 遍历调用所有SpringApplicationRunListener的environmentPrepared()的方法，告诉他们：“当前SpringBoot应用使用的Environment准备好了咯！”。</p>
+<p>5） 如果SpringApplication的showBanner属性被设置为true，则打印banner。</p>
+<p>6） 根据用户是否明确设置了applicationContextClass类型以及初始化阶段的推断结果，决定该为当前SpringBoot应用创建什么类型的ApplicationContext并创建完成，然后根据条件决定是否添加ShutdownHook，决定是否使用自定义的BeanNameGenerator，决定是否使用自定义的ResourceLoader，当然，最重要的，将之前准备好的Environment设置给创建好的ApplicationContext使用。</p>
+<p>7） ApplicationContext创建好之后，SpringApplication会再次借助Spring-FactoriesLoader，查找并加载classpath中所有可用的ApplicationContext-Initializer，然后遍历调用这些ApplicationContextInitializer的initialize（applicationContext）方法来对已经创建好的ApplicationContext进行进一步的处理。</p>
+<p>8） 遍历调用所有SpringApplicationRunListener的contextPrepared()方法。</p>
+<p>9） 最核心的一步，将之前通过@EnableAutoConfiguration获取的所有配置以及其他形式的IoC容器配置加载到已经准备完毕的ApplicationContext。</p>
+<p>10） 遍历调用所有SpringApplicationRunListener的contextLoaded()方法。</p>
+<p>11） 调用ApplicationContext的refresh()方法，完成IoC容器可用的最后一道工序。</p>
+<p>12） 查找当前ApplicationContext中是否注册有CommandLineRunner，如果有，则遍历执行它们。</p>
+<p>13） 正常情况下，遍历执行SpringApplicationRunListener的finished()方法、（如果整个过程出现异常，则依然调用所有SpringApplicationRunListener的finished()方法，只不过这种情况下会将异常信息一并传入处理）</p>
+<p>去除事件通知点后，整个流程如下：</p>
+<p><img src="http://mmbiz.qpic.cn/mmbiz_jpg/pcT41pYWuUHL6ZWFVCvMDEpd6z50YV0BV0WRLh7on3ibclf2rjhmOF3Pn8G8Nh66DMuqicS5O6IibPLALkCibiaxoibw/0?wx_fmt=jpeg" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>到此，SpringBoot的核心组件完成了基本的解析，综合来看，大部分都是Spring框架背后的一些概念和实践方式，SpringBoot只是在这些概念和实践上对特定的场景事先进行了固化和升华，而也恰恰是这些固化让我们开发基于Sping框架的应用更加方便高效。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/springboot启动原理/" data-id="cjyvgh1nl001iq4urd9hl9mxj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/21/apirequestcontext/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ApiRequestContext的构建过程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/21/logback/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">logback实践</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>flow(active)流程 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="active相关旅程。CustomerJourneyController.activate方法：1先保存customerJourney2然后调用customerJourneyService.activate(triggerId)：2.1查询出customerJourney，根据uimodel转换出LinkedJourney，2.2再根据LinkedJourney得到相关得properties加入c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flow(active)流程">
+<meta property="og:url" content="http://yoursite.com/2019/03/29/flow(active)/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="active相关旅程。CustomerJourneyController.activate方法：1先保存customerJourney2然后调用customerJourneyService.activate(triggerId)：2.1查询出customerJourney，根据uimodel转换出LinkedJourney，2.2再根据LinkedJourney得到相关得properties加入c">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flow(active)流程">
+<meta name="twitter:description" content="active相关旅程。CustomerJourneyController.activate方法：1先保存customerJourney2然后调用customerJourneyService.activate(triggerId)：2.1查询出customerJourney，根据uimodel转换出LinkedJourney，2.2再根据LinkedJourney得到相关得properties加入c">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-flow(active)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(active)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      flow(active)流程
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>active相关旅程。<br>CustomerJourneyController.activate方法：<br>1先保存customerJourney<br>2然后调用customerJourneyService.activate(triggerId)：<br>2.1查询出customerJourney，根据uimodel转换出LinkedJourney，<br>2.2再根据LinkedJourney得到相关得properties加入customerJourney<br>2.3根据customerJourney和linkedJourney进行deploy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy(</span><br><span class="line">[1].bpmnGenerator.generateBPMN-&gt;converter出bpmnModel，[2].bpmnGenerator.getTriggerCondition(triggerNode)-&gt;根据triggerNode得到comditionstring，此处根据根节点workflowEvent得出beanname 从而得到对应得TriggerConditionGenerator接口得具体实现，核心方法generateInternal主要用来返回生成的condition字符串。(所有得trigger generator在此处使用)</span><br><span class="line">[3].customerJourney设置得到的bpmn，triggerType，workflowEvent，condition</span><br><span class="line">[4].根据customerJourneyname和bpmn进行deploy并返回ProcessDefinitionId,并设置到customerJourney中</span><br><span class="line">[5].customerJourney中每个properties都设置processDedfId和triggerId)</span><br></pre></td></tr></table></figure></p>
+<p>2.4 deploy结束返回customerJourney，设置ACTIVE状态，并更新表数据<br>2.5最后保存所有properties节点信息</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(active)/" data-id="cjyvgh1mg000tq4urp348badm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/31/activiti/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          activiti
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/29/flow(ExecutorJob)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">flow(ExecutorJob)流程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

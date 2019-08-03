@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Actionzh">
+<meta property="og:url" content="http://yoursite.com/page/5/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Actionzh">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-flow(ExecutorJob)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(ExecutorJob)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/29/flow(ExecutorJob)/">flow(ExecutorJob)流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>CustomerJourneyExecutorJob.doWork<br>根据body转化出customerJourneyContext，然后调用</li>
+<li>workflowTrigger.trigger<br>调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用</li>
+<li>workflowManager.run(内部为acticiti的runtimeService启动流程)返回processInstanceId,生成CustomerJourneyInstance并入库</li>
+</ol>
+<h4 id="action的逻辑实现调用部分"><a href="#action的逻辑实现调用部分" class="headerlink" title="action的逻辑实现调用部分"></a>action的逻辑实现调用部分</h4><p>看bpmn的xml发现，serviceTask 节点内有activiti:delegateExpression的信息，值为#{TriggerDelegateDispatcher}，#{ActionDelegateDispatcher}联想到spring代码中的delegate，查看代码发现抽象BaseDispatcher的实现有ActionDelegateDispatcher和TriggerDelegateDispatcher证实了想法。</p>
+<p>ActionDelegateDispatcher的executeDelegate方法根据customerJourneyProperty.getEvent()得到beanname，从而得到AbstractDelegate的具体实现的bean对象，最终执行delegate.executeDelegate方法，实现自实现的逻辑（每个action的实现逻辑即在此进行调用和实现）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt; &lt;definitions xmlns=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:activiti=&quot;http://activiti.org/bpmn&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:omgdc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; xmlns:omgdi=&quot;http://www.omg.org/spec/DD/20100524/DI&quot; typeLanguage=&quot;http://www.w3.org/2001/XMLSchema&quot; expressionLanguage=&quot;http://www.w3.org/1999/XPath&quot; targetNamespace=&quot;http://www.activiti.org/processdef&quot;&gt; &lt;process id=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; isExecutable=&quot;true&quot;&gt; &lt;startEvent id=&quot;START&quot;/&gt; &lt;sequenceFlow sourceRef=&quot;START&quot; targetRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot;/&gt; &lt;serviceTask id=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;TriggerDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;conditions&quot;:&quot;ANY&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;endEvent id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;sequenceFlow id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548-flow&quot; sourceRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; targetRef=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;serviceTask id=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;ActionDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;replyMessage&quot;:&#123;&quot;touser&quot;:&quot;#&#123;OPENID&#125;&quot;,&quot;text&quot;:&#123;&quot;content&quot;:&quot;近期活动 Upcoming events:\n\n2018/11/28 &lt;a href=\&quot; \&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 双语教育的模型与实践\nWhittle Talks | Bilingual Models and Practices\n\n2018/12/08 &lt;a href=\&quot;pages/order/order?event_id=82\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 小童书的大说法\nWhittle Talks | The big story behind a book for small children\n\n更多精彩活动，请&lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;查看活动日历&lt;/a &gt;\n\nFind out more in our &lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt; Event Calendar&lt;/a &gt;&quot;&#125;&#125;,&quot;resultVariable&quot;:&quot;gatewayc58&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;sequenceFlow id=&quot;N-7f0dcb94-be72-4999-84dc-256fa65d9fd9&quot; sourceRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; targetRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;/process&gt; &lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;&gt; &lt;bpmndi:BPMNPlane bpmnElement=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; id=&quot;BPMNPlane_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;/&gt; &lt;/bpmndi:BPMNDiagram&gt; &lt;/definitions&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(ExecutorJob)/" data-id="cjyvgh1mf000sq4uriigdd84n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-flow(triggerJob)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(triggerJob)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/29/flow(triggerJob)/">flow(TriggerJob)流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ol>
+<li>customerJourneyTriggerJob.doWork(message)<br>根据routingKey得出eventType和actionType根据名称拼接处QueueWorker的实现bean</li>
+<li>调用QueueWorker.work方法<br>根据body得出EventDTO，根据dto的event得出EventTriggerCallback接口的实现，</li>
+<li>调用EventTriggerCallback.onTrigger<br>根据contactId和eventid 生成CustomerJourneyContext，并调用</li>
+<li>workflowTrigger.trigger<br>根据eventdto的event查出所有customerJourney，验证其condition是否满足，满足则发送p2PMessageProducer.send(EXECUTOR_QUEUE, context) mq消息进行处理</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(triggerJob)/" data-id="cjyvgh1mh000uq4urib1jp98t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-41601" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/41601/" class="article-date">
+  <time datetime="2019-03-24T14:54:16.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/24/41601/">当 forEach 需要索引</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Java8：当-forEach-需要索引"><a href="#Java8：当-forEach-需要索引" class="headerlink" title="Java8：当 forEach 需要索引"></a>Java8：当 forEach 需要索引</h1><p>在 <a href="https://www.jianshu.com/p/5db0cf79d2d5" target="_blank" rel="noopener">上一篇文章</a> 中，我们讨论了如何使用 Java8 中 <code>Map</code> 添加的新方法 <code>computeIfAbsent</code> 来统计集合中每个元素出现的所有位置，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public static Map&lt;String, List&lt;Integer&gt;&gt; getElementPositions(List&lt;String&gt; list) &#123;</span><br><span class="line">    Map&lt;String, List&lt;Integer&gt;&gt; positionsMap = new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    for (int i = 0; i &lt; list.size(); i++) &#123;</span><br><span class="line">        positionsMap.computeIfAbsent(list.get(i), k -&gt; new ArrayList&lt;&gt;(1)).add(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return positionsMap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至少有两点需要探讨：<br>1、如果 <em>list</em> 不是基于数组的（即不是 <code>RandomAccess</code> 的），而是基于链表的，那么 <code>list.get(int index)</code> 方法的效率就值得思考了；<br>2、既然都有了 Lambda（即当前平台为 Java8），我们为什么还要一次次去写传统的 for 循环呢？</p>
+<p>在 Java8 中，为 <code>Iterable</code> 接口添加了默认的 <code>forEach</code> 方法：</p>
+<p><img src="/2019/03/24/41601/1.png" alt="1"></p>
+<p>很好理解，遍历当前 <code>Iterable</code> 中所有的元素，使用每个元素作为参数调用一次 <em>action</em>。而 <code>Collection</code> 接口继承了 <code>Iterable</code> 接口，所以所有的继承自 <code>Collection</code> 的集合类都可以直接调用 <code>forEach</code> 方法。比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">    List&lt;String&gt; list = Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;d&quot;, &quot;d&quot;, &quot;d&quot;, &quot;f&quot;, &quot;f&quot;, &quot;g&quot;);</span><br><span class="line"></span><br><span class="line">    list.forEach(str -&gt; System.out.print(str + &quot;  &quot;));</span><br><span class="line"></span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><img src="/2019/03/24/41601/2.png" alt="2"></p>
+<p>forEach 运行示例</p>
+<p>那如果我们在遍历的时候需要使用到元素的索引呢（类似 <code>getElementPositions</code> 方法那样）？<br>很可惜，Java8 的 <code>Iterable</code> 并没有提供一个带索引的 <code>forEach</code> 方法。不过自己动手，丰衣足食 —— 让我们自己写一个带索引的 <code>forEach</code> 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Objects;</span><br><span class="line">import java.util.function.BiConsumer;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Iterable 的工具类</span><br><span class="line"> */</span><br><span class="line">public class Iterables &#123;</span><br><span class="line"></span><br><span class="line">    public static &lt;E&gt; void forEach(</span><br><span class="line">            Iterable&lt;? extends E&gt; elements, BiConsumer&lt;Integer, ? super E&gt; action) &#123;</span><br><span class="line">        Objects.requireNonNull(elements);</span><br><span class="line">        Objects.requireNonNull(action);</span><br><span class="line"></span><br><span class="line">        int index = 0;</span><br><span class="line">        for (E element : elements) &#123;</span><br><span class="line">            action.accept(index++, element);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该 <code>forEach</code> 方法第一个参数为要遍历的 <code>Iterable</code>，第二个参数为 <code>BiConsumer</code>。<code>BiConsumer</code> 的输入参数第一个即索引，第二个为元素。</p>
+<p>我们测试下这个 <code>forEach</code> 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; list = Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;d&quot;, &quot;d&quot;, &quot;d&quot;, &quot;f&quot;, &quot;f&quot;, &quot;g&quot;);</span><br><span class="line"></span><br><span class="line">    Iterables.forEach(list, (index, str) -&gt; System.out.println(index + &quot; -&gt; &quot; + str));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><img src="/2019/03/24/41601/3.png" alt="3"></p>
+<p>结果和预期的一致。</p>
+<p>现在我们使用 <code>Iterables.forEach</code> 改写 <code>getElementPositions</code> 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public static Map&lt;String, List&lt;Integer&gt;&gt; getElementPositions(List&lt;String&gt; list) &#123;</span><br><span class="line">    Map&lt;String, List&lt;Integer&gt;&gt; positionsMap = new HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    Iterables.forEach(list, (index, str) -&gt; &#123;</span><br><span class="line">        positionsMap.computeIfAbsent(str, k -&gt; new ArrayList&lt;&gt;(1)).add(index);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    return positionsMap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">    List&lt;String&gt; list = Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;, &quot;c&quot;, &quot;c&quot;, &quot;d&quot;, &quot;d&quot;, &quot;d&quot;, &quot;f&quot;, &quot;f&quot;, &quot;g&quot;);</span><br><span class="line"></span><br><span class="line">    System.out.println(&quot;使用 computeIfAbsent 和 Iterable.forEach：&quot;);</span><br><span class="line">    Map&lt;String, List&lt;Integer&gt;&gt; elementPositions = getElementPositions(list);</span><br><span class="line">    System.out.println(elementPositions);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果和原来一致：<br><img src="/2019/03/24/41601/4.png" alt="4"></p>
+<p>使用 computeIfAbsent 和 Iterable.forEach 的运行结果</p>
+<p>真的不明白这么简单且实用的方法，Java8 为什么不在 <code>Iterable</code> 中提供一个默认实现（此处应有黑人问号）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/41601/" data-id="cjyvgh1lk000kq4uryxp8s3wm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-32403" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/32403/" class="article-date">
+  <time datetime="2019-03-24T14:54:16.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/24/32403/">subList</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="List接口中定义："><a href="#List接口中定义：" class="headerlink" title="List接口中定义："></a>List接口中定义：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br></pre></td></tr></table></figure>
+<h3 id="英文注释："><a href="#英文注释：" class="headerlink" title="英文注释："></a>英文注释：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fromIndex and toIndex are equal, the </span><br><span class="line">returned list is empty.) The returned list is backed by this list, so non-structural changes in the returned list are reflected in this list, and vice-versa. </span><br><span class="line">The returned list supports all of the optional list operations supported by this list.</span><br><span class="line"></span><br><span class="line">This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays). Any operation that expects a list can be used as a </span><br><span class="line">range operation by passing a subList view instead of a whole list. For example, the following idiom removes a range of elements from a list: </span><br><span class="line">      list.subList(from, to).clear();</span><br><span class="line"></span><br><span class="line">Similar idioms may be constructed for indexOf and lastIndexOf, and all of the algorithms in the Collections class can be applied to a subList.</span><br><span class="line">The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via </span><br><span class="line">the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in </span><br><span class="line">progress may yield incorrect results.)</span><br></pre></td></tr></table></figure>
+<p>根据注释得知：</p>
+<p>1，该方法返回的是父list的一个视图，从fromIndex（包含），到toIndex（不包含）。fromIndex=toIndex 表示子list为空</p>
+<p>2，父子list做的非结构性修改（non-structural changes）都会影响到彼此：所谓的“非结构性修改”，是指不涉及到list的大小改变的修改。相反，结构性修改，指改变了list大小的修改。</p>
+<p>3，对于结构性修改，子list的所有操作都会反映到父list上。但父list的修改将会导致返回的子list失效。</p>
+<p>4，tips：如何删除list中的某段数据：</p>
+<p>list.subList(from, to).clear();</p>
+<h3 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h3><p>来自<a href="http://www.cnblogs.com/weknow619/p/6251065.html" target="_blank" rel="noopener">【Java每日一题】20170105</a>，就是看到这个题目才让我知道list的这个方法我没有接触过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package ques; import java.util.ArrayList; import java.util.List; public class Ques0105 &#123; public static void main(String[] args) &#123;  </span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();  </span><br><span class="line">        list.add(&quot;a&quot;); // 使用构造器创建一个包含list的列表list1 </span><br><span class="line">        List&lt;String&gt; list1 = new ArrayList&lt;String&gt;(list); // 使用subList生成与list相同的列表list2 </span><br><span class="line">        List&lt;String&gt; list2 = list.subList(0, list.size());  </span><br><span class="line">        list2.add(&quot;b&quot;);  </span><br><span class="line"></span><br><span class="line">        System.out.println(list.equals(list1));  </span><br><span class="line">        System.out.println(list.equals(list2));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果如下：<br><img src="/2019/03/24/32403/1.png" alt="1"></p>
+<p>可以发现，list2为list的子list，当list2发生结构性修改（list2.add(“b”)）后，list也发生相应改变，所以返回结果为false和true</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/32403/" data-id="cjyvgh1lj000jq4urxf9u74vc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-32402" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/32402/" class="article-date">
+  <time datetime="2019-03-24T14:51:59.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/24/32402/">通配符和边界</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>&lt;? extends T&gt;</code>和<code>&lt;? super T&gt;</code>是Java泛型中的<strong>“通配符（Wildcards）”</strong>和<strong>“边界（Bounds）”</strong>的概念。</p>
+<ul>
+<li>&lt;? extends T&gt;：是指 <strong>“上界通配符（Upper Bounds Wildcards）”</strong></li>
+<li>&lt;? super T&gt;：是指 <strong>“下界通配符（Lower Bounds Wildcards）”</strong></li>
+</ul>
+<h3 id="为什么要用通配符和边界？"><a href="#为什么要用通配符和边界？" class="headerlink" title="为什么要用通配符和边界？"></a>为什么要用通配符和边界？</h3><p>使用泛型的过程中，经常出现一种很别扭的情况。比如按照题主的例子，我们有Fruit类，和它的派生类Apple类。</p>
+<p>class Fruit {} class Apple extends Fruit {}</p>
+<p>然后有一个最简单的容器：Plate类。盘子里可以放一个泛型的“东西”。我们可以对这个东西做最简单的“放”和“取”的动作：set( )和get( )方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Plate&lt;T&gt;&#123; </span><br><span class="line">private T item;</span><br><span class="line"> public Plate(T t)&#123;item=t;&#125; </span><br><span class="line"> public void set(T t)&#123;item=t;&#125; </span><br><span class="line"> public T get()&#123;return item;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我定义一个“水果盘子”，逻辑上水果盘子当然可以装苹果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plate&lt;Fruit&gt; p=new Plate&lt;Apple&gt;(new Apple());</span><br></pre></td></tr></table></figure>
+<p>但实际上Java编译器不允许这个操作。会报错，“装苹果的盘子”无法转换成“装水果的盘子”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">error: incompatible types: Plate&lt;Apple&gt; cannot be converted to Plate&lt;Fruit&gt;</span><br></pre></td></tr></table></figure>
+<p>所以我的尴尬症就犯了。实际上，编译器脑袋里认定的逻辑是这样的：</p>
+<ul>
+<li><strong>苹果 IS-A 水果</strong></li>
+<li><strong>装苹果的盘子 NOT-IS-A 装水果的盘子</strong></li>
+</ul>
+<p>所以，就算容器里装的东西之间有继承关系，但容器之间是没有继承关系的。所以我们不可以把Plate的引用传递给Plate。</p>
+<p>为了让泛型用起来更舒服，Sun的大脑袋们就想出了<code>&lt;? extends T&gt;</code>和<code>&lt;? super T&gt;</code>的办法，来让”水果盘子“和”苹果盘子“之间发生关系。</p>
+<h3 id="什么是上界？"><a href="#什么是上界？" class="headerlink" title="什么是上界？"></a>什么是上界？</h3><p>下面代码就是“上界通配符（Upper Bounds Wildcards）”：</p>
+<p>Plate&lt;？ extends Fruit&gt;</p>
+<p>翻译成人话就是：一个能放水果以及一切是水果派生类的盘子。再直白点就是：啥水果都能放的盘子。这和我们人类的逻辑就比较接近了。<code>Plate&lt;？ extends Fruit&gt;</code>和<code>Plate&lt;Apple&gt;</code>最大的区别就是：<code>Plate&lt;？ extends Fruit&gt;</code>是<code>Plate&lt;Fruit&gt;</code>以及<code>Plate&lt;Apple&gt;</code>的基类。直接的好处就是，我们可以用“苹果盘子”给“水果盘子”赋值了。</p>
+<p>Plate&lt;? extends Fruit&gt; p=new Plate<apple>(new Apple());</apple></p>
+<p>如果把Fruit和Apple的例子再扩展一下，食物分成水果和肉类，水果有苹果和香蕉，肉类有猪肉和牛肉，苹果还有两种青苹果和红苹果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//Lev 1</span><br><span class="line">class Food&#123;&#125; </span><br><span class="line">//Lev 2</span><br><span class="line">class Fruit extends Food&#123;&#125; </span><br><span class="line">class Meat extends Food&#123;&#125; </span><br><span class="line">//Lev 3</span><br><span class="line">class Apple extends Fruit&#123;&#125; </span><br><span class="line">class Banana extends Fruit&#123;&#125; </span><br><span class="line">class Pork extends Meat&#123;&#125; </span><br><span class="line">class Beef extends Meat&#123;&#125; </span><br><span class="line">//Lev 4</span><br><span class="line">class RedApple extends Apple&#123;&#125; </span><br><span class="line">class GreenApple extends Apple&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个体系中，下界通配符 <code>Plate&lt;？ extends Fruit&gt;</code> 覆盖下图中蓝色的区域。</p>
+<p><img src="/2019/03/24/32402/1.png" alt="1"></p>
+<h3 id="什么是下界？"><a href="#什么是下界？" class="headerlink" title="什么是下界？"></a>什么是下界？</h3><p>相对应的，“下界通配符（Lower Bounds Wildcards）”：</p>
+<p>Plate&lt;？ super Fruit&gt;</p>
+<p>表达的就是相反的概念：一个能放水果以及一切是水果基类的盘子。<code>Plate&lt;？ super Fruit&gt;</code>是<code>Plate&lt;Fruit&gt;</code>的基类，但不是<code>Plate&lt;Apple&gt;</code>的基类。对应刚才那个例子，<code>Plate&lt;？ super Fruit&gt;</code>覆盖下图中红色的区域。</p>
+<p><img src="/2019/03/24/32402/2.png" alt="2"></p>
+<h3 id="上下界通配符的副作用"><a href="#上下界通配符的副作用" class="headerlink" title="上下界通配符的副作用"></a>上下界通配符的副作用</h3><p>边界让Java不同泛型之间的转换更容易了。但不要忘记，这样的转换也有一定的副作用。那就是容器的部分功能可能失效。</p>
+<p>还是以刚才的Plate为例。我们可以对盘子做两件事，往盘子里set()新东西，以及从盘子里get()东西。</p>
+<p>class Plate<t>{ private T item; public Plate(T t){item=t;} public void set(T t){item=t;} public T get(){return item;}<br>}</t></p>
+<h4 id="上界-lt-extends-T-gt-不能往里存，只能往外取"><a href="#上界-lt-extends-T-gt-不能往里存，只能往外取" class="headerlink" title="上界&lt;? extends T&gt;不能往里存，只能往外取"></a>上界&lt;? extends T&gt;不能往里存，只能往外取</h4><p><strong>&lt;? extends Fruit&gt;会使往盘子里放东西的set( )方法失效。但取东西get( )方法还有效。比如下面例子里两个set()方法，插入Apple和Fruit都报错。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Plate&lt;? extends Fruit&gt; p=new Plate&lt;Apple&gt;(new Apple()); //不能存入任何元素</span><br><span class="line">p.set(new Fruit());    //Error</span><br><span class="line">p.set(new Apple());    //Error //读取出来的东西只能存放在Fruit或它的基类里。</span><br><span class="line">Fruit newFruit1=p.get();</span><br><span class="line">Object newFruit2=p.get();</span><br><span class="line">Apple newFruit3=p.get();    //Error</span><br></pre></td></tr></table></figure>
+<p>原因是编译器只知道容器内是Fruit或者它的派生类，但具体是什么类型不知道。可能是Fruit？可能是Apple？也可能是Banana，RedApple，GreenApple？编译器在看到后面用Plate赋值以后，盘子里没有被标上有“苹果”。而是标上一个占位符：CAP#1，来表示捕获一个Fruit或Fruit的子类，具体是什么类不知道，代号CAP#1。然后无论是想往里插入Apple或者Meat或者Fruit编译器都不知道能不能和这个CAP#1匹配，所以就都不允许。</p>
+<p>所以通配符&lt;?&gt;和类型参数的区别就在于，对编译器来说所有的T都代表同一种类型。比如下面这个泛型方法里，三个T都指代同一个类型，要么都是String，要么都是Integer。</p>
+<p>public <t> List<t> fill(T… t);</t></t></p>
+<p>但通配符<code>&lt;?&gt;</code>没有这种约束，<code>Plate&lt;?&gt;</code>单纯的就表示：盘子里放了一个东西，是什么我不知道。</p>
+<p>所以题主问题里的错误就在这里，<code>Plate&lt;？ extends Fruit&gt;</code>里什么都放不进去。</p>
+<h4 id="下界-lt-super-T-gt-不影响往里存，但往外取只能放在Object对象里"><a href="#下界-lt-super-T-gt-不影响往里存，但往外取只能放在Object对象里" class="headerlink" title="下界&lt;? super T&gt;不影响往里存，但往外取只能放在Object对象里"></a>下界&lt;? super T&gt;不影响往里存，但往外取只能放在Object对象里</h4><p><strong>使用下界&lt;? super Fruit&gt;会使从盘子里取东西的get( )方法部分失效，只能存放到Object对象里。set( )方法正常。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Plate&lt;? super Fruit&gt; p=new Plate&lt;Fruit&gt;(new Fruit()); //存入元素正常</span><br><span class="line">p.set(new Fruit());</span><br><span class="line">p.set(new Apple()); //读取出来的东西只能存放在Object类里。</span><br><span class="line">Apple newFruit3=p.get();    //Error</span><br><span class="line">Fruit newFruit1=p.get();    //Error</span><br><span class="line">Object newFruit2=p.get();</span><br></pre></td></tr></table></figure>
+<p>因为下界规定了元素的最小粒度的下限，实际上是放松了容器元素的类型控制。既然元素是Fruit的基类，那往里存粒度比Fruit小的都可以。但往外读取元素就费劲了，只有所有类的基类Object对象才能装下。但这样的话，元素的类型信息就全部丢失。</p>
+<h3 id="PECS原则"><a href="#PECS原则" class="headerlink" title="PECS原则"></a>PECS原则</h3><p>最后看一下什么是PECS（Producer Extends Consumer Super）原则，已经很好理解了：</p>
+<ul>
+<li><strong>频繁往外读取内容的，适合用上界Extends。</strong></li>
+<li><strong>经常往里插入的，适合用下界Super。</strong></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/32402/" data-id="cjyvgh1li000iq4uremn5dm7x" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-32401" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/32401/" class="article-date">
+  <time datetime="2019-03-24T14:50:00.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/24/32401/">Java8(forEach)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>java中的集合有两种形式Collection<e>，Map&lt;K,V&gt;</e></p>
+<p>Collection类型集合<br>在JAVA7中遍历有一下几种方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = Arrays.asList(<span class="string">"aaaa"</span>,<span class="string">"bbbb"</span>);</span><br><span class="line"><span class="comment">//for循环</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt; list.size();i++)&#123;</span><br><span class="line">    System.out.println(list.get(i));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//增强for循环</span></span><br><span class="line"><span class="keyword">for</span>(String str : list)&#123;</span><br><span class="line">    System.out.println(str);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//迭代器</span></span><br><span class="line">Iterator&lt;String&gt; iterator = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iterator.hasNext())&#123;</span><br><span class="line">    System.out.println(iterator.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在JAVA8中还可以使用forEach来遍历：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">list.forEach(new Consumer&lt;String&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void accept(String s) &#123;</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>发现和使用sort排序的写法是一样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(list, new Comparator&lt;String&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public int compare(String o1, String o2) &#123;</span><br><span class="line">        return o1.compareTo(o2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>发现代码量没有减少多少，那么我们在加上Lambda表达式，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.forEach(str-&gt; System.out.println(str));</span><br></pre></td></tr></table></figure>
+<p>sort排序也使用Lambda表达式，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(list,(o1,o2)-&gt;&#123;return  o1.compareTo(o2);&#125;);</span><br></pre></td></tr></table></figure>
+<p>Map类型集合<br>在JAVA7中遍历有下面几种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,String&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">map.put(&quot;id&quot;,&quot;11&quot;);</span><br><span class="line">map.put(&quot;name&quot;,&quot;zhangsan&quot;);</span><br><span class="line">map.put(&quot;age&quot;,&quot;30&quot;);</span><br><span class="line">for (Map.Entry&lt;String,String&gt; entry : map.entrySet())&#123;</span><br><span class="line">    System.out.println(&quot;k=&quot; + entry.getKey() + &quot;,v=&quot; + entry.getValue());</span><br><span class="line">&#125;</span><br><span class="line">for (String key : map.keySet())&#123;</span><br><span class="line">    System.out.println(&quot;k=&quot; + key + &quot;,v=&quot; + map.get(key));</span><br><span class="line">&#125;</span><br><span class="line">Iterator&lt;Map.Entry&lt;String, String&gt;&gt; iterator = map.entrySet().iterator();</span><br><span class="line">while (iterator.hasNext())&#123;</span><br><span class="line">    Map.Entry&lt;String, String&gt; entry = iterator.next();</span><br><span class="line">    System.out.println(&quot;k=&quot; + entry.getKey() + &quot;,v=&quot; + entry.getValue());</span><br><span class="line">&#125;</span><br><span class="line">for (String v : map.values())&#123;</span><br><span class="line">    System.out.println(&quot;v=&quot; + v);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用JAVA8的forEach遍历，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">map.forEach(new BiConsumer&lt;String, String&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void accept(String s, String s2) &#123;</span><br><span class="line">        System.out.println(&quot;k=&quot; + s + &quot;,v=&quot; + s2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>也可以使用Lambda表达式，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">map.forEach((k,v)-&gt; System.out.println(&quot;v=&quot;+k+&quot;,v=&quot;+v));</span><br></pre></td></tr></table></figure>
+<p>本文中只使用forEach，没有使用JAVA8的Stream包。<br>注：例子中出现的Consumer和BiConsumer是JAVA8中新增的函数式接口，Consumer接口中只有一个无返回结果并且只有一个泛型参数的方法，源码如下：<br><img src="/2019/03/24/32401/1.png" alt="1"></p>
+<p>BiConsumer接口中提供的是一个无返回结果并且有两个泛型参数的方法，源码如下：<br><img src="/2019/03/24/32401/2.png" alt="2"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/32401/" data-id="cjyvgh1lg000gq4urrx7dqi03" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-FilterandInterceptor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/20/FilterandInterceptor/" class="article-date">
+  <time datetime="2019-03-19T16:00:00.000Z" itemprop="datePublished">2019-03-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/20/FilterandInterceptor/">拦截器和过滤器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GenericFilterBean<br><a href="https://blog.csdn.net/liangxw1/article/details/51095484" target="_blank" rel="noopener">https://blog.csdn.net/liangxw1/article/details/51095484</a><br>RequestInterceptor<br><a href="https://www.jianshu.com/p/919d066a07aa" target="_blank" rel="noopener">https://www.jianshu.com/p/919d066a07aa</a></p>
+<p>Servlet中提供了8个监听器</p>
+<p>==一类==:监听三个域对象的创建和销毁的监听器<br>对象类型    对应的监听器<br>ServletContext    ServletContextListener<br>HttpSession    HttpSessionListener<br>HttpServletRequest    ServletRequestListener</p>
+<p>==二类==:监听三个域对象的属性变更的监听器.(属性添加,属性移除,属性替换)<br>对象类型    对应的监听器<br>ServletContext    ServletContextAttributeListener<br>HttpServletRequest    ServletRequestAttributeListener<br>HttpSession    HttpSessionAttributeListener</p>
+<p>==三类==:监听HttpSession对象中的JavaBean的状态的改变.(绑定,解除绑定,钝化和活化)2个<br>对象类型    对应的监听器<br>HttpSession    HttpSessionBindingListener(绑定,解除绑定)<br>HttpSession    HttpSessionActivationListener(钝化和活化)<br>​</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/20/FilterandInterceptor/" data-id="cjyvgh1ll000lq4urjg7s4b6i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-sql" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/20/sql/" class="article-date">
+  <time datetime="2019-03-19T16:00:00.000Z" itemprop="datePublished">2019-03-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/20/sql/">insert和replace相关</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="insert-ignore-into-和insert-into"><a href="#insert-ignore-into-和insert-into" class="headerlink" title="insert ignore into 和insert into"></a>insert ignore into 和insert into</h3><p>INSERT IGNORE 与INSERT INTO的区别就是INSERT IGNORE会忽略数据库中已经存在 的数据，如果数据库没有数据，就插入新的数据，如果有数据的话就跳过这条数据。这样就可以保留数据库中已经存在数据，达到在间隙中插入数据的目的。</p>
+<h3 id="replace-into"><a href="#replace-into" class="headerlink" title="replace into"></a>replace into</h3><p>replace into表示插入替换数据，需求表中有PrimaryKey，或者unique索引的话，如果数据库已经存在数据，则用新数据替换，如果没有数据效果则和insert into一样；<br>REPLACE语句会返回一个数，来指示受影响的行的数目。该数是被删除和被插入的行数的和。如果对于一个单行REPLACE该数为1，则一行被插入，同时没有行被删除。如果该数大于1，则在新行被插入前，有一个或多个旧行被删除。如果表包含多个唯一索引，并且新行复制了在不同的唯一索引中的不同旧行的值，则有可能是一个单一行替换了多个旧行。</p>
+<h3 id="insert-into-…-on-duplicate-key-update"><a href="#insert-into-…-on-duplicate-key-update" class="headerlink" title="insert into … on duplicate key update"></a>insert into … on duplicate key update</h3><p>insert语句的末尾添加on duplicate key update语法：如果插入行出现<strong>唯一索引或者主键</strong>重复时，则执行旧的update；如果不会导致唯一索引或者主键重复时，就直接添加新行。<br><a href="https://blog.csdn.net/qq_41070393/article/details/82422632" target="_blank" rel="noopener">https://blog.csdn.net/qq_41070393/article/details/82422632</a><br>附加条件：<br><a href="https://blog.csdn.net/hellozhxy/article/details/80945553" target="_blank" rel="noopener">https://blog.csdn.net/hellozhxy/article/details/80945553</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/20/sql/" data-id="cjyvgh1mn0011q4urtn3xmns7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31910" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31910/" class="article-date">
+  <time datetime="2019-03-19T09:13:08.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31910/">Sha1加密和HmacSHA1相关</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Sha1加密：</span><br><span class="line"></span><br><span class="line">private static final char[] _HEX_DIGITS_ = &#123;&apos;0&apos;, &apos;1&apos;, &apos;2&apos;, &apos;3&apos;, &apos;4&apos;, &apos;5&apos;,          &apos;6&apos;, &apos;7&apos;, &apos;8&apos;, &apos;9&apos;, &apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;e&apos;, &apos;f&apos;&#125;;</span><br><span class="line"></span><br><span class="line">private static String getFormattedText(byte[] bytes) &#123;      int len = bytes.length;      StringBuilder buf = new StringBuilder(len * 2);      // 把密文转换成十六进制的字符串形式      for (int j = 0; j &lt; len; j++) &#123;          buf.append(_HEX_DIGITS_[(bytes[j] &gt;&gt; 4) &amp; 0x0f]);          buf.append(_HEX_DIGITS_[bytes[j] &amp; 0x0f]);      &#125;      return buf.toString();  &#125;</span><br><span class="line"></span><br><span class="line">public String payload(@RequestBody String body, HttpServletRequest request) &#123;</span><br><span class="line"></span><br><span class="line">MessageDigest sha1 = MessageDigest.getInstance(&quot;SHA-1&quot;);  String secret = &quot;123321Zh&quot;;  sha1.update(secret.getBytes(&quot;utf-8&quot;));  byte[] digest = sha1.digest();  String result = _getFormattedText_(digest);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Java HmacSHA1算法：（HMAC(散列消息身份验证码: Hashed Message Authentication Code)）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public static String hmacSha1(String src, String key) &#123;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line"></span><br><span class="line">SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(&quot;utf-8&quot;), &quot;HmacSHA1&quot;);</span><br><span class="line"></span><br><span class="line">            Mac mac = Mac.getInstance(&quot;HmacSHA1&quot;);</span><br><span class="line"></span><br><span class="line">            mac.init(signingKey);</span><br><span class="line"></span><br><span class="line">            byte[] rawHmac = mac.doFinal(src.getBytes(&quot;utf-8&quot;));</span><br><span class="line"></span><br><span class="line">            return Hex.encodeHexString(rawHmac);</span><br><span class="line"></span><br><span class="line">&#125; catch (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            throw new RuntimeException(e);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31910/" data-id="cjyvgh1lh000hq4urvjgc4wl1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31909" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31909/" class="article-date">
+  <time datetime="2019-03-19T09:11:40.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31909/">0315的总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>–1.save和saveandflush<br>save不会立刻提交到数据库，flush则立刻提交生效，save可能只是修改在内存中的<br>–2.webhook<br>3.HMAC,SHA1<br>–4.ngrok<br><a href="https://tonybai.com/2015/05/14/ngrok-source-intro/" target="_blank" rel="noopener">https://tonybai.com/2015/05/14/ngrok-source-intro/</a><br>–5.node vue<br>–6.JodaTimeConverter</p>
+<p>–7.jackson </p>
+<p>–8.jdbctemplate namedParameterJdbcTemplate<br><a href="https://segmentfault.com/a/1190000010907688" target="_blank" rel="noopener">https://segmentfault.com/a/1190000010907688</a><br>–9.rabbit(exchange type,routingkey,queue,channel)<br>–0.zookeeper的配置属性，集群(hostname)<br>11.npm i和npm install的区别<br><a href="https://blog.csdn.net/chern1992/article/details/79193211" target="_blank" rel="noopener">https://blog.csdn.net/chern1992/article/details/79193211</a><br>–12.搭建hexo博客相关<br><a href="https://blog.csdn.net/sinat_37781304/article/details/82729029" target="_blank" rel="noopener">https://blog.csdn.net/sinat_37781304/article/details/82729029</a><br>13.阿里巴巴为什么不用 ZooKeeper 做服务发现？<br><a href="https://yq.aliyun.com/articles/599997" target="_blank" rel="noopener">https://yq.aliyun.com/articles/599997</a><br>14.what are webhooks?<br><a href="https://zapier.com/blog/what-are-webhooks/" target="_blank" rel="noopener">https://zapier.com/blog/what-are-webhooks/</a><br>You’re only limited by your imagination.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31909/" data-id="cjyvgh1lf000fq4ur66e3z5nr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

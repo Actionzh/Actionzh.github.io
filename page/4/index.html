@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Actionzh">
+<meta property="og:url" content="http://yoursite.com/page/4/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Actionzh">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-jinshuju流程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/03/jinshuju流程/" class="article-date">
+  <time datetime="2019-04-03T15:40:16.000Z" itemprop="datePublished">2019-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/03/jinshuju流程/">总结0403(金数据linkflow分析)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-connect"><a href="#1-connect" class="headerlink" title="1.connect"></a>1.connect</h3><p>1.1根据code和state获取token,得到token,refresh_token,和期限等信息-&gt;用accesstoken获取profile<br>1.2将email作为channelId,查数据库是否已存在channeldto<br>不存在则重新构建channeldto和channedto.property<br>1.3事务执行channeldto插入数据库，同时将access_token和refresh_token插入redis,accesstoken设置redis过期时间</p>
+<h3 id="2-getaccesstoken根据channelId"><a href="#2-getaccesstoken根据channelId" class="headerlink" title="2.getaccesstoken根据channelId"></a>2.getaccesstoken根据channelId</h3><p>从redis获取accesstoken如果为空，则获取refreshtoken,并从新请求获取token信息，并设置进入redis(refreshToken每次都更新进channel.property的数据库字段中)</p>
+<h3 id="3-handleSubmit-String-channelId-JsonNode-responseBody"><a href="#3-handleSubmit-String-channelId-JsonNode-responseBody" class="headerlink" title="3.handleSubmit(String channelId, JsonNode responseBody)"></a>3.handleSubmit(String channelId, JsonNode responseBody)</h3><p>1.根据JinshujuSubmitDTO获取FormMappingDTO<br>2.判断是否是微信过来的用户，曾经关注过的用户取出contact; 未关注过的新建用户创建匿名用户<br>3.既是匿名用户又没有表单映射，退出<br>匿名访问情况下先通过表单的值查询是否有已存在用户（通过邮箱和手机号）<br>4.根据channeldto和submitdto创建EventDTO<br>5.用channelId和contactDTO调用<br>==contactFacade.save==：<br>保存contactDTO，更新渠道账号信息ContactIdentityDTO<br>循环获取contactdto的event,调用：<br>==eventService.create(eventDTO)==：<br>保存event，循环子事件，调用rabbitMq消息</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/03/jinshuju流程/" data-id="cjyvgh1mj000xq4uruducg2f0" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-0403" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/03/0403/" class="article-date">
+  <time datetime="2019-04-03T09:40:16.000Z" itemprop="datePublished">2019-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/03/0403/">总结0403</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.oauth2<br><a href="https://www.jianshu.com/p/9d0264d27c3b" target="_blank" rel="noopener">https://www.jianshu.com/p/9d0264d27c3b</a><br>oauth1与oauth2<br><a href="https://blog.csdn.net/w_xuexi666/article/details/54564058" target="_blank" rel="noopener">https://blog.csdn.net/w_xuexi666/article/details/54564058</a></p>
+<ol start="2">
+<li>http basic 认证</li>
+</ol>
+<ul>
+<li>浏览器发送请求 get 到服务器，服务器检查请求是否包含 Authorization 信息，若没有则返回响应 401，并且加上响应头信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WWW-Authenticate: Basic realm=&quot;请求域&quot;。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>浏览器接受到上面传递回来的响应码，会自动弹出输入框让用户输入相关的用户名和密码。之后，浏览器将用户名和密码进行 base64 编码，设置请求头Authorization，去请求服务器，并且每次请求都会将密文附加于请求头，服务器收到请求后，对密文进行验证，从而返回相应的信息，如果验证失败，会返回 401 状态码，执行上一步骤，再次进行验证。</li>
+</ul>
+<ol start="3">
+<li>Token<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token 是一串字符串，通常因为作为鉴权凭据，最常用的使用场景是 API 鉴权。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>4.bifunction/function<br><a href="https://www.jianshu.com/p/8dc46a2dc21d" target="_blank" rel="noopener">https://www.jianshu.com/p/8dc46a2dc21d</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/03/0403/" data-id="cjyvgh1l10006q4ur25mj5d3m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-异常处理(0402)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/02/异常处理(0402)/" class="article-date">
+  <time datetime="2019-04-02T09:40:16.000Z" itemprop="datePublished">2019-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/02/异常处理(0402)/">总结0402（异常处理）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.系统异常(即用户重试都无法解决的，例如网络异常，数据库异常，IO异常等)<br>AppException<br>ExceptionCode使用<strong>S_XXX</strong>开头<br>httpcode 500<br>2.业务异常(即可以通过用户重试或者改变参数解决的，例如参数错误，配置缺失，验证错误等)<br>BizException<br>ExceptionCode使用<strong>B_XXX</strong>开头<br>httpcode  420<br>3.代码异常（如NPE或SQLException） 和 系统异常（网络异常，环境问题等）都使用httpCode=500, ExceptionCode=S99999抛出，在服务中通过@ExceptionHandler(Throwable.class)兜底并添加code，S99999</p>
+<p>异常处理流程：<br>程序中直接抛出抛出异常，最终由spring的统一异常处理（@ExceptionHandler）来捕获，打印异常信息，返回httpcode和ErrorResult<br>对象，而系统调用会经过ribbon，根据httpcode的状态判断是否进行重试。</p>
+<p>3.@RestControllerAdvice spring统一异常处理<br><a href="https://www.cnblogs.com/magicalSam/p/7198420.html" target="_blank" rel="noopener">https://www.cnblogs.com/magicalSam/p/7198420.html</a><br><a href="https://www.cnblogs.com/topfish/p/9573635.html" target="_blank" rel="noopener">https://www.cnblogs.com/topfish/p/9573635.html</a></p>
+<p>4.springboot 重试<br>spring-retry<br><a href="https://blog.csdn.net/u012129558/article/details/79016732" target="_blank" rel="noopener">https://blog.csdn.net/u012129558/article/details/79016732</a></p>
+<p>5.spring cloud得重试机制<br>Feign.Retryer<br>ribbon重试配置</p>
+<p><a href="https://www.jb51.net/article/129336.htm" target="_blank" rel="noopener">https://www.jb51.net/article/129336.htm</a><br><a href="https://www.cnblogs.com/zhangjianbin/p/7228628.html" target="_blank" rel="noopener">https://www.cnblogs.com/zhangjianbin/p/7228628.html</a></p>
+<p>6.开发测试发布流程</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/02/异常处理(0402)/" data-id="cjyvgh1mo0013q4ur4uoxd197" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-0401" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/02/0401/" class="article-date">
+  <time datetime="2019-04-01T16:08:16.000Z" itemprop="datePublished">2019-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/02/0401/">总结0402</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.mdc<br><a href="https://www.liangzl.com/get-article-detail-572.html" target="_blank" rel="noopener">https://www.liangzl.com/get-article-detail-572.html</a><br><a href="https://shift-alt-ctrl.iteye.com/blog/2345272" target="_blank" rel="noopener">https://shift-alt-ctrl.iteye.com/blog/2345272</a><br>2.transmittable-thread-local<br><a href="https://github.com/alibaba/transmittable-thread-local" target="_blank" rel="noopener">https://github.com/alibaba/transmittable-thread-local</a><br>3.代码整洁之道<br>注释不能美化糟糕的代码<br>4.异常处理<br><a href="https://blog.csdn.net/yongyuai/article/details/79752608" target="_blank" rel="noopener">https://blog.csdn.net/yongyuai/article/details/79752608</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/02/0401/" data-id="cjyvgh1kt0002q4ur0obhy2c6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-HikariCP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/HikariCP/" class="article-date">
+  <time datetime="2019-03-31T09:28:18.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/31/HikariCP/">HikariCP</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本篇文章主要实现SpringBoot中使用hikariCP；<br>一 、使用工具 </p>
+<ol>
+<li>JDK1.8 </li>
+<li>springToolSuit(STS) </li>
+<li>maven<br>二、创建项目<br>1.首先创建一个SpringBoot项目，勾选web，mysql等具体怎样创建可以参考我的上两个博客；传送门<br>2.maven 依赖如下：<br>1）Java 8 maven artifact:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.6.1&lt;/version&gt;</span><br><span class="line">    &lt;scope&gt;compile&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>2）Java 7 maven artifact:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;HikariCP-java7&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;2.4.11&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;compile&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>我的maven依赖为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">        &lt;!-- spring aop --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- spring data jpa --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- hibernate 依赖 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.hibernate.javax.persistence&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;hibernate-jpa-2.1-api&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0.0.Final&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- JDBC连接数据库，因为要用HikariCP，所以需要将SpringBoot中的tomcat-jdbc排除 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-jdbc&lt;/artifactId&gt;</span><br><span class="line">            &lt;exclusions&gt;</span><br><span class="line">                &lt;exclusion&gt;</span><br><span class="line">                    &lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;</span><br><span class="line">                    &lt;artifactId&gt;tomcat-jdbc&lt;/artifactId&gt;</span><br><span class="line">                &lt;/exclusion&gt;</span><br><span class="line">            &lt;/exclusions&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- HikariCP 连接池依赖，从父依赖获取额版本 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;</span><br><span class="line">            &lt;!-- &lt;scope&gt;runtime&lt;/scope&gt; --&gt;</span><br><span class="line">        &lt;/dependency&gt; </span><br><span class="line"></span><br><span class="line">        &lt;!-- 因为配置了thymeleaf 模板，可以将此注释</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt; --&gt;</span><br><span class="line">        &lt;!-- thymeleaf 模板   默认包含spring-boot-starter-web--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 连接mysql数据库驱动 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;runtime&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- spring boot 内置tomcat --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--@ConfigurationProperties注解--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;</span><br><span class="line">            &lt;optional&gt;true&lt;/optional&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- net json 这个必须配置jdk的版本号 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;net.sf.json-lib&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;json-lib&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.4&lt;/version&gt;</span><br><span class="line">            &lt;classifier&gt;jdk15&lt;/classifier&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream --&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- LEGACYHTML5需要搭配一个额外的库NekoHTML才可用,解决严格的html验证问题 --&gt;</span><br><span class="line">        &lt;dependency&gt;  </span><br><span class="line">            &lt;groupId&gt;net.sourceforge.nekohtml&lt;/groupId&gt;  </span><br><span class="line">            &lt;artifactId&gt;nekohtml&lt;/artifactId&gt;  </span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 单元测试相关依赖 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+<p>SpringBoot父依赖如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;1.5.6.RELEASE&lt;/version&gt;</span><br><span class="line">        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的是，因为用了最新的SpringBoot版本，HikarICP从SpringBoot继承版本，所以JDK需要配置为1.8，如果不是将会出现错误，错误原因将会在下面展示。 </p>
+<p>3.数据库连接配置文件如下(我将数据库连接配置单独写在了一个配置文件，这样找起来比较清晰，文件名为 datasource.properties ，后面的配置类中要用到此名字)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#第一个数据源（多数据源将会在后面介绍,primary表示为第一个数据源）</span><br><span class="line">spring.datasource.primary.dataSourceClassName=com.mysql.jdbc.jdbc2.optional.MysqlDataSource</span><br><span class="line">spring.datasource.primary.dataSourceProperties.serverName=localhost</span><br><span class="line">spring.datasource.primary.dataSourceProperties.portNumber=3306</span><br><span class="line">spring.datasource.primary.dataSourceProperties.databaseName=newrecruit</span><br><span class="line">spring.datasource.primary.username=root</span><br><span class="line">spring.datasource.primary.password=yourpassword</span><br><span class="line"># 下面为连接池的补充设置，应用到上面所有数据源中</span><br><span class="line">#自动提交</span><br><span class="line">spring.datasource.default-auto-commit=true</span><br><span class="line">#指定updates是否自动提交</span><br><span class="line">spring.datasource.auto-commit=true</span><br><span class="line">spring.jpa.show-sql = true</span><br><span class="line">spring.datasource.maximum-pool-size=100</span><br><span class="line">spring.datasource.max-idle=10</span><br><span class="line">spring.datasource.max-wait=10000</span><br><span class="line">spring.datasource.min-idle=5</span><br><span class="line">spring.datasource.initial-size=5</span><br><span class="line">spring.datasource.validation-query=SELECT 1</span><br><span class="line">spring.datasource.test-on-borrow=false</span><br><span class="line">spring.datasource.test-while-idle=true</span><br><span class="line"># 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 </span><br><span class="line">spring.datasource.time-between-eviction-runs-millis=18800</span><br><span class="line"># 配置一个连接在池中最小生存的时间，单位是毫秒 </span><br><span class="line">spring.datasource.minEvictableIdleTimeMillis=300000</span><br><span class="line"></span><br><span class="line"># Hibernate ddl auto (create, create-drop, update)</span><br><span class="line">spring.jpa.hibernate.ddl-auto=update  </span><br><span class="line">#spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect  </span><br><span class="line">spring.jpa.hibernate.naming_strategy=org.hibernate.cfg.ImprovedNamingStrategy  </span><br><span class="line">#spring.jpa.database=org.hibernate.dialect.MySQL5InnoDBDialect </span><br><span class="line">spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect</span><br></pre></td></tr></table></figure></p>
+<p>数据库配置文件写好以后，开始写配置类 :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc.config;</span><br><span class="line"></span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;</span><br><span class="line">import org.springframework.boot.context.properties.ConfigurationProperties;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.context.annotation.Primary;</span><br><span class="line">import org.springframework.context.annotation.PropertySource;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * &lt;p&gt;Company: &lt;/p&gt; </span><br><span class="line">  * @Description: </span><br><span class="line">  * @Create Date: 2017年8月13日下午11:59:49</span><br><span class="line">  * @Version: V1.00 </span><br><span class="line">  * @Author: 追到乌云的尽头找太阳</span><br><span class="line">  */</span><br><span class="line">@Configuration</span><br><span class="line">@PropertySource(&quot;classpath:datasource.properties&quot;)</span><br><span class="line">public class DataSourceConfig &#123;</span><br><span class="line"></span><br><span class="line">    private Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Bean(name = &quot;primaryDataSource&quot;)</span><br><span class="line">    @Primary</span><br><span class="line">    @Qualifier(&quot;primaryDataSource&quot;)</span><br><span class="line">    @ConfigurationProperties(prefix=&quot;spring.datasource.primary&quot; )</span><br><span class="line">    public DataSource primaryDataSource() &#123;</span><br><span class="line">        logger.info(&quot;数据库连接池创建中.......&quot;);</span><br><span class="line">        return DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一个@PropertySource(“classpath:datasource.properties”)注解，就可以免去我们自己写读取配置文件的麻烦<br>第一个数据源的配置类如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line">import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;</span><br><span class="line">import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.context.annotation.Primary;</span><br><span class="line">import org.springframework.data.jpa.repository.config.EnableJpaRepositories;</span><br><span class="line">import org.springframework.orm.jpa.JpaTransactionManager;</span><br><span class="line">import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;</span><br><span class="line">import org.springframework.transaction.PlatformTransactionManager;</span><br><span class="line">import org.springframework.transaction.annotation.EnableTransactionManagement;</span><br><span class="line"></span><br><span class="line">import javax.persistence.EntityManager;</span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">  * &lt;p&gt;Company: 信息技术研究所 &lt;/p&gt; </span><br><span class="line">  * @Description: 第一个数据源的配置类</span><br><span class="line">  * @Create Date: 2017年5月11日下午9:22:12</span><br><span class="line">  * @Version: V1.00 </span><br><span class="line">  * @Author: 追到乌云的尽头找太阳</span><br><span class="line">  */</span><br><span class="line">@Configuration</span><br><span class="line">@EnableTransactionManagement</span><br><span class="line">@EnableJpaRepositories(</span><br><span class="line">        entityManagerFactoryRef=&quot;entityManagerFactoryPrimary&quot;,</span><br><span class="line">        transactionManagerRef=&quot;transactionManagerPrimary&quot;,</span><br><span class="line">        basePackages= &#123; &quot;com.zlc.dao&quot; &#125;) //设置Repository所在位置</span><br><span class="line">public class PrimaryDataSouceConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired @Qualifier(&quot;primaryDataSource&quot;)</span><br><span class="line">    private DataSource primaryDataSource;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;entityManagerPrimary&quot;)</span><br><span class="line">    public EntityManager entityManager(EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return entityManagerFactoryPrimary(builder).getObject().createEntityManager();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;entityManagerFactoryPrimary&quot;)</span><br><span class="line">    public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary (EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return builder</span><br><span class="line">                .dataSource(primaryDataSource)</span><br><span class="line">                .properties(getVendorProperties(primaryDataSource))</span><br><span class="line">                .packages(&quot;com.zlc.entity&quot;) //设置实体类所在位置</span><br><span class="line">                .persistenceUnit(&quot;primaryPersistenceUnit&quot;)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JpaProperties jpaProperties;</span><br><span class="line"></span><br><span class="line">    private Map&lt;String, String&gt; getVendorProperties(DataSource dataSource) &#123;</span><br><span class="line">        return jpaProperties.getHibernateProperties(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;transactionManagerPrimary&quot;)</span><br><span class="line">    public PlatformTransactionManager transactionManagerPrimary(EntityManagerFactoryBuilder builder) &#123;</span><br><span class="line">        return new JpaTransactionManager(entityManagerFactoryPrimary(builder).getObject());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面有连个需要注意的地方，一个是JPA所在的包名： basePackages= { “com.b505.dao” }) //设置Repository所在位置，一定不能写错，一个JPA实体类所在的位置： .packages(“com.b505.entity”) //设置实体类所在位置。</p>
+<p>我们在main方法中我们可以检查一下（一定要注意SpringBoot项目的结构，因为SpringBoot是自动扫描并注册类注册到Spring的上下文中所以main所在的类的包名一定是最大的，这样用其他注解的类才能正常注册，我的项目结构如下）：<br><img src="/2019/03/31/HikariCP/1.png" alt="1"></p>
+<p>如果你的controller写在了com.zlca.web；那么项目编译不会产生错误，但是此web层的映射全都不能用，因为没有注册到Spring中。SpringBoot是扫描@SpringBootApplication下的类以及此注解的子文件夹下的类；<br>main方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">package com.zlc;</span><br><span class="line"></span><br><span class="line">import java.sql.Connection;</span><br><span class="line">import java.sql.ResultSet;</span><br><span class="line">import java.sql.SQLException;</span><br><span class="line"></span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line"></span><br><span class="line">import com.zaxxer.hikari.HikariDataSource;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;p&gt;Company: 信息技术研究所 &lt;/p&gt; </span><br><span class="line"> * @Description: 程序的入口</span><br><span class="line"> * @Create Date: 2017年9月14日下午1:11:05</span><br><span class="line"> * @Version: V1.00 </span><br><span class="line"> * @Author: 追到乌云的尽头找太阳</span><br><span class="line"> */</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class RecruitmentApp &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext applicationContext = SpringApplication.run(</span><br><span class="line">                RecruitmentApp.class, args);</span><br><span class="line">        DataSource dataSource = applicationContext.getBean(DataSource.class);</span><br><span class="line">        System.out.println(&quot;datasource is :&quot; + dataSource);</span><br><span class="line">        //检查数据库是否是hikar数据库连接池</span><br><span class="line">        if (!(dataSource instanceof HikariDataSource)) &#123;</span><br><span class="line">            System.err.println(&quot; Wrong datasource type :&quot;</span><br><span class="line">                    + dataSource.getClass().getCanonicalName());</span><br><span class="line">            System.exit(-1);</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            Connection connection = dataSource.getConnection();</span><br><span class="line">            ResultSet rs = connection.createStatement()</span><br><span class="line">                    .executeQuery(&quot;SELECT 1&quot;);</span><br><span class="line">            if (rs.first()) &#123;</span><br><span class="line"></span><br><span class="line">                System.out.println(&quot;Connection OK!&quot;);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                System.out.println(&quot;Something is wrong&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            // connection.close();</span><br><span class="line">            // System.exit(0);</span><br><span class="line"></span><br><span class="line">        &#125; catch (SQLException e) &#123;</span><br><span class="line">            System.out.println(&quot;FAILED&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            System.exit(-2);</span><br><span class="line">            // TODO: handle exception</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>HIkariCP已经配置好了，启动main；<br><img src="/2019/03/31/HikariCP/2.png" alt="2"></p>
+<p>完工；这里需要注意的一点，如果是用jdk1.7，则会出现如下错误：<br><img src="/2019/03/31/HikariCP/3.png" alt="3"><br><img src="/2019/03/31/HikariCP/4.png" alt="4"></p>
+<p>这个就是本博客一开始中说的jdk版本和Hikari的版本要对应上。此错误只需要将JDK换成1.8即可。</p>
+<p>参考：<br><a href="https://blog.csdn.net/chen15369337607/article/details/78142751" target="_blank" rel="noopener">https://blog.csdn.net/chen15369337607/article/details/78142751</a><br><a href="https://blog.csdn.net/clementad/article/details/46928621" target="_blank" rel="noopener">https://blog.csdn.net/clementad/article/details/46928621</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/HikariCP/" data-id="cjyvgh1nh001eq4uriqvzsbbl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Flyway" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/Flyway/" class="article-date">
+  <time datetime="2019-03-31T09:11:04.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/31/Flyway/">Flyway</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是Flyway"><a href="#什么是Flyway" class="headerlink" title="什么是Flyway?"></a>什么是Flyway?</h2><blockquote>
+<p>Flyway is an open-source database migration tool. It strongly favors simplicity and convention over configuration.</p>
+</blockquote>
+<p>Flyway是一款开源的数据库版本管理工具，它更倾向于规约优于配置的方式。Flyway可以独立于应用实现管理并跟踪数据库变更，支持数据库版本自动升级，并且有一套默认的规约，不需要复杂的配置，Migrations可以写成SQL脚本，也可以写在Java代码中，不仅支持Command Line和Java API，还支持Build构建工具和Spring Boot等，同时在分布式环境下能够安全可靠地升级数据库，同时也支持失败恢复等。</p>
+<p>Flyway主要基于6种基本命令：<code>Migrate</code>, <code>Clean</code>, <code>Info</code>, <code>Validate</code>, <code>Baseline</code> and <code>Repair</code>，稍候会逐一分析讲解。目前支持的数据库主要有：Oracle, SQL Server, SQL Azure, DB2, DB2 z/OS, MySQL(including Amazon RDS), MariaDB, Google Cloud SQL, PostgreSQL(including Amazon RDS and Heroku), Redshift, Vertica, H2, Hsql, Derby, SQLite, SAP HANA, solidDB, Sybase ASE and Phoenix.</p>
+<p>关于Flyway的优势，支持的数据库以及与其他数据库版本工具的对比，可以阅读<a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway官网介绍</a>。</p>
+<h2 id="为什么使用Flyway"><a href="#为什么使用Flyway" class="headerlink" title="为什么使用Flyway?"></a>为什么使用Flyway?</h2><p>通常在项目开始时会针对数据库进行全局设计，但在开发产品新特性过程中，难免会遇到需要更新数据库Schema的情况，比如：添加新表，添加新字段和约束等，这种情况在实际项目中也经常发生。那么，当开发人员完成了对数据库更的SQL脚本后，如何快速地在其他开发者机器上同步？并且如何在测试服务器上快速同步？以及如何保证集成测试能够顺利执行并通过呢？</p>
+<p>假设以Spring Boot技术栈项目为例，可能有人会说，本地使用Hibernate自动更新数据库Schema模式，然后让QA或DEV到测试服务器上手动执行SQL脚本，同时可以写一个Gradle任务自动执行更新。</p>
+<p>个人觉得，对于Hibernate自动更新数据库，感觉不靠谱，不透明，控制自由度不高，而且有时很容易就会犯错，比如：用SQL创建的某个字段为VARCHAR类型，而在Entity中配置的为CHAR类型，那么在运行集成测试时，自动创建的数据库表中的字段为CHAR类型，而实际SQL脚本期望的是VARCHAR类型，虽然测试通过了，但不是期望的行为，并且在本地bootRun或服务器上运行Service时都会失败。另外，到各测试服务器上手动执行SQL脚本费时费神费力的，干嘛不自动化呢，当然，对于高级别和PROD环境，还是需要DBA手动执行的。最后，写一段自动化程序来自动执行更新，想法是很好的，那如果已经有了一些插件或库可以帮助你更好地实现这样的功能，为何不好好利用一下呢，当然，如果是为了学习目的，重复造轮子是无可厚非的。</p>
+<p>其实，以上问题可以通过Flyway工具来解决，Flyway可以实现自动化的数据库版本管理，并且能够记录数据库版本更新记录，Flyway官网对<a href="https://flywaydb.org/getstarted/why" target="_blank" rel="noopener">Why database migrations</a>结合示例进行了详细的阐述，有兴趣可以参阅一下。</p>
+<h2 id="Flyway如何工作的"><a href="#Flyway如何工作的" class="headerlink" title="Flyway如何工作的?"></a>Flyway如何工作的?</h2><p>Flyway对数据库进行版本管理主要由Metadata表和6种命令完成，Metadata主要用于记录元数据，每种命令功能和解决的问题范围不一样，以下分别对metadata表和这些命令进行阐述，其中的示意图都来自Flyway的官方文档。</p>
+<h4 id="Metadata-Table"><a href="#Metadata-Table" class="headerlink" title="Metadata Table"></a>Metadata Table</h4><p>Flyway中最核心的就是用于记录所有版本演化和状态的Metadata表，在Flyway首次启动时会创建默认名为<code>SCHEMA_VERSION</code>的元数据表，其表结构为(以MySQL为例)：</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Null</th>
+<th>Key</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version_rank</td>
+<td>int(11)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_rank</td>
+<td>int(11)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>version</td>
+<td>varchar(50)</td>
+<td>NO</td>
+<td>PRI</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>description</td>
+<td>varchar(200)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>type</td>
+<td>varchar(20)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>script</td>
+<td>varchar(1000)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>checksum</td>
+<td>int(11)</td>
+<td>YES</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_by</td>
+<td>varchar(100)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_on</td>
+<td>timestamp</td>
+<td>NO</td>
+<td></td>
+<td>CURRENT_TIMESTAMP</td>
+</tr>
+<tr>
+<td>execution_time</td>
+<td>int(11)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>success</td>
+<td>tinyint(1)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<p>Flyway官网上提供了一个很清晰的示例<a href="https://flywaydb.org/getstarted/how" target="_blank" rel="noopener">How Flyway works</a>，可以参阅一下。</p>
+<h4 id="Migrate"><a href="#Migrate" class="headerlink" title="Migrate"></a>Migrate</h4><p>Migrate是指把数据库Schema迁移到最新版本，是Flyway工作流的核心功能，Flyway在Migrate时会检查Metadata(元数据)表，如果不存在会创建Metadata表，Metadata表主要用于记录版本变更历史以及Checksum之类的。<br><img src="/2019/03/31/Flyway/1.png" alt="1"><br>Migrate时会扫描指定文件系统或Classpath下的Migrations(可以理解为数据库的版本脚本)，并且会逐一比对Metadata表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按次序Apply到数据库中，否则不需要做任何事情。另外，通常在应用程序启动时应默认执行Migrate操作，从而避免程序和数据库的不一致性。</p>
+<h4 id="Clean"><a href="#Clean" class="headerlink" title="Clean"></a>Clean</h4><p>Clean相对比较容易理解，即清除掉对应数据库Schema中的所有对象，包括表结构，视图，存储过程，函数以及所有的数据等都会被清除。<br><img src="/2019/03/31/Flyway/2.png" alt="2"><br>Clean操作在开发和测试阶段是非常有用的，它能够帮助快速有效地更新和重新生成数据库表结构，但特别注意的是：不应在Production的数据库上使用！</p>
+<h4 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h4><p>Info用于打印所有Migrations的详细和状态信息，其实也是通过Metadata表和Migrations完成的，下图很好地示意了Info打印出来的信息。<br><img src="/2019/03/31/Flyway/3.png" alt="3"></p>
+<p>Info能够帮助快速定位当前的数据库版本，以及查看执行成功和失败的Migrations。</p>
+<h4 id="Validate"><a href="#Validate" class="headerlink" title="Validate"></a>Validate</h4><p>Validate是指验证已经Apply的Migrations是否有变更，Flyway是默认是开启验证的。<br><img src="/2019/03/31/Flyway/4.png" alt="4"><br>Validate原理是对比Metadata表与本地Migrations的Checksum值，如果值相同则验证通过，否则验证失败，从而可以防止对已经Apply到数据库的本地Migrations的无意修改。</p>
+<h4 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h4><p>Baseline针对已经存在Schema结构的数据库的一种解决方案，即实现在非空数据库中新建Metadata表，并把Migrations应用到该数据库。<br><img src="/2019/03/31/Flyway/5.png" alt="5"><br>Baseline可以应用到特定的版本，这样在已有表结构的数据库中也可以实现添加Metadata表，从而利用Flyway进行新Migrations的管理了。</p>
+<h4 id="Repair"><a href="#Repair" class="headerlink" title="Repair"></a>Repair</h4><p>Repair操作能够修复Metadata表，该操作在Metadata表出现错误时是非常有用的。<br><img src="/2019/03/31/Flyway/6.png" alt="6"></p>
+<p>Repair会修复Metadata表的错误，通常有两种用途：</p>
+<ul>
+<li>移除失败的Migration记录，该问题只是针对不支持DDL事务的数据库。</li>
+<li>重新调整已经应用的Migratons的Checksums值，比如：某个Migratinon已经被应用，但本地进行了修改，又期望重新应用并调整Checksum值，不过尽量不要这样操作，否则可能造成其它环境失败。</li>
+</ul>
+<h2 id="如何使用Flyway"><a href="#如何使用Flyway" class="headerlink" title="如何使用Flyway?"></a>如何使用Flyway?</h2><p>这里将主要关注在Gradle和Spring Boot中集成并使用Flyway，数据库通常会采用MySQL、PostgreSQL、H2或Hsql等。</p>
+<h4 id="正确创建Migrations"><a href="#正确创建Migrations" class="headerlink" title="正确创建Migrations"></a>正确创建Migrations</h4><p><strong>Migrations</strong>是指Flyway在更新数据库时是使用的版本脚本，比如：一个基于Sql的Migration命名为<code>V1__init_tables.sql</code>，内容即是创建所有表的sql语句，另外，Flyway也支持基于Java的Migration。Flyway加载Migrations的默认Locations为<code>classpath:db/migration</code>，也可以指定<code>filesystem:/project/folder</code>，其加载是在Runtime自动递归地执行的。<br><img src="/2019/03/31/Flyway/8.png" alt="8"></p>
+<p>除了需要指定Location外，Flyway对Migrations的扫描还必须遵从一定的命名模式，Migration主要分为两类：Versioned和Repeatable。</p>
+<ul>
+<li><p><strong>Versioned migrations</strong><br>一般常用的是Versioned类型，用于版本升级，每一个版本都有一个唯一的标识并且只能被应用一次，并且不能再修改已经加载过的Migrations，因为Metadata表会记录其Checksum值。其中的version标识版本号，由一个或多个数字构成，数字之间的分隔符可以采用点或下划线，在运行时下划线其实也是被替换成点了，每一部分的前导零会被自动忽略。</p>
+</li>
+<li><p><strong>Repeatable migrations</strong><br>Repeatable是指可重复加载的Migrations，其每一次的更新会影响Checksum值，然后都会被重新加载，并不用于版本升级。对于管理不稳定的数据库对象的更新时非常有用。Repeatable的Migrations总是在Versioned之后按顺序执行，但开发者必须自己维护脚本并且确保可以重复执行，通常会在sql语句中使用<code>CREATE OR REPLACE</code>来保证可重复执行。</p>
+</li>
+</ul>
+<p>默认情况下基于Sql的Migration文件的命令规则如下图所示：<br><img src="/2019/03/31/Flyway/9.png" alt="9"></p>
+<p>其中的文件名由以下部分组成，除了使用默认配置外，某些部分还可自定义规则。</p>
+<ul>
+<li>prefix: 可配置，前缀标识，默认值<code>V</code>表示Versioned，<code>R</code>表示Repeatable</li>
+<li>version: 标识版本号，由一个或多个数字构成，数字之间的分隔符可用点<code>.</code>或下划线<code>_</code></li>
+<li>separator: 可配置，用于分隔版本标识与描述信息，默认为两个下划线<code>__</code></li>
+<li>description: 描述信息，文字之间可以用下划线或空格分隔</li>
+<li>suffix: 可配置，后续标识，默认为<code>.sql</code></li>
+</ul>
+<p>另外，关于如何使用基于Java的Migrations，有兴趣可以参考<a href="https://flywaydb.org/documentation/migration/java" target="_blank" rel="noopener">Java-based migrations</a>。</p>
+<h4 id="支持的数据库"><a href="#支持的数据库" class="headerlink" title="支持的数据库"></a>支持的数据库</h4><p>目前Flyway支持的数据库还是挺多的，包括：Oracle, SQL Server, SQL Azure, DB2, DB2 z/OS, MySQL(including Amazon RDS), MariaDB, Google Cloud SQL, PostgreSQL(including Amazon RDS and Heroku), Redshift, Vertica, H2, Hsql, Derby, SQLite, SAP HANA, solidDB, Sybase ASE and Phoenix。<br>目前来说，个人用得比较多的数据库是<a href="https://flywaydb.org/documentation/database/postgresql" target="_blank" rel="noopener">PostgreSQL</a>、<a href="https://flywaydb.org/documentation/database/mysql" target="_blank" rel="noopener">MySQL</a>、<a href="https://flywaydb.org/documentation/database/h2" target="_blank" rel="noopener">H2</a>和<a href="https://flywaydb.org/documentation/database/hsql" target="_blank" rel="noopener">Hsql</a>，针对每种数据库的<code>flyway.url</code>示例配置为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># PostgreSQL</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:postgresql://localhost:5432/postgres?currentSchema=myschema</span><br><span class="line"></span><br><span class="line"># MySQL</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC&amp;useSSL=true</span><br><span class="line"></span><br><span class="line"># H2</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:h2:./.tmp/testdb</span><br><span class="line"></span><br><span class="line"># Hsql</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:hsqldb:hsql//localhost:1476/testdb</span><br></pre></td></tr></table></figure>
+<h4 id="Flyway命令行"><a href="#Flyway命令行" class="headerlink" title="Flyway命令行"></a>Flyway命令行</h4><p>Flyway的命令行工具支持直接在命令行中运行<code>Migrate</code>, <code>Clean</code>, <code>Info</code>, <code>Validate</code>, <code>Baseline</code>和<code>Repair</code>6种命令，不需要借助其他Build工具，不需要应用程序运行在JVM中，只需要单纯的命令行即可，但需要根据不同的操作系统<a href="https://flywaydb.org/documentation/commandline/" target="_blank" rel="noopener">下载</a>并安装该命令行工具。Flyway会依次搜索以下配置文件，越靠后的配置会覆盖靠前的配置：</p>
+<ul>
+<li>/conf/flyway.conf</li>
+<li>/flyway.conf</li>
+<li>/flyway.conf</li>
+</ul>
+<p>一个典型Flyway项目示例目录结构如下：<br><img src="/2019/03/31/Flyway/10.png" alt="10"></p>
+<p>更多关于Flyway命令行使用可以参考<a href="https://flywaydb.org/documentation/commandline/migrate" target="_blank" rel="noopener">Flyway Command-line</a>。</p>
+<h4 id="在Gradle中的应用"><a href="#在Gradle中的应用" class="headerlink" title="在Gradle中的应用"></a>在Gradle中的应用</h4><p>首先需要在Gradle中引入Flyway插件，通常有两种方式：</p>
+<ul>
+<li><p>方式一：采用buildscript依赖方式。</p>
+<p>buildscript {<br>repositories {<br>mavenCentral()<br>}<br>dependencies {<br>classpath(“org.flywaydb:flyway-gradle-plugin:4.0.3”)<br>}<br>}<br>apply plugin: ‘org.flywaydb.flyway’</p>
+</li>
+</ul>
+<ul>
+<li><p>方式二（推荐）：采用DSL方式引用Plugins。</p>
+<p>plugins {<br>id “org.flywaydb.flyway” version “4.0.3”<br>}</p>
+</li>
+</ul>
+<p>而在Gradle中配置Flyway Properties有两种方式：</p>
+<ul>
+<li><p>方式一：在<code>build.gradle</code>中配置Flyway Properties。</p>
+<p>flyway {<br>url = jdbc:h2:./.tmp/testdb<br>user = sa<br>password =<br>}</p>
+<h1 id="或者写成："><a href="#或者写成：" class="headerlink" title="或者写成："></a>或者写成：</h1><p>project.ext[‘flyway.url’] = ‘jdbc:h2:./.tmp/testdb’<br>project.ext[‘flyway.user’] = ‘sa’<br>project.ext[‘flyway.password’] = ‘’</p>
+</li>
+<li><p>方式二：在<code>gradle.properties</code>中配置Flyway Properties。</p>
+<p>flyway.url = jdbc:h2:./.tmp/testdb<br>flyway.user = sa<br>flyway.password =</p>
+</li>
+</ul>
+<p>如果期望在运行Gradle Clean/Build Tasks时自动执行Flyway的某些任务，可以设置<code>dependsOn</code>，若不期望隐式执行Flyway任务，可以不配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clean.dependsOn flywayRepair # To repair the Flyway metadata table</span><br><span class="line">build.dependsOn flywayMigrate # To migrate the schema to the latest version</span><br></pre></td></tr></table></figure></p>
+<p>另外，其它Tasks：<code>flywayInfo</code>, <code>flywayValidate</code>, <code>flywayBaseline</code>分别对应到Flyway的命令。在使用Spring Boot时，运行<code>./gradlew bootRun</code>会自动检查并加载最新的db.migration脚本。</p>
+<p><strong>特别注意：</strong>在Production环境中不应执行<code>./gradlew flywayClean</code>，除非你知道自己的行为和目的，因为该命令会清除所有的数据库对象，相当危险。</p>
+<p>更多关于Flyway在Gradle中的使用请参阅<a href="https://flywaydb.org/documentation/gradle/migrate" target="_blank" rel="noopener">Flyway Gradle Plugin</a>。</p>
+<h4 id="与Spring-Boot集成"><a href="#与Spring-Boot集成" class="headerlink" title="与Spring Boot集成"></a>与Spring Boot集成</h4><p>在Spring Boot中，如果加入Flyway的依赖，则会自动引用Flyway并使用默认值，但可以修改并配置<a href="https://github.com/spring-projects/spring-boot/tree/v1.4.0.RELEASE/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/flyway/FlywayProperties.java" target="_blank" rel="noopener">FlywayProperties</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">flyway.baseline-description= # The description to tag an existing schema with when executing baseline.</span><br><span class="line"></span><br><span class="line">flyway.baseline-version=1 # Version to start migration.</span><br><span class="line"></span><br><span class="line">flyway.baseline-on-migrate=false # Whether to execute migration against a non-empty schema with no metadata table</span><br><span class="line"></span><br><span class="line">flyway.check-location=false # Check that migration scripts location exists.</span><br><span class="line"></span><br><span class="line">flyway.clean-on-validation-error=false # will clean all objects. Warning! Do NOT enable in production!</span><br><span class="line"></span><br><span class="line">flyway.enabled=true # Enable flyway.</span><br><span class="line"></span><br><span class="line">flyway.encoding=UTF-8 # The encoding of migrations.</span><br><span class="line"></span><br><span class="line">flyway.ignore-failed-future-migration=true # Ignore future migrations when reading the metadata table.</span><br><span class="line"></span><br><span class="line">flyway.init-sqls= # SQL statements to execute to initialize a connection immediately after obtaining it.</span><br><span class="line"></span><br><span class="line">flyway.locations=classpath:db/migration # locations of migrations scripts.</span><br><span class="line"></span><br><span class="line">flyway.out-of-order=false # Allows migrations to be run &quot;out of order&quot;.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-prefix= # The prefix of every placeholder.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-replacement=true # Whether placeholders should be replaced.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-suffix=&#125; # The suffix of every placeholder.</span><br><span class="line"></span><br><span class="line">flyway.placeholders.*= # Placeholders to replace in Sql migrations.</span><br><span class="line"></span><br><span class="line">flyway.schemas= # Default schema of the connection and updating</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-prefix=V # The file name prefix for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-separator=__ # The file name separator for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-suffix=.sql # The file name suffix for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.table=schema_version # The name of Flyway&apos;s metadata table.</span><br><span class="line"></span><br><span class="line">flyway.url= # JDBC url of the database to migrate. If not set, the primary configured data source is used.</span><br><span class="line"></span><br><span class="line">flyway.user= # Login user of the database to migrate. If not set, use spring.datasource.username value.</span><br><span class="line"></span><br><span class="line">flyway.password= # JDBC password if you want Flyway to create its own DataSource.</span><br><span class="line"></span><br><span class="line">flyway.validate-on-migrate=true # Validate sql migration CRC32 checksum in classpath.</span><br></pre></td></tr></table></figure>
+<p>若使用Gradle，通常在<code>build.gradle</code>引入<code>org.flywaydb:flyway-core:4.0.3</code>依赖后即可使用。可能会有以下几种需求：</p>
+<ul>
+<li><p>在本地Run和Tests都会使用内存数据库，其中的<code>spring.jpa.hibernate.ddl-auto</code>都设置为<code>validate</code>，Schema不需要Hibernate自动生成，并期望使用Flyway，而在线上环境会使用真实数据库，并不期望使用Flyway，如何实现呢？<br><strong>解决方案：</strong>可以在<code>common.properties</code>中配置<code>flyway.enabled=false</code>，然后在local或dev的配置中启用Flyway即可。通常推荐使用此模式，毕竟可以对不同的环境进行控制，另外本地Run不会依赖真实数据库，又能保证数据库Schema是按脚本创建的。</p>
+</li>
+<li><p>在运行Tests会使用内存数据库，有单独的配置文件，不使用Flyway，而在本地bootRun时会使用真实数据库，使用Flyway，毕竟不想每次Schema改后都在本地手动去执行脚本，如何实现？<br><strong>解决方案：</strong>设置<code>bootRun.dependsOn</code>动态添加Flyway的依赖即可：</p>
+<p>addFlywayDenpendency {<br>doLast {<br>dependencies {<br>compile(‘org.flywaydb:flyway-core:4.0.3’)<br>}<br>}<br>}<br>bootRun.dependsOn=addFlywayDenpendency</p>
+</li>
+<li><p>若项目有多个团队同时开发不同的功能，需要新建多个分支，并且都会涉及到数据库Schema更改，当后期Merge时，Migration的版本如何控制并且不会产生数据库更改的冲突呢？<br><strong>解决方案：</strong>如果两个分支的数据库更改有冲突，要么最初数据库设计不合理，要么目前数据库更改不合理，所以需要团队进行全局考虑和协调。而针对数据库在同一段时间有修改，但不会造成冲突的情况，通常实际项目中主要存在这样的情况，那可以设置<code>flyway.out-of-order=true</code>，这样允许当v1和v3已经被应用后，v2出现时同样也可以被应用。其实在本地使用内存数据库不会存在该问题，因为数据库所有对象会自动清除掉，而在local或dev中使用真实数据库时可遇到这样的问题，因此需要注意一下了。<br>另外，值得一提的是Flyway的参数<code>ignore-failed-future-migration</code>默认为<code>true</code>，使用情形为：当Rollback数据库更改到旧版本，而metadata表中已存在了新版本时，Flyway会忽略此错误，只会显示警告信息。</p>
+</li>
+</ul>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>总得来说，Flyway可以有效改善数据库版本管理方式，如果项目中还未使用，不防尝试一下。如果有兴趣，也可以关注<a href="http://mybatis.github.io/migrations/" target="_blank" rel="noopener">MyBatis Migration</a>，功能支持没有Flyway多，属于更轻量级的数据库版本管理工具。如果在使用过程中遇到了问题或坑，欢迎留言一起交流讨论。</p>
+<hr>
+<p>References</p>
+<ul>
+<li><a href="https://flywaydb.org/documentation/" target="_blank" rel="noopener">Flyway Documentation</a></li>
+<li><a href="https://flywaydb.org/documentation/gradle/" target="_blank" rel="noopener">Gradle Plugin: Flyway</a></li>
+<li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html" target="_blank" rel="noopener">Spring Common application properties</a></li>
+<li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-execute-flyway-database-migrations-on-startup" target="_blank" rel="noopener">Execute Flyway database migrations on startup</a></li>
+</ul>
+<p>参考：<a href="https://blog.csdn.net/u014091123/article/details/78133522" target="_blank" rel="noopener">https://blog.csdn.net/u014091123/article/details/78133522</a><br><a href="https://www.jianshu.com/p/5b3ee67e3598" target="_blank" rel="noopener">https://www.jianshu.com/p/5b3ee67e3598</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/Flyway/" data-id="cjyvgh1nu001oq4urke5f1uue" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/总结/" class="article-date">
+  <time datetime="2019-03-31T08:01:16.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/31/总结/">总结0331</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.activiti引擎相关的流程<br>2.flow项目的运行流程和代码结构<br>3.代码的整洁，规范<br>4.HikariCP数据库连接池<br>5.flyway数据库版本控制</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/总结/" data-id="cjyvgh1mp0014q4urhrgnrugm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结0331" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/总结0331/" class="article-date">
+  <time datetime="2019-03-31T08:01:16.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/31/总结0331/">总结0331</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.activiti引擎相关的流程<br>2.flow项目的运行流程和代码结构<br>3.代码的整洁，规范<br>4.HikariCP数据库连接池<br>5.flyway数据库版本控制</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/总结0331/" data-id="cjyvgh1mq0015q4urvx89iu1g" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-activiti" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/activiti/" class="article-date">
+  <time datetime="2019-03-31T06:26:22.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/31/activiti/">activiti</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1、工作流引擎："><a href="#1、工作流引擎：" class="headerlink" title="1、工作流引擎："></a>1、工作流引擎：</h2><p>ProcessEngine对象，它是Activiti的核心类，由该类可以获取其他服务实例（历史服务、创库服务、任务服务、用户参与者服务）；</p>
+<h2 id="2、BPMN："><a href="#2、BPMN：" class="headerlink" title="2、BPMN："></a>2、BPMN：</h2><p>业务流程建模与标注（Business Process Model and Notation，BPMN) ，描述流程的基本符号，包括这些图元如何组合成一个业务流程图（Business Process Diagram）；</p>
+<h2 id="3、数据库（先学后看）"><a href="#3、数据库（先学后看）" class="headerlink" title="3、数据库（先学后看）"></a>3、数据库（先学后看）</h2><p>Activiti的后台是有数据库来支持的，所有的表都是由ACT开头的。第二部分是表示表的用途的两个字母标识。<br>用途也和服务的API对应。Activiti工作流的数据库有23张表。</p>
+<p>ACT_RE_*: ‘RE’表示repository。 这个前缀的表包含了流程定义和流程静态资源 （图片，规则，等等）。</p>
+<p>ACT_RU_*: ‘RU’表示runtime。 这些运行时的表，包含流程实例，任务，变量，异步任务，等运行中的数据。 Activiti只在流程实例执行过程中保存这些数据， 在流程结束时就会删除这些记录。 这样运行时表可以一直很小速度很快。</p>
+<p>ACT_ID_*: ‘ID’表示identity。 这些表包含身份信息，比如用户，组等等。</p>
+<p>ACT_HI_*: ‘HI’表示history。 这些表包含历史数据，比如历史流程实例， 变量，任务等等。</p>
+<p>ACT_GE_*: 通用数据， 用于不同场景下，如存放资源文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">3.3.1：资源库流程规则表</span><br><span class="line">1)	act_re_deployment 	部署信息表</span><br><span class="line">2)	act_re_model  		流程设计模型部署表</span><br><span class="line">3)	act_re_procdef  		流程定义数据表</span><br><span class="line">3.3.2：运行时数据库表</span><br><span class="line">1)	act_ru_execution		运行时流程执行实例表</span><br><span class="line">2)	act_ru_identitylink		运行时流程人员表，主要存储任务节点与参与者的相关信息</span><br><span class="line">3)	act_ru_task			运行时任务节点表</span><br><span class="line">4)	act_ru_variable		运行时流程变量数据表</span><br><span class="line">3.3.3：历史数据库表</span><br><span class="line">1)	act_hi_actinst 		历史节点表</span><br><span class="line">2)	act_hi_attachment		历史附件表</span><br><span class="line">3)	act_hi_comment		历史意见表</span><br><span class="line">4)	act_hi_identitylink		历史流程人员表</span><br><span class="line">5)	act_hi_detail			历史详情表，提供历史变量的查询</span><br><span class="line">6)	act_hi_procinst		历史流程实例表</span><br><span class="line">7)	act_hi_taskinst		历史任务实例表</span><br><span class="line">8)	act_hi_varinst			历史变量表</span><br><span class="line">3.3.4：组织机构表</span><br><span class="line">1)	act_id_group		用户组信息表</span><br><span class="line">2)	act_id_info			用户扩展信息表</span><br><span class="line">3)	act_id_membership	用户与用户组对应信息表</span><br><span class="line">4)	act_id_user			用户信息表</span><br><span class="line">这四张表很常见，基本的组织机构管理，关于用户认证方面建议还是自己开发一套，组件自带的功能太简单，使用中有很多需求难以满足 </span><br><span class="line">3.3.5：通用数据表</span><br><span class="line">1)	act_ge_bytearray		二进制数据表</span><br><span class="line">2)	act_ge_property			属性数据表存储整个流程引擎级别的数据,初始化表结构时，会默认插入三条记录，</span><br></pre></td></tr></table></figure>
+<h2 id="4、Activiti项目"><a href="#4、Activiti项目" class="headerlink" title="4、Activiti项目"></a>4、Activiti项目</h2><h3 id="1、LeaveBill-png"><a href="#1、LeaveBill-png" class="headerlink" title="1、LeaveBill.png"></a>1、LeaveBill.png</h3><p><img src="/2019/03/31/activiti/1.png" alt="1"></p>
+<h3 id="2、LeaveBill-bpmn"><a href="#2、LeaveBill-bpmn" class="headerlink" title="2、LeaveBill.bpmn"></a>2、LeaveBill.bpmn</h3><p>LeaveBill.bpmn是上面LeaveBill.png工作流的配置文件<br>    Start event：开始事件<br>    End entit：结束事件<br>    User task：用户任务活动<br>    Service task：服务任务活动<br>    Exclusive gateway：独家网关，排它网关通道，只能有一条分支执行，如if else<br>    Parallel gateway：并行网关，并行网关通道，所有分支一块执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;definitions xmlns=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:activiti=&quot;http://activiti.org/bpmn&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:omgdc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; xmlns:omgdi=&quot;http://www.omg.org/spec/DD/20100524/DI&quot; typeLanguage=&quot;http://www.w3.org/2001/XMLSchema&quot; expressionLanguage=&quot;http://www.w3.org/1999/XPath&quot; targetNamespace=&quot;http://www.activiti.org/test&quot;&gt;</span><br><span class="line">  &lt;process id=&quot;leaveBill&quot; name=&quot;leaveProcess&quot; isExecutable=&quot;true&quot;&gt;</span><br><span class="line">    &lt;startEvent id=&quot;startevent1&quot; name=&quot;Start&quot;&gt;&lt;/startEvent&gt;</span><br><span class="line">      &lt;!--开启了三个工作流--&gt;</span><br><span class="line">    &lt;userTask id=&quot;usertask1&quot; name=&quot;请假申请&quot; activiti:assignee=&quot;张三&quot;&gt;&lt;/userTask&gt;</span><br><span class="line">    &lt;userTask id=&quot;usertask2&quot; name=&quot;审批[主管]&quot; activiti:assignee=&quot;李四&quot;&gt;&lt;/userTask&gt;</span><br><span class="line">    &lt;userTask id=&quot;usertask3&quot; name=&quot;审批[经理]&quot; activiti:assignee=&quot;王五&quot;&gt;&lt;/userTask&gt;</span><br><span class="line">    &lt;endEvent id=&quot;endevent1&quot; name=&quot;End&quot;&gt;&lt;/endEvent&gt;</span><br><span class="line">    &lt;sequenceFlow id=&quot;flow1&quot; sourceRef=&quot;startevent1&quot; targetRef=&quot;usertask1&quot;&gt;&lt;/sequenceFlow&gt;</span><br><span class="line">    &lt;sequenceFlow id=&quot;flow2&quot; sourceRef=&quot;usertask1&quot; targetRef=&quot;usertask2&quot;&gt;&lt;/sequenceFlow&gt;</span><br><span class="line">    &lt;sequenceFlow id=&quot;flow3&quot; sourceRef=&quot;usertask2&quot; targetRef=&quot;usertask3&quot;&gt;&lt;/sequenceFlow&gt;</span><br><span class="line">    &lt;sequenceFlow id=&quot;leaveBill&quot; sourceRef=&quot;usertask3&quot; targetRef=&quot;endevent1&quot;&gt;&lt;/sequenceFlow&gt;</span><br><span class="line">  &lt;/process&gt;</span><br><span class="line">  &lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_leaveBill&quot;&gt;</span><br><span class="line">    &lt;bpmndi:BPMNPlane bpmnElement=&quot;leaveBill&quot; id=&quot;BPMNPlane_leaveBill&quot;&gt;</span><br><span class="line">      &lt;bpmndi:BPMNShape bpmnElement=&quot;startevent1&quot; id=&quot;BPMNShape_startevent1&quot;&gt;</span><br><span class="line">        &lt;omgdc:Bounds height=&quot;35.0&quot; width=&quot;35.0&quot; x=&quot;295.0&quot; y=&quot;20.0&quot;&gt;&lt;/omgdc:Bounds&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNShape&gt;</span><br><span class="line">      &lt;bpmndi:BPMNShape bpmnElement=&quot;usertask1&quot; id=&quot;BPMNShape_usertask1&quot;&gt;</span><br><span class="line">        &lt;omgdc:Bounds height=&quot;55.0&quot; width=&quot;105.0&quot; x=&quot;260.0&quot; y=&quot;80.0&quot;&gt;&lt;/omgdc:Bounds&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNShape&gt;</span><br><span class="line">      &lt;bpmndi:BPMNShape bpmnElement=&quot;usertask2&quot; id=&quot;BPMNShape_usertask2&quot;&gt;</span><br><span class="line">        &lt;omgdc:Bounds height=&quot;55.0&quot; width=&quot;105.0&quot; x=&quot;260.0&quot; y=&quot;160.0&quot;&gt;&lt;/omgdc:Bounds&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNShape&gt;</span><br><span class="line">      &lt;bpmndi:BPMNShape bpmnElement=&quot;usertask3&quot; id=&quot;BPMNShape_usertask3&quot;&gt;</span><br><span class="line">        &lt;omgdc:Bounds height=&quot;55.0&quot; width=&quot;105.0&quot; x=&quot;260.0&quot; y=&quot;250.0&quot;&gt;&lt;/omgdc:Bounds&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNShape&gt;</span><br><span class="line">      &lt;bpmndi:BPMNShape bpmnElement=&quot;endevent1&quot; id=&quot;BPMNShape_endevent1&quot;&gt;</span><br><span class="line">        &lt;omgdc:Bounds height=&quot;35.0&quot; width=&quot;35.0&quot; x=&quot;290.0&quot; y=&quot;350.0&quot;&gt;&lt;/omgdc:Bounds&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNShape&gt;</span><br><span class="line">      &lt;bpmndi:BPMNEdge bpmnElement=&quot;flow1&quot; id=&quot;BPMNEdge_flow1&quot;&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;55.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;80.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNEdge&gt;</span><br><span class="line">      &lt;bpmndi:BPMNEdge bpmnElement=&quot;flow2&quot; id=&quot;BPMNEdge_flow2&quot;&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;135.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;160.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNEdge&gt;</span><br><span class="line">      &lt;bpmndi:BPMNEdge bpmnElement=&quot;flow3&quot; id=&quot;BPMNEdge_flow3&quot;&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;215.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;250.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNEdge&gt;</span><br><span class="line">      &lt;bpmndi:BPMNEdge bpmnElement=&quot;leaveBill&quot; id=&quot;BPMNEdge_leaveBill&quot;&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;312.0&quot; y=&quot;305.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">        &lt;omgdi:waypoint x=&quot;307.0&quot; y=&quot;350.0&quot;&gt;&lt;/omgdi:waypoint&gt;</span><br><span class="line">      &lt;/bpmndi:BPMNEdge&gt;</span><br><span class="line">    &lt;/bpmndi:BPMNPlane&gt;</span><br><span class="line">  &lt;/bpmndi:BPMNDiagram&gt;</span><br><span class="line">&lt;/definitions&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-核心API"><a href="#5-核心API" class="headerlink" title="5 核心API"></a>5 核心API</h2><h3 id="5-1：ProcessEngine"><a href="#5-1：ProcessEngine" class="headerlink" title="5.1：ProcessEngine"></a>5.1：ProcessEngine</h3><p>说明：<br>1) 在Activiti中最核心的类，其他的类都是由他而来。<br>2) 产生方式：<br><img src="/2019/03/31/activiti/2.png" alt="2"></p>
+<p>在前面看到了两种创建ProcessEngine（流程引擎）的方式，而这里要简化很多，调用ProcessEngines的getDefaultProceeEngine方法时会自动加载classpath下名为activiti.cfg.xml文件。</p>
+<p>3) 可以产生RepositoryService<br><img src="/2019/03/31/activiti/3.png" alt="3"></p>
+<p>4) 可以产生RuntimeService<br><img src="/2019/03/31/activiti/4.png" alt="4"></p>
+<p>5) 可以产生TaskService<br><img src="/2019/03/31/activiti/5.png" alt="5"></p>
+<p>各个Service的作用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">RepositoryService</span><br><span class="line">管理流程定义</span><br><span class="line"></span><br><span class="line">RuntimeService</span><br><span class="line">执行管理，包括启动、推进、删除流程实例等操作</span><br><span class="line"></span><br><span class="line">TaskService</span><br><span class="line">任务管理</span><br><span class="line"></span><br><span class="line">HistoryService</span><br><span class="line">历史管理(执行完的数据的管理)</span><br><span class="line"></span><br><span class="line">IdentityService</span><br><span class="line">组织机构管理</span><br><span class="line"></span><br><span class="line">FormService</span><br><span class="line">一个可选服务，任务表单管理</span><br><span class="line"></span><br><span class="line">ManagerService</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-2：RepositoryService"><a href="#5-2：RepositoryService" class="headerlink" title="5.2：RepositoryService"></a>5.2：RepositoryService</h2><p>是Activiti的仓库服务类。所谓的仓库指流程定义文档的两个文件：bpmn文件和流程图片。<br>1) 产生方式<br><img src="/2019/03/31/activiti/6.png" alt="6"></p>
+<p>2) 可以产生DeploymentBuilder，用来定义流程部署的相关参数<br><img src="/2019/03/31/activiti/7.png" alt="7"></p>
+<p>3) 删除流程定义<br><img src="/2019/03/31/activiti/8.png" alt="8"></p>
+<h3 id="5-3：RuntimeService"><a href="#5-3：RuntimeService" class="headerlink" title="5.3：RuntimeService"></a>5.3：RuntimeService</h3><p>是activiti的流程执行服务类。可以从这个服务类中获取很多关于流程执行相关的信息。</p>
+<h3 id="5-4：TaskService"><a href="#5-4：TaskService" class="headerlink" title="5.4：TaskService"></a>5.4：TaskService</h3><p>是activiti的任务服务类。可以从这个类中获取任务的信息。</p>
+<h3 id="5-5：HistoryService"><a href="#5-5：HistoryService" class="headerlink" title="5.5：HistoryService"></a>5.5：HistoryService</h3><p>是activiti的查询历史信息的类。在一个流程执行完成后，这个对象为我们提供查询历史信息。</p>
+<h3 id="5-6：ProcessDefinition"><a href="#5-6：ProcessDefinition" class="headerlink" title="5.6：ProcessDefinition"></a>5.6：ProcessDefinition</h3><p>流程定义类。可以从这里获得资源文件等。</p>
+<h3 id="5-7：ProcessInstance"><a href="#5-7：ProcessInstance" class="headerlink" title="5.7：ProcessInstance"></a>5.7：ProcessInstance</h3><p>代表流程定义的执行实例。如范冰冰请了一天的假，她就必须发出一个流程实例的申请。一个流程实例包括了所有的运行节点。我们可以利用这个对象来了解当前流程实例的进度等信息。流程实例就表示一个流程从开始到结束的最大的流程分支，即一个流程中流程实例只有一个。</p>
+<h3 id="5-8：Execution"><a href="#5-8：Execution" class="headerlink" title="5.8：Execution"></a>5.8：Execution</h3><p>Activiti用这个对象去描述流程执行的每一个节点。在没有并发的情况下，Execution就是同ProcessInstance。流程按照流程定义的规则执行一次的过程，就可以表示执行对象Execution。<br>如图为ProcessInstance的源代码：<br><img src="/2019/03/31/activiti/9.png" alt="9"></p>
+<p>从源代码中可以看出ProcessInstance就是Execution。但在现实意义上有所区别：<br><img src="/2019/03/31/activiti/10.png" alt="10"><br>在单线流程中，如上图的贷款流程，ProcessInstance与Execution是一致的。<br><img src="/2019/03/31/activiti/11.png" alt="11"><br>这个例子有一个特点：wire money(汇钱)和archive(存档)是并发执行的。这个时候，总线路代表ProcessInstance，而分线路中每个活动代表Execution。<br><strong>总结：</strong></p>
+<p><strong>* 一个流程中，执行对象可以存在多个，但是流程实例只能有一个。</strong></p>
+<p><strong>* 当流程按照规则只执行一次的时候，那么流程实例就是执行对象。</strong></p>
+<h2 id="Activiti中的activiti-expression和activiti-delegateExpression有什么区别？"><a href="#Activiti中的activiti-expression和activiti-delegateExpression有什么区别？" class="headerlink" title="Activiti中的activiti:expression和activiti:delegateExpression有什么区别？"></a>Activiti中的activiti:expression和activiti:delegateExpression有什么区别？</h2><p>以serviceTask为例，delegateExpression是引用一个JavaDelegate实现bean，具体的操作在这个bean中定义；而expression则可以写成#{loggerHandler.log()} 这样的，表达式本身就是要做的操作。<br>参考：<br><a href="https://blog.csdn.net/weixin_43220261/article/details/85059106" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43220261/article/details/85059106</a><br><a href="https://blog.csdn.net/qq877507054/article/details/60143099" target="_blank" rel="noopener">https://blog.csdn.net/qq877507054/article/details/60143099</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/activiti/" data-id="cjyvgh1ni001fq4urzf65pohn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-flow(active)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/29/flow(active)/" class="article-date">
+  <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/29/flow(active)/">flow(active)流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>active相关旅程。<br>CustomerJourneyController.activate方法：<br>1先保存customerJourney<br>2然后调用customerJourneyService.activate(triggerId)：<br>2.1查询出customerJourney，根据uimodel转换出LinkedJourney，<br>2.2再根据LinkedJourney得到相关得properties加入customerJourney<br>2.3根据customerJourney和linkedJourney进行deploy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy(</span><br><span class="line">[1].bpmnGenerator.generateBPMN-&gt;converter出bpmnModel，[2].bpmnGenerator.getTriggerCondition(triggerNode)-&gt;根据triggerNode得到comditionstring，此处根据根节点workflowEvent得出beanname 从而得到对应得TriggerConditionGenerator接口得具体实现，核心方法generateInternal主要用来返回生成的condition字符串。(所有得trigger generator在此处使用)</span><br><span class="line">[3].customerJourney设置得到的bpmn，triggerType，workflowEvent，condition</span><br><span class="line">[4].根据customerJourneyname和bpmn进行deploy并返回ProcessDefinitionId,并设置到customerJourney中</span><br><span class="line">[5].customerJourney中每个properties都设置processDedfId和triggerId)</span><br></pre></td></tr></table></figure></p>
+<p>2.4 deploy结束返回customerJourney，设置ACTIVE状态，并更新表数据<br>2.5最后保存所有properties节点信息</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/29/flow(active)/" data-id="cjyvgh1mg000tq4urp348badm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>paxos算法 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="算法内容Paxos在原作者的《Paxos Made Simple》中内容是比较精简的：1234567891011&amp;gt; Phase 1&amp;gt; &amp;gt; (a) A proposer selects a proposal number n and sends a prepare request with number n to a majority of acceptors.&amp;gt; &amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="paxos算法">
+<meta property="og:url" content="http://yoursite.com/2019/06/16/paxos算法/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="算法内容Paxos在原作者的《Paxos Made Simple》中内容是比较精简的：1234567891011&amp;gt; Phase 1&amp;gt; &amp;gt; (a) A proposer selects a proposal number n and sends a prepare request with number n to a majority of acceptors.&amp;gt; &amp;gt;">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/5.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="paxos算法">
+<meta name="twitter:description" content="算法内容Paxos在原作者的《Paxos Made Simple》中内容是比较精简的：1234567891011&amp;gt; Phase 1&amp;gt; &amp;gt; (a) A proposer selects a proposal number n and sends a prepare request with number n to a majority of acceptors.&amp;gt; &amp;gt;">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-paxos算法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/16/paxos算法/" class="article-date">
+  <time datetime="2019-06-16T04:51:21.000Z" itemprop="datePublished">2019-06-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      paxos算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="算法内容"><a href="#算法内容" class="headerlink" title="算法内容"></a>算法内容</h2><p>Paxos在原作者的《Paxos Made Simple》中内容是比较精简的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; Phase 1</span><br><span class="line">&gt; </span><br><span class="line">&gt; (a) A proposer selects a proposal number n and sends a prepare request with number n to a majority of acceptors.</span><br><span class="line">&gt; </span><br><span class="line">&gt; (b) If an acceptor receives a prepare request with number n greater than that of any prepare request to which it has already responded, then it responds to the request with a promise not to accept any more proposals numbered less than n and with the highest-numbered pro-posal (if any) that it has accepted.</span><br><span class="line">&gt; </span><br><span class="line">&gt; Phase 2</span><br><span class="line">&gt; </span><br><span class="line">&gt; (a) If the proposer receives a response to its prepare requests (numbered n) from a majority of acceptors, then it sends an accept request to each of those acceptors for a proposal numbered n with a value v , where v is the value of the highest-numbered proposal among the responses, or is any value if the responses reported no proposals.</span><br><span class="line">&gt; </span><br><span class="line">&gt; (b) If an acceptor receives an accept request for a proposal numbered n, it accepts the proposal unless it has already responded to a prepare request having a number greater than n.</span><br></pre></td></tr></table></figure></p>
+<p>借用[paxos图解]文中的流程图可概括为：<br><img src="/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/1.png" alt="1"></p>
+<h2 id="实例及详解"><a href="#实例及详解" class="headerlink" title="实例及详解"></a>实例及详解</h2><p>Paxos中有三类角色<code>Proposer</code>、<code>Acceptor</code>及<code>Learner</code>，主要交互过程在<code>Proposer</code>和<code>Acceptor</code>之间。</p>
+<p><code>Proposer</code>与<code>Acceptor</code>之间的交互主要有4类消息通信，如下图：<br><img src="/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/2.png" alt="2"></p>
+<p>这4类消息对应于paxos算法的两个阶段4个过程：</p>
+<ul>
+<li>phase 1<ul>
+<li>a) proposer向网络内超过半数的acceptor发送prepare消息</li>
+<li>b) acceptor正常情况下回复promise消息</li>
+</ul>
+</li>
+<li>phase 2<ul>
+<li>a) 在有足够多acceptor回复promise消息时，proposer发送accept消息</li>
+<li>b) 正常情况下acceptor回复accepted消息</li>
+</ul>
+</li>
+</ul>
+<p>因为在整个过程中可能有其他proposer针对同一件事情发出以上请求，所以在每个过程中都会有些特殊情况处理，这也是为了达成一致性所做的事情。如果在整个过程中没有其他proposer来竞争，那么这个操作的结果就是确定无异议的。但是如果有其他proposer的话，情况就不一样了。</p>
+<p>以<a href="http://zh.wikipedia.org/zh-cn/Paxos%E7%AE%97%E6%B3%95#.E5.AE.9E.E4.BE.8B" target="_blank" rel="noopener">paxos中文wiki上的例子</a>为例。简单来说该例子以若干个议员提议税收，确定最终通过的法案税收比例。</p>
+<p>以下图中基本只画出proposer与一个acceptor的交互。时间标志T2总是在T1后面。propose number简称N。</p>
+<p>情况之一如下图：<br><img src="/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/3.png" alt="3"></p>
+<p>A3在T1发出accepted给A1，然后在T2收到A5的prepare，在T3的时候A1才通知A5最终结果(税率10%)。这里会有两种情况：</p>
+<ul>
+<li>A5发来的N5小于A1发出去的N1，那么A3直接拒绝(reject)A5</li>
+<li>A5发来的N5大于A1发出去的N1，那么A3回复promise，但带上A1的(N1, 10%)</li>
+</ul>
+<p>这里可以与paxos流程图对应起来，更好理解。<strong>acceptor会记录(MaxN, AcceptN, AcceptV)</strong>。</p>
+<p>A5在收到promise后，后续的流程可以顺利进行。但是发出accept时，因为收到了(AcceptN, AcceptV)，所以会取最大的AcceptN对应的AcceptV，例子中也就是A1的10%作为AcceptV。如果在收到promise时没有发现有其他已记录的AcceptV，则其值可以由自己决定。</p>
+<p>针对以上A1和A5冲突的情况，最终A1和A5都会广播接受的值为10%。</p>
+<p>其实4个过程中对于acceptor而言，在回复promise和accepted时由于都可能因为其他proposer的介入而导致特殊处理。所以基本上看在这两个时间点收到其他proposer的请求时就可以了解整个算法了。例如在回复promise时则可能因为proposer发来的N不够大而reject：<br><img src="/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/4.png" alt="4"></p>
+<p>如果在发accepted消息时，对其他更大N的proposer发出过promise，那么也会reject该proposer发出的accept，如图：<br><img src="/2019/06/16/paxos算法/paxos%E7%AE%97%E6%B3%95/5.png" alt="5"></p>
+<p>这个对应于Phase 2 b)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; it accepts the proposal unless it has already responded to a prepare request having a number greater than n.</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Leslie Lamport没有用数学描述Paxos，但是他用英文阐述得很清晰。将Paxos的两个Phase的内容理解清楚，整个算法过程还是不复杂的。</p>
+<p>至于Paxos中一直提到的一个全局唯一且递增的proposer number，其如何实现，引用如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; 如何产生唯一的编号呢？在《Paxos made simple》中提到的是让所有的Proposer都从不相交的数据集合中进行选择，例如系统有5个Proposer，则可为每一个Proposer分配一个标识j(0~4)，则每一个proposer每次提出决议的编号可以为5*i + j(i可以用来表示提出议案的次数)</span><br></pre></td></tr></table></figure></p>
+<p>原文：<a href="https://www.cnblogs.com/hugb/p/8955505.html" target="_blank" rel="noopener">https://www.cnblogs.com/hugb/p/8955505.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/16/paxos算法/" data-id="cjyvgh1mk000yq4urf0wn5sld" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/16/cas单点登陆/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          cas单点登陆
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/16/分布式事务/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">分布式事务</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

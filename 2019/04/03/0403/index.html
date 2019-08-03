@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>总结0403 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.oauth2https://www.jianshu.com/p/9d0264d27c3boauth1与oauth2https://blog.csdn.net/w_xuexi666/article/details/54564058  http basic 认证   浏览器发送请求 get 到服务器，服务器检查请求是否包含 Authorization 信息，若没有则返回响应 401，并且加上响应头">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结0403">
+<meta property="og:url" content="http://yoursite.com/2019/04/03/0403/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="1.oauth2https://www.jianshu.com/p/9d0264d27c3boauth1与oauth2https://blog.csdn.net/w_xuexi666/article/details/54564058  http basic 认证   浏览器发送请求 get 到服务器，服务器检查请求是否包含 Authorization 信息，若没有则返回响应 401，并且加上响应头">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.577Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="总结0403">
+<meta name="twitter:description" content="1.oauth2https://www.jianshu.com/p/9d0264d27c3boauth1与oauth2https://blog.csdn.net/w_xuexi666/article/details/54564058  http basic 认证   浏览器发送请求 get 到服务器，服务器检查请求是否包含 Authorization 信息，若没有则返回响应 401，并且加上响应头">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-0403" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/03/0403/" class="article-date">
+  <time datetime="2019-04-03T09:40:16.000Z" itemprop="datePublished">2019-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      总结0403
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.oauth2<br><a href="https://www.jianshu.com/p/9d0264d27c3b" target="_blank" rel="noopener">https://www.jianshu.com/p/9d0264d27c3b</a><br>oauth1与oauth2<br><a href="https://blog.csdn.net/w_xuexi666/article/details/54564058" target="_blank" rel="noopener">https://blog.csdn.net/w_xuexi666/article/details/54564058</a></p>
+<ol start="2">
+<li>http basic 认证</li>
+</ol>
+<ul>
+<li>浏览器发送请求 get 到服务器，服务器检查请求是否包含 Authorization 信息，若没有则返回响应 401，并且加上响应头信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WWW-Authenticate: Basic realm=&quot;请求域&quot;。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>浏览器接受到上面传递回来的响应码，会自动弹出输入框让用户输入相关的用户名和密码。之后，浏览器将用户名和密码进行 base64 编码，设置请求头Authorization，去请求服务器，并且每次请求都会将密文附加于请求头，服务器收到请求后，对密文进行验证，从而返回相应的信息，如果验证失败，会返回 401 状态码，执行上一步骤，再次进行验证。</li>
+</ul>
+<ol start="3">
+<li>Token<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">token 是一串字符串，通常因为作为鉴权凭据，最常用的使用场景是 API 鉴权。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>4.bifunction/function<br><a href="https://www.jianshu.com/p/8dc46a2dc21d" target="_blank" rel="noopener">https://www.jianshu.com/p/8dc46a2dc21d</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/03/0403/" data-id="cjyvgh1l10006q4ur25mj5d3m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/03/jinshuju流程/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          总结0403(金数据linkflow分析)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/02/异常处理(0402)/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">总结0402（异常处理）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

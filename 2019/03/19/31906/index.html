@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Joda-Time | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一 Jode-Time 介绍 任何企业应用程序都需要处理时间问题。应用程序需要知道当前的时间点和下一个时间点，有时它们还必须计算这两个时间点之间的路径。使用 JDK 完成这项任务将非常痛苦和繁琐。既然无法摆脱时间，为何不设法简化时间处理？现在来看看 Joda Time，一个面向 Java™ 平台的易于使用的开源时间/日期库。正如您在本文中了解的那样，JodaTime轻松化解了处理日期和时间的痛苦和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Joda-Time">
+<meta property="og:url" content="http://yoursite.com/2019/03/19/31906/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="一 Jode-Time 介绍 任何企业应用程序都需要处理时间问题。应用程序需要知道当前的时间点和下一个时间点，有时它们还必须计算这两个时间点之间的路径。使用 JDK 完成这项任务将非常痛苦和繁琐。既然无法摆脱时间，为何不设法简化时间处理？现在来看看 Joda Time，一个面向 Java™ 平台的易于使用的开源时间/日期库。正如您在本文中了解的那样，JodaTime轻松化解了处理日期和时间的痛苦和">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.597Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Joda-Time">
+<meta name="twitter:description" content="一 Jode-Time 介绍 任何企业应用程序都需要处理时间问题。应用程序需要知道当前的时间点和下一个时间点，有时它们还必须计算这两个时间点之间的路径。使用 JDK 完成这项任务将非常痛苦和繁琐。既然无法摆脱时间，为何不设法简化时间处理？现在来看看 Joda Time，一个面向 Java™ 平台的易于使用的开源时间/日期库。正如您在本文中了解的那样，JodaTime轻松化解了处理日期和时间的痛苦和">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-31906" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31906/" class="article-date">
+  <time datetime="2019-03-19T06:53:58.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Joda-Time
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一 Jode-Time 介绍</strong></p>
+<p>任何企业应用程序都需要处理时间问题。应用程序需要知道当前的时间点和下一个时间点，有时它们还必须计算这两个<br>时间点之间的路径。使用 JDK 完成这项任务将非常痛苦和繁琐。<br>既然无法摆脱时间，为何不设法简化时间处理？现在来看看 Joda Time，一个面向 Java™ 平台的易于<br>使用的开源时间/日期库。正如您在本文中了解的那样，JodaTime轻松化解了处理日期和时间的痛苦和繁琐。</p>
+<p>Joda-Time 令时间和日期值变得易于管理、操作和理解。事实上，易于使用是 Joda 的主要设计目标。其他目标包括可扩展性、完整的特性集以及对多种日历系统的支持。<br>并且 Joda 与 JDK 是百分之百可互操作的，因此您无需替换所有 Java 代码，只需要替换执行日期/时间计算的那部分代码。<br>Joda-Time提供了一组Java类包用于处理包括ISO8601标准在内的date和time。可以利用它把JDK Date和Calendar类完全替换掉，而且仍然能够提供很好的集成。</p>
+<p>为什么要使用 Joda？<br>考虑创建一个用时间表示的某个随意的时刻 — 比如，2000 年 1 月 1 日 0 时 0 分。<br>我如何创建一个用时间表示这个瞬间的 JDK 对象？使用 java.util.Date？<br>事实上这是行不通的，因为自 JDK 1.1 之后的每个 Java 版本的 Javadoc 都声明应当使用 java.util.Calendar。<br>Date 中不赞成使用的构造函数的数量严重限制了您创建此类对象的途径。</p>
+<p>那么 Calendar 又如何呢？我将使用下面的方式创建必需的实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0);</span><br></pre></td></tr></table></figure>
+<p>使用 Joda，代码应该类似如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new</span><br><span class="line">DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br></pre></td></tr></table></figure>
+<p>这一行简单代码没有太大的区别。但是现在我将使问题稍微复杂化。<br>假设我希望在这个日期上加上 90 天并输出结果。使用 JDK，我需要使用清单 1 中的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 以 JDK 的方式向某一个瞬间加上 90 天并输出结果</span><br><span class="line"></span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line"></span><br><span class="line">calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">SimpleDateFormat sdf =</span><br><span class="line"></span><br><span class="line">new SimpleDateFormat(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br><span class="line"></span><br><span class="line">calendar.add(Calendar.DAY_OF_MONTH, 90);</span><br><span class="line"></span><br><span class="line">System.out.println(sdf.format(calendar.getTime()));</span><br></pre></td></tr></table></figure>
+<p>// 以 Joda 的方式向某一个瞬间加上 90 天并输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new </span><br><span class="line">DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">System.out.println(dateTime.plusDays(90).toString(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>两者之间的差距拉大了（Joda 用了两行代码，JDK 则是 5 行代码）。<br>现在假设我希望输出这样一个日期：距离 2000.1.1日 45 天之后的某天在下一个月的当前周的最后一天的日期。<br>坦白地说，我甚至不想使用 Calendar 处理这个问题。<br>使用 JDK 实在太痛苦了，即使是简单的日期计算，比如上面这个计算。<br>正是多年前的这样一个时刻，我第一次领略到 JodaTime的强大。使用 Joda，用于计算的代码所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">System.out.println(dateTime.plusDays(45).plusMonths(1).dayOfWeek().withMaximumValue().toString(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br><span class="line"></span><br><span class="line">输出为：</span><br><span class="line"></span><br><span class="line">Sun 03/19/2000 00:00:00.000</span><br></pre></td></tr></table></figure>
+<p>如果您正在寻找一种易于使用的方式替代 JDK 日期处理，那么您真的应该考虑 Joda。</p>
+<p>二 <strong>创建Joda-Time对象</strong></p>
+<p> 现在，我将展示在采用该库时会经常遇到的一些 Joda 类，并展示如何创建这些类的实例。</p>
+<p><strong>ReadableInstant</strong><br>Joda 通过 ReadableInstant 类实现了瞬间性这一概念。表示时间上的不可变瞬间的 Joda 类都属于这个类的子类。<br>（将这个类命名为ReadOnlyInstant 可能更好，我认为这才是设计者需要传达的意思）。<br>换句话说，ReadableInstant 表示时间上的某一个不可修改的瞬间。<br>其中的两个子类分别为 <strong>DateTime 和 DateMidnight</strong>：</p>
+<p><strong>DateTime</strong>：这是最常用的一个类。它以毫秒级的精度封装时间上的某个瞬间时刻。<br>DateTime 始终与 DateTimeZone 相关，如果您不指定它的话，它将被默认设置为运行代码的机器所在的时区。<br>可以使用多种方式构建 DateTime 对象。这个构造函数使用系统时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime();</span><br></pre></td></tr></table></figure>
+<p>如果您创建了一个 DateTime 的实例，并且没有提供 Chronology 或 DateTimeZone，Joda将使用 ISOChronology（默认）和DateTimeZone（来自系统设置）</p>
+<p>Joda 可以使您精确地控制创建 DateTime 对象的方式，该对象表示时间上的某个特定的瞬间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime( 2 2000, //year</span><br><span class="line">1, // month</span><br><span class="line">1, // day</span><br><span class="line">0, // hour (midnight is zero)</span><br><span class="line">0, // minute</span><br><span class="line">0, // second</span><br><span class="line">0 // milliseconds</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>下一个构造函数将指定从 epoch（1970年1月1日 子时 格林威治标准时间） 到某个时刻所经过的毫秒数。<br>它根据 JDK Date 对象的毫秒值创建一个DateTime 对象，其时间精度用毫秒表示，因为 epoch 与 Joda 是相同的：</p>
+<p>1 java.util.Date jdkDate = new Date(); 2 long timeInMillis = jdkDate.getTime(); 3 DateTime dateTime = new DateTime(timeInMillis);</p>
+<p>或者Date 对象直接传递给构造函数:</p>
+<p><code>dateTime = new DateTime(new Date());</code></p>
+<p>Joda 支持使用许多其他对象作为构造函数的参数，用于创建 DateTime:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Use a Calendar</span><br><span class="line">  dateTime = new DateTime(calendar); 3 </span><br><span class="line">  // Use another Joda DateTime</span><br><span class="line">  dateTime = new DateTime(anotherDateTime); 6 </span><br><span class="line">  // Use a String (must be formatted properly)</span><br><span class="line">  String timeString = &quot;2006-01-26T13:30:00-06:00&quot;;</span><br><span class="line">  dateTime = new DateTime(timeString); 10   timeString = &quot;2006-01-26&quot;; 11   dateTime = new DateTime(timeString);</span><br></pre></td></tr></table></figure>
+<p>注意，如果您准备使用 String（必须经过解析），您必须对其进行精确地格式化。</p>
+<p>DateMidnight：这个类封装某个时区（通常为默认时区）在特定年/月/日的午夜时分的时刻。<br>它基本上类似于 DateTime，不同之处在于时间部分总是为与该对象关联的特定 DateTimeZone 时区的午夜时分。</p>
+<p><strong>ReadablePartial</strong><br>应用程序所需处理的日期问题并不全部都与时间上的某个完整时刻有关，因此您可以处理一个局部时刻。<br>例如，有时您比较关心年/月/日，或者一天中的时间，甚至是一周中的某天。Joda 设计者使用ReadablePartial 接口捕捉这种表示局部时间的概念，<br>这是一个不可变的局部时间片段。用于处理这种时间片段的两个有用类分别为 <strong>LocalDate 和 LocalTime</strong>：</p>
+<p><strong>LocalDate</strong>：该类封装了一个年/月/日的组合。当地理位置（即时区）变得不重要时，使用它存储日期将非常方便。<br>例如，某个特定对象的出生日期 可能为 1999 年 4 月 16 日，但是从技术角度来看，<br>在保存所有业务值的同时不会了解有关此日期的任何其他信息（比如这是一周中的星期几，或者这个人出生地所在的时区）。<br>在这种情况下，应当使用 LocalDate。</p>
+<p><strong>LocalTime</strong>：这个类封装一天中的某个时间，当地理位置不重要的情况下，可以使用这个类来只存储一天当中的某个时间。<br>例如，晚上 11:52 可能是一天当中的一个重要时刻（比如，一个 cron 任务将启动，它将备份文件系统的某个部分），<br>但是这个时间并没有特定于某一天，因此我不需要了解有关这一时刻的其他信息。</p>
+<p>创建对象代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">  package com.jt.joda;  </span><br><span class="line">  import java.util.Date;  </span><br><span class="line">  import org.joda.time.DateTime; </span><br><span class="line">  import org.joda.time.LocalDate; </span><br><span class="line">  import org.joda.time.LocalTime; </span><br><span class="line">  import org.junit.Test;  </span><br><span class="line"> public class Demo &#123;  </span><br><span class="line">@Test      </span><br><span class="line">public void test1()&#123;          </span><br><span class="line">         //方法一：取系统点间 </span><br><span class="line">         DateTime dt1 = new DateTime();  System.out.println(dt1);            </span><br><span class="line">         //方法二：通过java.util.Date对象生成 </span><br><span class="line">         DateTime dt2 = new DateTime(new Date()); </span><br><span class="line"> System.out.println(dt2);          </span><br><span class="line">         //方法三：指定年月日点分秒生成(参数依次是：年,月,日,时,分,秒,毫秒) </span><br><span class="line">         DateTime dt3 = new DateTime(2012, 5, 20, 13, 14, 0, 0); </span><br><span class="line"> System.out.println(dt3); </span><br><span class="line">         //方法四：ISO8601形式生成 </span><br><span class="line">         DateTime dt4 = new DateTime(&quot;2012-05-20&quot;);  System.out.println(dt4);         </span><br><span class="line"> DateTime dt5 = new DateTime(&quot;2012-05-20T13:14:00&quot;);  System.out.println(dt5);            </span><br><span class="line">         //只需要年月日的时候 </span><br><span class="line">         LocalDate localDate = new LocalDate(2009, 9, 6);// September 6, 2009 </span><br><span class="line"> System.out.println(localDate);          </span><br><span class="line">         //只需要时分秒毫秒的时候 </span><br><span class="line">         LocalTime localTime = new LocalTime(13, 30, 26, 0);// 1:30:26PM </span><br><span class="line"> System.out.println(localTime);  </span><br><span class="line"> &#125; </span><br><span class="line">  /*    </span><br><span class="line"> 2015-09-25T17:51:12.900+08:00 </span><br><span class="line"> 2015-09-25T17:51:12.977+08:00 </span><br><span class="line"> 2012-05-20T13:14:00.000+08:00 </span><br><span class="line"> 2012-05-20T00:00:00.000+08:00 </span><br><span class="line"> 2012-05-20T13:14:00.000+08:00 </span><br><span class="line"> 2009-09-06 </span><br><span class="line"> 13:30:26.000  */</span><br><span class="line">     </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>三 与JDK日期对象转换</p>
+<p>许多代码都使用了 JDK Date 和 Calendar 类。但是幸亏有 Joda，可以执行任何必要的日期算法，然后再转换回 JDK 类。<br>这将两者的优点集中到一起。您在本文中看到的所有 Joda 类都可以从 JDK Calendar 或 Date 创建，正如您在 创建 JodaTime对象 中看到的那样。<br>出于同样的原因，可以从您所见过的任何 Joda 类创建 JDK Calendar 或 Date。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DateTime dt = new DateTime(); </span><br><span class="line"> </span><br><span class="line">//转换成java.util.Date对象 </span><br><span class="line">Date d1 = new Date(dt.getMillis()); </span><br><span class="line">Date d2 = dt.toDate(); </span><br><span class="line"> </span><br><span class="line">//转换成java.util.Calendar对象 </span><br><span class="line">Calendar c1 = Calendar.getInstance(); </span><br><span class="line">c1.setTimeInMillis(dt.getMillis()); </span><br><span class="line">Calendar c2 = dt.toCalendar(Locale.getDefault());</span><br></pre></td></tr></table></figure>
+<p>对于 ReadablePartial 子类，您还需要经过额外一步，如所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Date date = localDate.toDateMidnight().toDate();</span><br></pre></td></tr></table></figure>
+<p>要创建 Date 对象，您必须首先将它转换为一个 DateMidnight 对象，然后只需要将 DateMidnight 对象作为 Date。<br>（当然，产生的 Date 对象将把它自己的时间部分设置为午夜时刻）。<br>JDK 互操作性被内置到 Joda API 中，因此您无需全部替换自己的接口，如果它们被绑定到 JDK 的话。比<br>如，您可以使用 Joda 完成复杂的部分，然后使用 JDK 处理接口。</p>
+<p><strong>四 日期计算</strong></p>
+<p>现在，您已经了解了如何创建一些非常有用的 Joda 类，我将向您展示如何使用它们执行日期计算。</p>
+<p>假设在当前的系统日期下，我希望计算上一个月的最后一天。对于这个例子，我并不关心一天中的时间，因为我只需要获得年/月/日，如所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LocalDate now = SystemFactory.getClock().getLocalDate();</span><br><span class="line"></span><br><span class="line">LocalDate lastDayOfPreviousMonth = now.minusMonths(1).dayOfMonth().withMaximumValue();</span><br></pre></td></tr></table></figure>
+<p>首先，我从当前月份减去一个月，得到 “上一个月”。<br>接着，我要求获得 dayOfMonth 的最大值，它使我得到这个月的最后一天。<br>注意，这些调用被连接到一起（注意 Joda ReadableInstant 子类是不可变的），这样您只需要捕捉调用链中最后一个方法的结果，从而获得整个计算的结果。</p>
+<p>您可能对dayOfMonth() 调用感兴趣。这在 Joda 中被称为属性（property）。它相当于 Java对象的属性。<br>属性是根据所表示的常见结构命名的，并且它被用于访问这个结构，用于完成计算目的。<br>属性是实现 Joda 计算威力的关键。您目前所见到的所有 4 个 Joda 类都具有这样的属性。一些例子包括：<br><strong>yearOfCentury</strong><br><strong>dayOfYear</strong><br><strong>monthOfYear</strong><br><strong>dayOfMonth</strong><br><strong>dayOfWeek</strong></p>
+<p>假设您希望获得任何一年中的第 11 月的第一个星期二的日期，而这天必须是在这个月的第一个星期一之后。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">LocalDate now = SystemFactory.getClock().getLocalDate();</span><br><span class="line"></span><br><span class="line">LocalDate electionDate = now.monthOfYear()</span><br><span class="line"></span><br><span class="line">.setCopy(11) // November</span><br><span class="line"></span><br><span class="line">.dayOfMonth() // Access Day Of Month Property</span><br><span class="line"></span><br><span class="line">.withMinimumValue() // Get its minimum value</span><br><span class="line"></span><br><span class="line">.plusDays(6) // Add 6 days</span><br><span class="line"></span><br><span class="line">.dayOfWeek() // Access Day Of Week Property</span><br><span class="line"></span><br><span class="line">.setCopy(&quot;Monday&quot;) // Set to Monday (it will round down)</span><br><span class="line"></span><br><span class="line">.plusDays(1); // Gives us Tuesday</span><br></pre></td></tr></table></figure>
+<p>.setCopy(“Monday”) 是整个计算的关键。不管中间LocalDate 值是多少，将其 dayOfWeek 属性设置为 Monday 总是能够四舍五入，<br>这样的话，在每月的开始再加上 6 天就能够让您得到第一个星期一。再加上一天就得到第一个星期二。Joda 使得执行此类计算变得非常容易。</p>
+<p>下面是其他一些因为使用 Joda 而变得超级简单的计算：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">  DateTime dt = new DateTime(); </span><br><span class="line"></span><br><span class="line">//昨天 </span><br><span class="line"></span><br><span class="line"> DateTime yesterday = dt.minusDays(1); </span><br><span class="line"></span><br><span class="line">  //明天 </span><br><span class="line"></span><br><span class="line">  DateTime tomorrow = dt.plusDays(1); </span><br><span class="line"></span><br><span class="line">  //1个月前 </span><br><span class="line"></span><br><span class="line">  DateTime before1month = dt.minusMonths(1);  </span><br><span class="line"></span><br><span class="line">  //3个月后 </span><br><span class="line"></span><br><span class="line"> DateTime after3month = dt.plusMonths(3); </span><br><span class="line"></span><br><span class="line"> //2年前 </span><br><span class="line"></span><br><span class="line"> DateTime before2year = dt.minusYears(2);</span><br><span class="line"></span><br><span class="line"> //5年后 </span><br><span class="line"></span><br><span class="line"> DateTime after5year = dt.plusYears(5);</span><br></pre></td></tr></table></figure>
+<p><strong>五 格式化时间</strong></p>
+<p>使用 JDK 格式化日期以实现打印是完全可以的，但是我始终认为它应该更简单一些。<br>这是 Joda 设计者进行了改进的另一个特性。要格式化一个 Joda 对象，调用它的 toString() 方法，<br>并且如果您愿意的话，传递一个标准的 ISO8601或一个 JDK 兼容的控制字符串，以告诉 JDK 如何执行格式化。<br>不需要创建单独的 SimpleDateFormat 对象<br>（但是 Joda 的确为那些喜欢自找麻烦的人提供了一个DateTimeFormatter 类）。<br>调用 Joda 对象的 toString() 方法，仅此而已。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dateTime.toString(ISODateTimeFormat.basicDateTime());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicDateTimeNoMillis());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicOrdinalDateTime());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicWeekDateTime());</span><br><span class="line"></span><br><span class="line">20090906T080000.000-0500 20090906T080000-0500 2009249T080000.000-0500 2009W367T080000.000-0500</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = DateTime.now();</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy hh:mm:ss.SSSa&quot;);</span><br><span class="line">dateTime.toString(&quot;dd-MM-yyyy HH:mm:ss&quot;);</span><br><span class="line">dateTime.toString(&quot;EEEE dd MMMM, yyyy HH:mm:ssa&quot;);</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy HH:mm ZZZZ&quot;);</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy HH:mm Z&quot;); 09/06/2009 02:30:00.000PM 06-Sep-2009 14:30:00 Sunday 06 September, 2009 14:30:00PM 09/06/2009 14:30 America/Chicago 09/06/2009 14:30 -0500</span><br></pre></td></tr></table></figure>
+<p><strong>结束语</strong></p>
+<p>谈到日期处理，Joda 是一种令人惊奇的高效工具。无论您是计算日期、打印日期，或是解析日期，Joda都将是工具箱中的便捷工具。<br>在本文中，我首先介绍了 Joda，它可以作为 JDK 日期/时间库的替代选择。然后介绍了一些 Joda 概念，以及如何使用 Joda 执行日期计算和格式化。</p>
+<p><strong>六 使用代码案例</strong></p>
+<p><code>2`</code>、获取年月日点分秒`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.  <code></code>//年 `</p>
+<p><code>3`</code>.  <code></code>int<code></code>year = dt.getYear(); `</p>
+<p><code>4`</code>.  <code></code>//月 `</p>
+<p><code>5`</code>.  <code></code>int<code></code>month = dt.getMonthOfYear(); `</p>
+<p><code>6`</code>.  <code></code>//日 `</p>
+<p><code>7`</code>.  <code></code>int<code></code>day = dt.getDayOfMonth(); `</p>
+<p><code>8`</code>.  <code></code>//星期 `</p>
+<p><code>9`</code>.  <code></code>int<code></code>week = dt.getDayOfWeek(); `</p>
+<p><code>10`</code>. <code></code>//点 `</p>
+<p><code>11`</code>. <code></code>int<code></code>hour = dt.getHourOfDay(); `</p>
+<p><code>12`</code>. <code></code>//分 `</p>
+<p><code>13`</code>. <code></code>int<code></code>min = dt.getMinuteOfHour(); `</p>
+<p><code>14`</code>. <code></code>//秒 `</p>
+<p><code>15`</code>. <code></code>int<code></code>sec = dt.getSecondOfMinute(); `</p>
+<p><code>16`</code>. <code></code>//毫秒 `</p>
+<p><code>17`</code>. <code></code>int<code></code>msec = dt.getMillisOfSecond(); `</p>
+<p><code>3</code> <code>星期的特殊处理</code></p>
+<p><code>dt.getDayOfWeek()</code></p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//星期 `</p>
+<p><code>4`</code>.  <code>switch</code>(dt.getDayOfWeek()) { `</p>
+<p><code>5`</code>.  <code></code>case<code></code>DateTimeConstants.SUNDAY: `</p>
+<p><code>6`</code>.      System.out.println(<code>&quot;星期日&quot;</code>); `</p>
+<p><code>7`</code>.      <code>break</code>; `</p>
+<p><code>8`</code>.  <code></code>case<code></code>DateTimeConstants.MONDAY: `</p>
+<p><code>9`</code>.      System.out.println(<code>&quot;星期一&quot;</code>); `</p>
+<p><code>10`</code>.     <code>break</code>; `</p>
+<p><code>11`</code>. <code></code>case<code></code>DateTimeConstants.TUESDAY: `</p>
+<p><code>12`</code>.     System.out.println(<code>&quot;星期二&quot;</code>); `</p>
+<p><code>13`</code>.     <code>break</code>; `</p>
+<p><code>14`</code>. <code></code>case<code></code>DateTimeConstants.WEDNESDAY: `</p>
+<p><code>15`</code>.     System.out.println(<code>&quot;星期三&quot;</code>); `</p>
+<p><code>16`</code>.     <code>break</code>; `</p>
+<p><code>17`</code>. <code></code>case<code></code>DateTimeConstants.THURSDAY: `</p>
+<p><code>18`</code>.     System.out.println(<code>&quot;星期四&quot;</code>); `</p>
+<p><code>19`</code>.     <code>break</code>; `</p>
+<p><code>20`</code>. <code></code>case<code></code>DateTimeConstants.FRIDAY: `</p>
+<p><code>21`</code>.     System.out.println(<code>&quot;星期五&quot;</code>); `</p>
+<p><code>22`</code>.     <code>break</code>; `</p>
+<p><code>23`</code>. <code></code>case<code></code>DateTimeConstants.SATURDAY: `</p>
+<p><code>24`</code>.     System.out.println(<code>&quot;星期六&quot;</code>); `</p>
+<p><code>25`</code>.     <code>break</code>; `</p>
+<p><code>26`</code>. } `</p>
+<p><code>4`</code>、与JDK日期对象的转换`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//转换成java.util.Date对象 `</p>
+<p><code>4`</code>.  Date d1 = <code></code>new<code></code>Date(dt.getMillis()); `</p>
+<p><code>5`</code>.  Date d2 = dt.toDate(); `</p>
+<p><code>6`</code>.   `</p>
+<p><code>7`</code>.  <code></code>//转换成java.util.Calendar对象 `</p>
+<p><code>8`</code>.  Calendar c1 = Calendar.getInstance(); `</p>
+<p><code>9`</code>.  c1.setTimeInMillis(dt.getMillis()); `</p>
+<p><code>10`</code>. Calendar c2 = dt.toCalendar(Locale.getDefault());`</p>
+<p><code>5`</code>、日期前后推算`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//昨天 `</p>
+<p><code>4`</code>.  DateTime yesterday = dt.minusDays(<code>1</code>);        `</p>
+<p><code>5`</code>.  <code></code>//明天 `</p>
+<p><code>6`</code>.  DateTime tomorrow = dt.plusDays(<code>1</code>);      `</p>
+<p><code>7`</code>.  <code></code>//1个月前 `</p>
+<p><code>8`</code>.  DateTime before1month = dt.minusMonths(<code>1</code>);       `</p>
+<p><code>9`</code>.  <code></code>//3个月后 `</p>
+<p><code>10`</code>. DateTime after3month = dt.plusMonths(<code>3</code>);         `</p>
+<p><code>11`</code>. <code></code>//2年前 `</p>
+<p><code>12`</code>. DateTime before2year = dt.minusYears(<code>2</code>);         `</p>
+<p><code>13`</code>. <code></code>//5年后 `</p>
+<p><code>14`</code>. DateTime after5year = dt.plusYears(<code>5</code>); `</p>
+<p><code>6`</code>、取特殊日期`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime();    `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//月末日期   `</p>
+<p><code>4`</code>.  DateTime lastday = dt.dayOfMonth().withMaximumValue(); `</p>
+<p><code>5`</code>.   `</p>
+<p><code>6`</code>.  <code></code>//90天后那周的周一 `</p>
+<p><code>7`</code>.  DateTime firstday = dt.plusDays(<code>90</code>).dayOfWeek().withMinimumValue(); `</p>
+<p><code>7`</code>、时区`</p>
+<p><code>1`</code>.  <code></code>//默认设置为日本时间 `</p>
+<p><code>2`</code>.  DateTimeZone.setDefault(DateTimeZone.forID(<code>&quot;Asia/Tokyo&quot;</code>)); `</p>
+<p><code>3`</code>.  DateTime dt1 = <code></code>new<code></code>DateTime(); `</p>
+<p><code>4`</code>.   `</p>
+<p><code>5`</code>.  <code></code>//伦敦时间 `</p>
+<p><code>6`</code>.  DateTime dt2 = <code>new` `DateTime(DateTimeZone.forID(</code>“Europe/London”<code></code>)); `</p>
+<p><code>8`</code>、计算区间`</p>
+<p><code>1`</code>.  DateTime begin = <code>new` `DateTime(</code>“2012-02-01”<code></code>); `</p>
+<p><code>2`</code>.  DateTime end = <code>new` `DateTime(</code>“2012-05-01”<code></code>); `</p>
+<p><code>3`</code>.   `</p>
+<p><code>4`</code>.  <code></code>//计算区间毫秒数 `</p>
+<p><code>5`</code>.  Duration d = <code></code>new<code></code>Duration(begin, end); `</p>
+<p><code>6`</code>.  <code></code>long<code></code>time = d.getMillis(); `</p>
+<p><code>7`</code>.   `</p>
+<p><code>8`</code>.  <code></code>//计算区间天数 `</p>
+<p><code>9`</code>.  Period p = <code></code>new<code></code>Period(begin, end, PeriodType.days()); `</p>
+<p><code>10`</code>. <code></code>int<code></code>days = p.getDays(); `</p>
+<p><code>11`</code>.  `</p>
+<p><code>12`</code>. <code></code>//计算特定日期是否在该区间内 `</p>
+<p><code>13`</code>. Interval i = <code></code>new<code></code>Interval(begin, end); `</p>
+<p><code>14`</code>. <code>boolean` `contained = i.contains(</code>new<code></code>DateTime(<code>&quot;2012-03-01&quot;</code>)); `</p>
+<p><code>9`</code>、日期比较`</p>
+<p><code>1`</code>.  DateTime d1 = <code>new` `DateTime(</code>“2012-02-01”<code></code>); `</p>
+<p><code>2`</code>.  DateTime d2 = <code>new` `DateTime(</code>“2012-05-01”<code></code>); `</p>
+<p><code>3`</code>.   `</p>
+<p><code>4`</code>.  <code></code>//和系统时间比 `</p>
+<p><code>5`</code>.  <code></code>boolean<code></code>b1 = d1.isAfterNow(); `</p>
+<p><code>6`</code>.  <code></code>boolean<code></code>b2 = d1.isBeforeNow(); `</p>
+<p><code>7`</code>.  <code></code>boolean<code></code>b3 = d1.isEqualNow(); `</p>
+<p><code>8`</code>.   `</p>
+<p><code>9`</code>.  <code></code>//和其他日期比 `</p>
+<p><code>10`</code>. <code></code>boolean<code></code>f1 = d1.isAfter(d2); `</p>
+<p><code>11`</code>. <code></code>boolean<code></code>f2 = d1.isBefore(d2); `</p>
+<p><code>12`</code>. <code></code>boolean<code></code>f3 = d1.isEqual(d2); `</p>
+<p><code>10`</code>、格式化输出`</p>
+<p><code>1`</code>.  DateTime dateTime = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  String s1 = dateTime.toString(<code>&quot;yyyy/MM/dd hh:mm:ss.SSSa&quot;</code>); `</p>
+<p><code>4`</code>.  String s2 = dateTime.toString(<code>&quot;yyyy-MM-dd HH:mm:ss&quot;</code>); `</p>
+<p><code>5`</code>.  String s3 = dateTime.toString(<code>&quot;EEEE dd MMMM, yyyy HH:mm:ssa&quot;</code>); `</p>
+<p><code>6`</code>.  String s4 = dateTime.toString(<code>&quot;yyyy/MM/dd HH:mm ZZZZ&quot;</code>); `</p>
+<p><code>7`</code>.  String s5 = dateTime.toString(<code>&quot;yyyy/MM/dd HH:mm Z&quot;</code>); `</p>
+<p> |</p>
+<p>案例：</p>
+<pre><code>public static DateTime getNowWeekMonday() { 
+    DateTime date = DateTime.now(); 
+    int dayOfWeek = date.getDayOfWeek(); 
+    return DateTime.parse(date.minusDays(dayOfWeek - 1).toString(&quot;yyyy-MM-dd&quot;)); 
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private static final String DATE_FORMAT = &quot;yyyy-MM-dd&quot;;</span><br><span class="line"></span><br><span class="line">  //每周一0点0分0秒触发，处理上上周</span><br><span class="line">  @Scheduled(cron = &quot;0 0 0 ? * MON &quot;)</span><br><span class="line">  public void weeklyRemind() &#123;</span><br><span class="line">      logger.info(&quot;CyclePendingReminderTask.weeklyRemind&quot;);</span><br><span class="line">      logger.info(&quot;周期性待处理提醒任务开始&quot;);</span><br><span class="line">      String now = DateTime.now().toString(DATE_FORMAT);</span><br><span class="line">      //往前推2周，上上周周一</span><br><span class="line">      String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">              .minusWeeks(2).toString(DATE_FORMAT);</span><br><span class="line">      //上上周周日</span><br><span class="line">      String to = DateTime.parse(from, ISODateTimeFormat.dateElementParser())</span><br><span class="line">              .plusWeeks(1).minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">      //上上周周一0点时间戳</span><br><span class="line">      long fromTime = DateTime.parse(from, ISODateTimeFormat.dateElementParser()).getMillis();</span><br><span class="line">      //上周周一0点时间戳</span><br><span class="line">      long toTime = DateTime.parse(to, ISODateTimeFormat.dateElementParser()).plus(1).getMillis();</span><br><span class="line">      List&lt;String&gt; userIdList = ideaService.getUserIdList();</span><br><span class="line">      for (String userId : userIdList) &#123;</span><br><span class="line">          List&lt;Idea&gt; ideaList = ideaService.findIdeasByCreateAt(userId, fromTime, toTime);</span><br><span class="line">          //有创建想法才会有提醒</span><br><span class="line">          if (ideaList.size() &gt; 0) &#123;</span><br><span class="line">              CyclePendingIdeaReminder reminder = new CyclePendingIdeaReminder();</span><br><span class="line">              reminder.setUserId(userId);</span><br><span class="line">              reminder.setFrom(from);</span><br><span class="line">              reminder.setTo(to);</span><br><span class="line">              reminder.setFinished(false);</span><br><span class="line">              cpiReminderService.save(reminder);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      logger.info(&quot;周期性待处理提醒任务完成&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">//每月一号0点0分0秒触发</span><br><span class="line">    //当中再判断当前月份进行季度和年度的处理操作</span><br><span class="line">    @Scheduled(cron = &quot;0 0 0 1 * ? &quot;)</span><br><span class="line">    public void monthlySelectionRemind() &#123;</span><br><span class="line">        logger.info(&quot;IdeaSelectionReminderTask monthlySelectionRemind start.&quot;);</span><br><span class="line">        DateTime nowTime = DateTime.now();</span><br><span class="line">        int month = nowTime.getMonthOfYear();</span><br><span class="line">        String now = nowTime.toString(DATE_FORMAT);</span><br><span class="line">        //年度处理:  1</span><br><span class="line">        if (month == 1) &#123;</span><br><span class="line">            logger.info(&quot;年度精选任务开始&quot;);</span><br><span class="line">            String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusYears(1).toString(DATE_FORMAT);</span><br><span class="line">            String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">            doMonthly(from, to, OriginalityType.year);</span><br><span class="line">            logger.info(&quot;年度精选任务完成&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //季度处理： 3(4)  6(7)  9(10)  12(1)</span><br><span class="line">        if (month == 4 || month == 7 || month == 10 || month == 1) &#123;</span><br><span class="line">            logger.info(&quot;季度精选任务开始&quot;);</span><br><span class="line">            String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                    .minusMonths(3).toString(DATE_FORMAT);</span><br><span class="line">            String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                    .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">            doMonthly(from, to, OriginalityType.quarter);</span><br><span class="line">            logger.info(&quot;季度精选任务完成&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //月份处理</span><br><span class="line">        logger.info(&quot;月精选任务开始&quot;);</span><br><span class="line">        String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusMonths(1).toString(DATE_FORMAT);</span><br><span class="line">        String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">        doMonthly(from, to, OriginalityType.month);</span><br><span class="line">        logger.info(&quot;月精选任务完成&quot;);</span><br><span class="line">        logger.info(&quot;IdeaSelectionReminderTask monthlySelectionRemind finish.&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> // 今日凌晨</span><br><span class="line">Date date = DateTime.parse(DateTime.now().toString(&quot;yyyy-MM-dd&quot;)).toDate()</span><br><span class="line">// 今天9点对应的日期</span><br><span class="line">Date date = DateTime.parse(DateTime.now().toString(&quot;yyyy-MM-dd&quot;)).hourOfDay().addToCopy(9).toDate();</span><br><span class="line">// 当前时间加1分钟</span><br><span class="line">Date date = DateTime.now().minuteOfHour().addToCopy(1)).toDate()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31906/" data-id="cjyvgh1ow001rq4ur39jhd5l8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/19/31907/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RabbitMQ基础概念
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/19/31905/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Github的webhooks</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

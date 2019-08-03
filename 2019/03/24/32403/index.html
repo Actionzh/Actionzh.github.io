@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>subList | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="List接口中定义：1List&amp;lt;E&amp;gt; subList(int fromIndex, int toIndex); 英文注释：123456789101112Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="subList">
+<meta property="og:url" content="http://yoursite.com/2019/03/24/32403/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="List接口中定义：1List&amp;lt;E&amp;gt; subList(int fromIndex, int toIndex); 英文注释：123456789101112Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fro">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/24/32403/1.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.614Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="subList">
+<meta name="twitter:description" content="List接口中定义：1List&amp;lt;E&amp;gt; subList(int fromIndex, int toIndex); 英文注释：123456789101112Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fro">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/24/32403/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-32403" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/32403/" class="article-date">
+  <time datetime="2019-03-24T14:54:16.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      subList
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="List接口中定义："><a href="#List接口中定义：" class="headerlink" title="List接口中定义："></a>List接口中定义：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br></pre></td></tr></table></figure>
+<h3 id="英文注释："><a href="#英文注释：" class="headerlink" title="英文注释："></a>英文注释：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fromIndex and toIndex are equal, the </span><br><span class="line">returned list is empty.) The returned list is backed by this list, so non-structural changes in the returned list are reflected in this list, and vice-versa. </span><br><span class="line">The returned list supports all of the optional list operations supported by this list.</span><br><span class="line"></span><br><span class="line">This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays). Any operation that expects a list can be used as a </span><br><span class="line">range operation by passing a subList view instead of a whole list. For example, the following idiom removes a range of elements from a list: </span><br><span class="line">      list.subList(from, to).clear();</span><br><span class="line"></span><br><span class="line">Similar idioms may be constructed for indexOf and lastIndexOf, and all of the algorithms in the Collections class can be applied to a subList.</span><br><span class="line">The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via </span><br><span class="line">the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in </span><br><span class="line">progress may yield incorrect results.)</span><br></pre></td></tr></table></figure>
+<p>根据注释得知：</p>
+<p>1，该方法返回的是父list的一个视图，从fromIndex（包含），到toIndex（不包含）。fromIndex=toIndex 表示子list为空</p>
+<p>2，父子list做的非结构性修改（non-structural changes）都会影响到彼此：所谓的“非结构性修改”，是指不涉及到list的大小改变的修改。相反，结构性修改，指改变了list大小的修改。</p>
+<p>3，对于结构性修改，子list的所有操作都会反映到父list上。但父list的修改将会导致返回的子list失效。</p>
+<p>4，tips：如何删除list中的某段数据：</p>
+<p>list.subList(from, to).clear();</p>
+<h3 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h3><p>来自<a href="http://www.cnblogs.com/weknow619/p/6251065.html" target="_blank" rel="noopener">【Java每日一题】20170105</a>，就是看到这个题目才让我知道list的这个方法我没有接触过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package ques; import java.util.ArrayList; import java.util.List; public class Ques0105 &#123; public static void main(String[] args) &#123;  </span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();  </span><br><span class="line">        list.add(&quot;a&quot;); // 使用构造器创建一个包含list的列表list1 </span><br><span class="line">        List&lt;String&gt; list1 = new ArrayList&lt;String&gt;(list); // 使用subList生成与list相同的列表list2 </span><br><span class="line">        List&lt;String&gt; list2 = list.subList(0, list.size());  </span><br><span class="line">        list2.add(&quot;b&quot;);  </span><br><span class="line"></span><br><span class="line">        System.out.println(list.equals(list1));  </span><br><span class="line">        System.out.println(list.equals(list2));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果如下：<br><img src="/2019/03/24/32403/1.png" alt="1"></p>
+<p>可以发现，list2为list的子list，当list2发生结构性修改（list2.add(“b”)）后，list也发生相应改变，所以返回结果为false和true</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/32403/" data-id="cjyvgh1lj000jq4urxf9u74vc" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/24/41601/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          当 forEach 需要索引
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/24/32402/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">通配符和边界</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

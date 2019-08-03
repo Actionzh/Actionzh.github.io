@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>WebService中的WSDL详解 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="WebService中的WSDL详解有人在WebService开发的时候，特别是和第三方有接口的时候，走的是SOAP协议，然后用户（或后台）给你一个WSDL文件（或网址），说按照上面的进行适配， 这时就要对WebService的WSDL有一定的理解，本文将对WSDL（WebService描述语言）进行详细总结。  WSDL (Web Services Description Language,We">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebService中的WSDL详解">
+<meta property="og:url" content="http://yoursite.com/2019/04/16/wsdl/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="WebService中的WSDL详解有人在WebService开发的时候，特别是和第三方有接口的时候，走的是SOAP协议，然后用户（或后台）给你一个WSDL文件（或网址），说按照上面的进行适配， 这时就要对WebService的WSDL有一定的理解，本文将对WSDL（WebService描述语言）进行详细总结。  WSDL (Web Services Description Language,We">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/04/16/wsdl/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/16/wsdl/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/16/wsdl/3.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.663Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebService中的WSDL详解">
+<meta name="twitter:description" content="WebService中的WSDL详解有人在WebService开发的时候，特别是和第三方有接口的时候，走的是SOAP协议，然后用户（或后台）给你一个WSDL文件（或网址），说按照上面的进行适配， 这时就要对WebService的WSDL有一定的理解，本文将对WSDL（WebService描述语言）进行详细总结。  WSDL (Web Services Description Language,We">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/16/wsdl/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-wsdl" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/16/wsdl/" class="article-date">
+  <time datetime="2019-04-16T06:34:08.000Z" itemprop="datePublished">2019-04-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WebService中的WSDL详解
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="WebService中的WSDL详解"><a href="#WebService中的WSDL详解" class="headerlink" title="WebService中的WSDL详解"></a>WebService中的WSDL详解</h3><pre><code>有人在WebService开发的时候，特别是和第三方有接口的时候，走的是SOAP协议，然后用户（或后台）给你一个WSDL文件（或网址），说按照上面的进行适配， 这时就要对WebService的WSDL有一定的理解，本文将对WSDL（WebService描述语言）进行详细总结。 
+WSDL (Web Services Description Language,Web服务描述语言)是一种XML Application，他将Web服务描述定义为一组服务访问点，客户端可以通过这些服务访问点对包含面向文档信息或面向过程调用的服务进行访问(类似远程过程调用)。WSDL首先对访问的操作和访问时使用的请求/响应消息进行抽象描述，然后将其绑定到具体的传输协议和消息格式上以最终定义具体部署的服务访问点。相关的具体部署的服务访问点通过组合就成为抽象的Web服务。
+</code></pre><p>一．WSDL的基本概念<br>       WSDL是一个用于精确描述Web服务的文档，WSDL文档是一个遵循WSDL-XML模式的XML文档。WSDL 文档将Web服务定义为服务访问点或端口的集合。在 WSDL 中，由于服务访问点和消息的抽象定义已从具体的服务部署或数据格式绑定中分离出来，因此可以对抽象定义进行再次使用。消息，指对交换数据的抽象描述；而端口类型，指操作的抽象集合。用于特定端口类型的具体协议和数据格式规范构成了可以再次使用的绑定。将Web访问地址与可再次使用的绑定相关联，可以定义一个端口，而端口的集合则定义为服务。<br>       一个WSDL文档通常包含8个重要的元素，即definitions、types、import、message、portType、operation、binding、service元素。这些元素嵌套在definitions元素中，definitions是WSDL文档的根元素。<br>WSDL文档外层结构图示：<br><img src="/2019/04/16/wsdl/1.png" alt="1"> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">WSDL 服务进行交互的基本元素： </span><br><span class="line">Types（消息类型）：数据类型定义的容器，它使用某种类型系统（如 XSD）。 </span><br><span class="line">Message（消息）：通信数据的抽象类型化定义，它由一个或者多个 part 组成。 </span><br><span class="line">Part：消息参数 </span><br><span class="line">PortType（端口类型）：特定端口类型的具体协议和数据格式规范。，它由一个或者多个 Operation组成。 </span><br><span class="line">Operation（操作）：对服务所支持的操作进行抽象描述，WSDL定义了四种操作： </span><br><span class="line">1.单向（one-way）：端点接受信息； </span><br><span class="line">3.要求-响应（solicit-response）：端点发送消息，然后接受相关消息； </span><br><span class="line">4.通知（notification[2] ）：端点发送消息。</span><br><span class="line"></span><br><span class="line">Binding：特定端口类型的具体协议和数据格式规范。 </span><br><span class="line">Port：定义为绑定和网络地址组合的单个端点。 </span><br><span class="line">Service：相关端口的集合，包括其关联的接口、操作、消息等。 </span><br><span class="line">外层结构里面也可能有多层结构。</span><br></pre></td></tr></table></figure>
+<p>二．WSDL的基本结构详解<br>下面通过一份wsdl文档，来详细解读WSDL结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"> &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span><br><span class="line">&lt;wsdl:definitions</span><br><span class="line">    targetNamespace=&quot;http://com.liuxiang.xfireDemo/HelloService&quot;</span><br><span class="line">    xmlns:tns=&quot;http://com.liuxiang.xfireDemo/HelloService&quot;</span><br><span class="line">    xmlns:wsdlsoap=&quot;http://schemas.xmlsoap.org/wsdl/soap/&quot;</span><br><span class="line">    xmlns:soap12=&quot;http://www.w3.org/2003/05/soap-envelope&quot;</span><br><span class="line">    xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span><br><span class="line">    xmlns:soapenc11=&quot;http://schemas.xmlsoap.org/soap/encoding/&quot;</span><br><span class="line">    xmlns:soapenc12=&quot;http://www.w3.org/2003/05/soap-encoding&quot;</span><br><span class="line">    xmlns:soap11=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span><br><span class="line">    xmlns:wsdl=&quot;http://schemas.xmlsoap.org/wsdl/&quot;&gt;</span><br><span class="line">    &lt;wsdl:types&gt;</span><br><span class="line">        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span><br><span class="line">            attributeFormDefault=&quot;qualified&quot; elementFormDefault=&quot;qualified&quot;</span><br><span class="line">            targetNamespace=&quot;http://com.liuxiang.xfireDemo/HelloService&quot;&gt;</span><br><span class="line">            &lt;xsd:element name=&quot;sayHello&quot;&gt;</span><br><span class="line">                &lt;xsd:complexType&gt;</span><br><span class="line">                    &lt;xsd:sequence&gt;</span><br><span class="line">                        &lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;1&quot;</span><br><span class="line">                            name=&quot;name&quot; nillable=&quot;true&quot; type=&quot;xsd:string&quot; /&gt;</span><br><span class="line">                    &lt;/xsd:sequence&gt;</span><br><span class="line">                &lt;/xsd:complexType&gt;</span><br><span class="line">            &lt;/xsd:element&gt;</span><br><span class="line">            &lt;xsd:element name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">                &lt;xsd:complexType&gt;</span><br><span class="line">                    &lt;xsd:sequence&gt;</span><br><span class="line">                        &lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;0&quot;</span><br><span class="line">                            name=&quot;return&quot; nillable=&quot;true&quot; type=&quot;xsd:string&quot; /&gt;</span><br><span class="line">                    &lt;/xsd:sequence&gt;</span><br><span class="line">                &lt;/xsd:complexType&gt;</span><br><span class="line">            &lt;/xsd:element&gt;</span><br><span class="line">        &lt;/xsd:schema&gt;</span><br><span class="line">    &lt;/wsdl:types&gt;</span><br><span class="line">    &lt;wsdl:message name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">        &lt;wsdl:part name=&quot;parameters&quot; element=&quot;tns:sayHelloResponse&quot; /&gt;</span><br><span class="line">    &lt;/wsdl:message&gt;</span><br><span class="line">    &lt;wsdl:message name=&quot;sayHelloRequest&quot;&gt;</span><br><span class="line">        &lt;wsdl:part name=&quot;parameters&quot; element=&quot;tns:sayHello&quot; /&gt;</span><br><span class="line">    &lt;/wsdl:message&gt;</span><br><span class="line">    &lt;wsdl:portType name=&quot;HelloServicePortType&quot;&gt;</span><br><span class="line">        &lt;wsdl:operation name=&quot;sayHello&quot;&gt;</span><br><span class="line">            &lt;wsdl:input name=&quot;sayHelloRequest&quot;</span><br><span class="line">                message=&quot;tns:sayHelloRequest&quot; /&gt;</span><br><span class="line">            &lt;wsdl:output name=&quot;sayHelloResponse&quot;</span><br><span class="line">                message=&quot;tns:sayHelloResponse&quot; /&gt;</span><br><span class="line">        &lt;/wsdl:operation&gt;</span><br><span class="line">    &lt;/wsdl:portType&gt;</span><br><span class="line">    &lt;wsdl:binding name=&quot;HelloServiceHttpBinding&quot;</span><br><span class="line">        type=&quot;tns:HelloServicePortType&quot;&gt;</span><br><span class="line">        &lt;wsdlsoap:binding style=&quot;document&quot;</span><br><span class="line">            transport=&quot;http://schemas.xmlsoap.org/soap/http&quot; /&gt;</span><br><span class="line">        &lt;wsdl:operation name=&quot;sayHello&quot;&gt;</span><br><span class="line">            &lt;wsdlsoap:operation soapAction=&quot;&quot; /&gt;</span><br><span class="line">            &lt;wsdl:input name=&quot;sayHelloRequest&quot;&gt;</span><br><span class="line">                &lt;wsdlsoap:body use=&quot;literal&quot; /&gt;</span><br><span class="line">            &lt;/wsdl:input&gt;</span><br><span class="line">            &lt;wsdl:output name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">                &lt;wsdlsoap:body use=&quot;literal&quot; /&gt;</span><br><span class="line">            &lt;/wsdl:output&gt;</span><br><span class="line">        &lt;/wsdl:operation&gt;</span><br><span class="line">    &lt;/wsdl:binding&gt;</span><br><span class="line">    &lt;wsdl:service name=&quot;HelloService&quot;&gt;</span><br><span class="line">        &lt;wsdl:port name=&quot;HelloServiceHttpPort&quot;</span><br><span class="line">            binding=&quot;tns:HelloServiceHttpBinding&quot;&gt;</span><br><span class="line">            &lt;wsdlsoap:address</span><br><span class="line">                location=&quot;http://localhost:8080/xfire/services/HelloService&quot; /&gt;</span><br><span class="line">        &lt;/wsdl:port&gt;</span><br><span class="line">    &lt;/wsdl:service&gt;</span><br><span class="line">&lt;/wsdl:definitions&gt;</span><br></pre></td></tr></table></figure>
+<p>（一） definitions元素<br>       所有的WSDL文档的根元素均是definitions元素。该元素封装了整个文档，同时通过其name提供了一个WSDL文档。除了提供一个命名空间（targetNamespace）外，该元素没有其他作用，故不作详细描述。</p>
+<p>（二）types元素<br>       WSDL采用了W3C XML模式内置类型作为其基本类型系统。types元素用作一个容器，用于定义XML模式内置类型中没有描述的各种数据类型（不太明白：XML模式内置类型中没有描述的各种数据类型）。当声明消息部分的有效时，消息定义使用了在types元素中定义的数据类型和元素。在本文的WSDL文档中的types定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:types&gt;</span><br><span class="line">        &lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;</span><br><span class="line">            attributeFormDefault=&quot;qualified&quot; elementFormDefault=&quot;qualified&quot;</span><br><span class="line">            targetNamespace=&quot;http://com.liuxiang.xfireDemo/HelloService&quot;&gt;</span><br><span class="line">            &lt;xsd:element name=&quot;sayHello&quot;&gt;</span><br><span class="line">                &lt;xsd:complexType&gt;</span><br><span class="line">                    &lt;xsd:sequence&gt;</span><br><span class="line">                        &lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;1&quot;</span><br><span class="line">                            name=&quot;name&quot; nillable=&quot;true&quot; type=&quot;xsd:string&quot; /&gt;</span><br><span class="line">                    &lt;/xsd:sequence&gt;</span><br><span class="line">                &lt;/xsd:complexType&gt;</span><br><span class="line">            &lt;/xsd:element&gt;</span><br><span class="line">            &lt;xsd:element name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">                &lt;xsd:complexType&gt;</span><br><span class="line">                    &lt;xsd:sequence&gt;</span><br><span class="line">                          &lt;xsd:element maxOccurs=&quot;1&quot; minOccurs=&quot;0&quot;</span><br><span class="line">                            name=&quot;return&quot; nillable=&quot;true&quot; type=&quot;xsd:string&quot; /&gt;</span><br><span class="line">                    &lt;/xsd:sequence&gt;</span><br><span class="line">                &lt;/xsd:complexType&gt;</span><br><span class="line">            &lt;/xsd:element&gt;</span><br><span class="line">        &lt;/xsd:schema&gt;</span><br><span class="line">    &lt;/wsdl:types&gt;</span><br><span class="line"></span><br><span class="line">       上面是数据定义部分，该部分定义了两个元素，一个是sayHello，一个是sayHelloResponse： </span><br><span class="line">       sayHello：定义了一个复杂类型，仅仅包含一个简单的字符串，将来用来描述操作的参入传入部分； </span><br><span class="line">       sayHelloResponse：定义了一个复杂类型，仅仅包含一个简单的字符串，将来用来描述操作的返回值； </span><br><span class="line">       这里sayHelloResponse是和sayHello相关的，sayHello相对于一个方法，里面的： type=”xsd:string”，name=”name”，是确定传入name的参数是String类型的，而sayHelloResponse中的 name=”return” type=”xsd:string” 是确定方法sayHello（String name）返回的类型是String类型的。</span><br></pre></td></tr></table></figure></p>
+<p>（三）import元素<br>       import元素使得可以在当前的WSDL文档中使用其他WSDL文档中指定的命名空间中的定义元素。本例子中没有使用import元素。通常在用户希望模块化WSDL文档的时候，该功能是非常有效果的。<br>import的格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:import namespace=&quot;http://xxx.xxx.xxx/xxx/xxx&quot; location=&quot;http://xxx.xxx.xxx/xxx/xxx.wsdl&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>必须有namespace属性和location属性：<br>1.namespace属性：值必须与正导入的WSDL文档中声明的targetNamespace相匹配；<br>2.location属性：必须指向一个实际的WSDL文档，并且该文档不能为空。</p>
+<p>（四）message元素<br>       message元素描述了Web服务使用消息的有效负载。message元素可以描述输出或者接受消息的有效负载；还可以描述SOAP文件头和错误detail元素的内容。定义message元素的方式取决于使用RPC样式还是文档样式的消息传递。在本文中的message元素的定义，本文档使用了采用文档样式的消息传递：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:message name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">        &lt;wsdl:part name=&quot;parameters&quot; element=&quot;tns:sayHelloResponse&quot; /&gt;</span><br><span class="line">    &lt;/wsdl:message&gt;</span><br><span class="line">    &lt;wsdl:message name=&quot;sayHelloRequest&quot;&gt;</span><br><span class="line">        &lt;wsdl:part name=&quot;parameters&quot; element=&quot;tns:sayHello&quot; /&gt;</span><br><span class="line">    &lt;/wsdl:message&gt;</span><br></pre></td></tr></table></figure></p>
+<pre><code>该部分是消息格式的抽象定义：定义了两个消息sayHelloResponse和sayHelloRequest：
+</code></pre><p>1.sayHelloRequest：<br>sayHello操作的请求消息格式，由一个消息片断组成，名字为parameters,元素是我们前面定义的types中的元素；</p>
+<p>2.sayHelloResponse：<br>sayHello操作的响应消息格式，由一个消息片断组成，名字为parameters,元素是我们前面定义的types中的元素；<br>        如果采用RPC样式的消息传递，只需要将文档中的element元素修改为type即可（？？）。</p>
+<p>（五）portType元素<br>       portType元素定义了Web服务的抽象接口。该接口有点类似Java的接口，都是定义了一个抽象类型和方法，没有定义实现。在WSDL中，portType元素是由binding和service元素来实现的，这两个元素用来说明Web服务实现使用的Internet协议、编码方案以及Internet地址。<br>一个portType中可以定义多个operation，一个operation可以看作是一个方法，本文中WSDL文档的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:portType name=&quot;HelloServicePortType&quot;&gt;</span><br><span class="line">        &lt;wsdl:operation name=&quot;sayHello&quot;&gt;</span><br><span class="line">            &lt;wsdl:input name=&quot;sayHelloRequest&quot;</span><br><span class="line">                message=&quot;tns:sayHelloRequest&quot; /&gt;</span><br><span class="line">            &lt;wsdl:output name=&quot;sayHelloResponse&quot;</span><br><span class="line">                message=&quot;tns:sayHelloResponse&quot; /&gt;</span><br><span class="line">        &lt;/wsdl:operation&gt;</span><br><span class="line">    &lt;/wsdl:portType&gt;</span><br></pre></td></tr></table></figure></p>
+<pre><code>portType定义了服务的调用模式的类型，这里包含一个操作sayHello方法，同时包含input和output表明该操作是一个请求／响应模式，请求消息是前面定义的sayHelloRequest，响应消息是前面定义的sayHelloResponse。input表示传递到Web服务的有效负载，output消息表示传递给客户的有效负载。 
+   这里相当于抽象类中定义了一个抽象方法sayHello，而方法参数的定义和返回值的定义都是在types中设置的，方法名又是在message中定义有的。
+</code></pre><p>（六）binding<br>       binding元素将一个抽象portType映射到一组具体协议(SOAO和HTTP)、消息传递样式、编码样式。通常binding元素与协议专有的元素和在一起使用，本文中的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:binding name=&quot;HelloServiceHttpBinding&quot;</span><br><span class="line">        type=&quot;tns:HelloServicePortType&quot;&gt;</span><br><span class="line">        &lt;wsdlsoap:binding style=&quot;document&quot;</span><br><span class="line">            transport=&quot;http://schemas.xmlsoap.org/soap/http&quot; /&gt;</span><br><span class="line">        &lt;wsdl:operation name=&quot;sayHello&quot;&gt;</span><br><span class="line">            &lt;wsdlsoap:operation soapAction=&quot;&quot; /&gt;</span><br><span class="line">            &lt;wsdl:input name=&quot;sayHelloRequest&quot;&gt;</span><br><span class="line">                &lt;wsdlsoap:body use=&quot;literal&quot; /&gt;</span><br><span class="line">            &lt;/wsdl:input&gt;</span><br><span class="line">            &lt;wsdl:output name=&quot;sayHelloResponse&quot;&gt;</span><br><span class="line">                &lt;wsdlsoap:body use=&quot;literal&quot; /&gt;</span><br><span class="line">            &lt;/wsdl:output&gt;</span><br><span class="line">        &lt;/wsdl:operation&gt;</span><br><span class="line">    &lt;/wsdl:binding&gt;</span><br></pre></td></tr></table></figure></p>
+<pre><code>这部分将服务访问点的抽象定义与SOAP、HTTP绑定，描述如何通过SOAP/HTTP来访问按照前面描述的访问入口点类型部署的访问入口。 
+</code></pre><p>其中规定了在具体SOAP调用时，应当使用的soapAction是”xxx”，这个Action在WebService代码调用中是很重要的。具体的使用需要参考特定协议定义的元素。</p>
+<p>（七）service元素和port元素<br>       service元素包含一个或者多个port元素，其中每个port元素表示一个不同的Web服务。port元素将URL赋给一个特定的binding，甚至可以使两个或者多个port元素将不同的URL赋值给相同的binding。文档中的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;wsdl:service name=&quot;HelloService&quot;&gt;</span><br><span class="line">        &lt;wsdl:port name=&quot;HelloServiceHttpPort&quot;</span><br><span class="line">            binding=&quot;tns:HelloServiceHttpBinding&quot;&gt;</span><br><span class="line">            &lt;wsdlsoap:address</span><br><span class="line">                location=&quot;http://localhost:8080/xfire/services/HelloService&quot; /&gt;</span><br><span class="line">        &lt;/wsdl:port&gt;</span><br><span class="line">    &lt;/wsdl:service&gt;</span><br></pre></td></tr></table></figure>
+<pre><code>对于这个WSDL文档的学习，第一次看是感觉非常陌生的，而且里面元素又多，学习的话先是要了解外层结构代表的意义和作用，然后理解里面的元素的意义和作用，有些元素作用不大，有些元素又是很关联的，有些元素是比较重要的。 
+</code></pre><p>WSDL图解：<br><img src="/2019/04/16/wsdl/2.png" alt="2"><br><img src="/2019/04/16/wsdl/3.png" alt="3"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/16/wsdl/" data-id="cjyvgh1nn001lq4urbjhvze6c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/16/webService/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          webservice
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/16/跨域/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">跨域</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

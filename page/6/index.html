@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Actionzh">
+<meta property="og:url" content="http://yoursite.com/page/6/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Actionzh">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-31908" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31908/" class="article-date">
+  <time datetime="2019-03-19T08:42:32.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31908/">Zookeeper的搭建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一、Zookeeper的搭建方式"><a href="#一、Zookeeper的搭建方式" class="headerlink" title="一、Zookeeper的搭建方式"></a>一、Zookeeper的搭建方式</h1><p>Zookeeper安装方式有三种，<strong>单机模式</strong>和<strong>集群模式</strong>以及<strong>伪集群模式</strong>。</p>
+<p>■ 单机模式：Zookeeper只运行在一台服务器上，适合测试环境；<br>■ 伪集群模式：就是在一台物理机上运行多个Zookeeper 实例；<br>■ 集群模式：Zookeeper运行于一个集群上，适合生产环境，这个计算机集群被称为一个“集合体”（ensemble）</p>
+<p>Zookeeper通过复制来实现高可用性，只要集合体中半数以上的机器处于可用状态，它就能够保证服务继续。<strong>为什么一定要超过半数呢</strong>？这跟Zookeeper的复制策略有关：zookeeper确保对znode 树的每一个修改都会被复制到集合体中超过半数的机器上。</p>
+<h2 id="1-1-Zookeeper的单机模式搭建"><a href="#1-1-Zookeeper的单机模式搭建" class="headerlink" title="1.1 Zookeeper的单机模式搭建"></a>1.1 Zookeeper的单机模式搭建</h2><p><strong>下载</strong>ZooKeeper</p>
+<p><strong>解压</strong>：tar -zxvf zookeeper-3.4.5.tar.gz <strong>重命名</strong>：mv zookeeper-3.4.5 zk</p>
+<p><strong>配置文件</strong>：在conf目录下删除zoo_sample.cfg文件，创建一个配置文件zoo.cfg。</p>
+<p>tickTime=2000<br>dataDir=/usr/local/zk/data<br>dataLogDir=/usr/local/zk/dataLog<br>clientPort=2181</p>
+<p><strong>配置环境变量</strong>：为了今后操作方便，我们需要对Zookeeper的环境变量进行配置，方法如下在/etc/profile文件中加入如下内容：</p>
+<p>export ZOOKEEPER_HOME=/usr/local/zk<br>export PATH=.:$HADOOP_HOME/bin:$ZOOKEEPER_HOME/bin:$JAVA_HOME/bin:$PATH</p>
+<p><strong>启动</strong>ZooKeeper的Server：zkServer.sh start；<br><strong>关闭</strong>ZooKeeper的Server：zkServer.sh stop</p>
+<h2 id="1-2-Zookeeper的伪集群模式搭建"><a href="#1-2-Zookeeper的伪集群模式搭建" class="headerlink" title="1.2 Zookeeper的伪集群模式搭建"></a>1.2 Zookeeper的伪集群模式搭建</h2><p>Zookeeper不但可以在单机上运行单机模式Zookeeper，而且可以在单机模拟集群模式 Zookeeper的运行，也就是将不同节点运行在同一台机器。我们知道伪分布模式下Hadoop的操作和分布式模式下有着很大的不同，但是在集群为分布 式模式下对Zookeeper的操作却和集群模式下没有本质的区别。显然，集群伪分布式模式为我们体验Zookeeper和做一些尝试性的实验提供了很大 的便利。比如，我们在实验的时候，可以先使用少量数据在集群伪分布模式下进行测试。当测试可行的时候，再将数据移植到集群模式进行真实的数据实验。这样不 但保证了它的可行性，同时大大提高了实验的效率。这种搭建方式，比较简便，成本比较低，适合测试和学习，如果你的手头机器不足，就可以在一台机器上部署了 3个server。</p>
+<h3 id="1-2-1-注意事项"><a href="#1-2-1-注意事项" class="headerlink" title="1.2.1. 注意事项"></a><strong>1.2.1. 注意事项</strong></h3><p>在一台机器上部署了3个server，需要注意的是在集群为分布式模式下我们使用的每个配置文档模拟一台机器，也就是说单台机器及上运行多个Zookeeper实例。但是，必须保证每个配置文档的各个端口号不能冲突，除了clientPort不同之外，dataDir也不同。另外，还要在dataDir所对应的目录中创建myid文件来指定对应的Zookeeper服务器实例。</p>
+<p>■ clientPort端口：如果在1台机器上部署多个server，那么每台机器都要不同的 clientPort，比如 server1是2181,server2是2182，server3是2183</p>
+<p>■ dataDir和dataLogDir：dataDir和dataLogDir也需要区分下，将数据文件和日志文件分开存放，同时每个server的这两变量所对应的路径都是不同的</p>
+<p>■ server.X和myid： server.X 这个数字就是对应，data/myid中的数字。在3个server的myid文件中分别写入了0，1，2，那么每个server中的zoo.cfg都配 server.0 server.2,server.3就行了。因为在同一台机器上，后面连着的2个端口，3个server都不要一样，否则端口冲突</p>
+<p>下面是我所配置的集群伪分布模式，分别通过zoo1.cfg、zoo2.cfg、zoo3.cfg来模拟由三台机器的Zookeeper集群,<br>代码清单 zoo1.cfg如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line">dataDir=/usr/local/zk/data_1</span><br><span class="line"></span><br><span class="line"># the port at which the clients will connect</span><br><span class="line">clientPort=2181</span><br><span class="line"></span><br><span class="line">#the location of the log file</span><br><span class="line">dataLogDir=/usr/local/zk/logs_1</span><br><span class="line"></span><br><span class="line">server.0=localhost:2287:3387</span><br><span class="line">server.1=localhost:2288:3388</span><br><span class="line">server.2=localhost:2289:3389</span><br></pre></td></tr></table></figure>
+<p>代码清单  zoo2.cfg如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line">dataDir=/usr/local/zk/data_2</span><br><span class="line"></span><br><span class="line"># the port at which the clients will connect</span><br><span class="line">clientPort=2182</span><br><span class="line"></span><br><span class="line">#the location of the log file</span><br><span class="line">dataLogDir=/usr/local/zk/logs_2</span><br><span class="line"></span><br><span class="line">server.0=localhost:2287:3387</span><br><span class="line">server.1=localhost:2288:3388</span><br><span class="line">server.2=localhost:2289:3389</span><br></pre></td></tr></table></figure></p>
+<p>代码清单 zoo3.cfg如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line">dataDir=/usr/local/zk/data_3</span><br><span class="line"></span><br><span class="line"># the port at which the clients will connect</span><br><span class="line">clientPort=2183</span><br><span class="line"></span><br><span class="line">#the location of the log file</span><br><span class="line">dataLogDir=/usr/local/zk/logs_3</span><br><span class="line"></span><br><span class="line">server.0=localhost:2287:3387</span><br><span class="line">server.1=localhost:2288:3388</span><br><span class="line">server.2=localhost:2289:3389</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-2-2-启动"><a href="#1-2-2-启动" class="headerlink" title="1.2.2 启动"></a>1.2.2 启动</h3><p>在集群为分布式下，我们只有一台机器，按时要运行三个Zookeeper实例。此时，如果在使用单机模式的启动命令是行不通的。此时，只要通过下面三条命令就能运行前面所配置的Zookeeper服务。如下所示：</p>
+<p>zkServer.sh start zoo1.sh<br>zkServer.sh start zoo2.sh<br>zkServer.sh start zoo3.sh</p>
+<p>启动过程，如下图所示：</p>
+<p><img src="/2019/03/19/31908/1.png" alt="1"></p>
+<p> 启动结果，如下图所示：</p>
+<p><img src="/2019/03/19/31908/2.png" alt="2"></p>
+<p>在运行完第一条指令之后，会出现一些错误异常，产生异常信息的原因是由于Zookeeper 服务的每个实例都拥有全局配置信息，他们在启动的时候会随时随地的进行Leader选举操作。此时，第一个启动的Zookeeper需要和另外两个 Zookeeper实例进行通信。但是，另外两个Zookeeper实例还没有启动起来，因此就产生了这的异样信息。我们直接将其忽略即可，待把图中“2 号”和“3号”Zookeeper实例启动起来之后，相应的异常信息自然会消失。此时，可以通过下面三条命令，来查询。</p>
+<p> zkServer.sh status zoo1.cfg<br> zkServer.sh status zoo2.cfg<br> zkServer.sh status zoo3.cfg</p>
+<p>Zookeeper服务的运行状态，如下图所示:</p>
+<p><img src="/2019/03/19/31908/3.png" alt="3"></p>
+<h2 id="1-3-Zookeeper的集群模式搭建"><a href="#1-3-Zookeeper的集群模式搭建" class="headerlink" title="1.3  Zookeeper的集群模式搭建"></a>1.3  Zookeeper的集群模式搭建</h2><p>为了获得可靠地Zookeeper服务，用户应该在一个机群上部署Zookeeper。只要机群上大多数的Zookeeper服务启动了，那么总的 Zookeeper服务将是可用的。集群的配置方式，和前两种类似，同样需要进行环境变量的配置。在每台机器上conf/zoo.cf配置文件的参数设置 相同</p>
+<h3 id="1-3-1-创建myid"><a href="#1-3-1-创建myid" class="headerlink" title="1.3.1 创建myid"></a>1.3.1 创建myid</h3><p>在dataDir(/usr/local/zk/data)目录创建myid文件</p>
+<p>Server0机器的内容为：0<br>Server1机器的内容为：1<br>Server2机器的内容为：2</p>
+<h3 id="1-3-2-编写配置文件"><a href="#1-3-2-编写配置文件" class="headerlink" title="1.3.2 编写配置文件"></a>1.3.2 编写配置文件</h3><p>在conf目录下删除zoo_sample.cfg文件，创建一个配置文件zoo.cfg，如下所示,代码清单  zoo.cfg中的参数设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># The number of milliseconds of each tick</span><br><span class="line">tickTime=2000</span><br><span class="line"></span><br><span class="line"># The number of ticks that the initial</span><br><span class="line"># synchronization phase can take</span><br><span class="line">initLimit=10</span><br><span class="line"></span><br><span class="line"># The number of ticks that can pass between</span><br><span class="line"># sending a request and getting an acknowledgement</span><br><span class="line">syncLimit=5</span><br><span class="line"></span><br><span class="line"># the directory where the snapshot is stored.</span><br><span class="line">dataDir=/usr/local/zk/data</span><br><span class="line"></span><br><span class="line"># the port at which the clients will connect</span><br><span class="line">clientPort=2183</span><br><span class="line"></span><br><span class="line">#the location of the log file</span><br><span class="line">dataLogDir=/usr/local/zk/log</span><br><span class="line"></span><br><span class="line">server.0=hadoop:2288:3388</span><br><span class="line">server.1=hadoop0:2288:3388</span><br><span class="line">server.2=hadoop1:2288:3388</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-3-启动"><a href="#1-3-3-启动" class="headerlink" title="1.3.3 启动"></a>1.3.3 启动</h3><p>分别在3台机器上启动ZooKeeper的Server：zkServer.sh start；</p>
+<h1 id="二、Zookeeper的配置"><a href="#二、Zookeeper的配置" class="headerlink" title="二、Zookeeper的配置"></a>二、Zookeeper的配置</h1><p>Zookeeper的功能特性是通过Zookeeper配置文件来进行控制管理的(zoo.cfg).这样的设计其实有其自身的原因，通过前面对Zookeeper的配置可以看出，在对Zookeeper集群进行配置的时候，它的配置文档是完全相同的。集群伪分布模式中，有少部分是不同的。这样的配置方式使得在部署Zookeeper服务的时候非常方便。如果服务器使用不同的配置文件，必须确保不同配置文件中的服务器列表相匹配。</p>
+<p>在设置Zookeeper配置文档时候，某些参数是可选的，某些是必须的。这些必须参数就构成了Zookeeper配置文档的最低配置要求。另外，若要对Zookeeper进行更详细的配置，可以参考下面的内容。</p>
+<h2 id="2-1-基本配置"><a href="#2-1-基本配置" class="headerlink" title="2.1 基本配置"></a>2.1 基本配置</h2><p>下面是在最低配置要求中必须配置的参数：</p>
+<p><strong>(1) client</strong>：监听客户端连接的端口。<br><strong>(2) tickTime</strong>：基本事件单元，这个时间是作为Zookeeper服务器之间或客户端与服务器之间维持心跳的时间间隔，每隔tickTime时间就会发送一个心跳；最小 的session过期时间为2倍tickTime 　　<br><strong>dataDir</strong>：存储内存中数据库快照的位置，如果不设置参数，更新食物的日志将被存储到默认位置。</p>
+<blockquote>
+<p>应该谨慎的选择日志存放的位置，使用专用的日志存储设备能够大大提高系统的性能，如果将日志存储在比较繁忙的存储设备上，那么将会很大程度上影像系统性能。</p>
+</blockquote>
+<h2 id="2-2-高级配置"><a href="#2-2-高级配置" class="headerlink" title="2.2 高级配置"></a>2.2 高级配置</h2><p>下面是高级配置参数中可选配置参数，用户可以使用下面的参数来更好的规定Zookeeper的行为：</p>
+<p><strong>(1) dataLogdDir</strong></p>
+<p>这个操作让管理机器把事务日志写入“dataLogDir”所指定的目录中，而不是“dataDir”所指定的目录。这将允许使用一个专用的日志设备，帮助我们避免日志和快照的竞争。配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># the directory where the snapshot is stored</span><br><span class="line">   dataDir=/usr/local/zk/data</span><br></pre></td></tr></table></figure>
+<p><strong>(2)maxClientCnxns</strong></p>
+<p>这个操作将限制连接到Zookeeper的客户端数量，并限制并发连接的数量，通过IP来区分不同的客户端。此配置选项可以阻止某些类别的Dos攻击。将他设置为零或忽略不进行设置将会取消对并发连接的限制。</p>
+<p>例如，此时我们将maxClientCnxns的值设为1，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># set maxClientCnxns</span><br><span class="line">   maxClientCnxns=1</span><br></pre></td></tr></table></figure></p>
+<p>启动Zookeeper之后，首先用一个客户端连接到Zookeeper服务器上。之后如果有第二个客户端尝试对Zookeeper进行连接，或者有某些隐式的对客户端的连接操作，将会触发Zookeeper的上述配置。</p>
+<p><strong>(3)minSessionTimeout和maxSessionTimeout</strong></p>
+<p>即最小的会话超时和最大的会话超时时间。在默认情况下，minSession=2<em>tickTime；maxSession=20</em>tickTime。</p>
+<h2 id="2-3-集群配置"><a href="#2-3-集群配置" class="headerlink" title="2.3 集群配置"></a>2.3 集群配置</h2><p><strong>(1) initLimit</strong></p>
+<p>此配置表示，允许follower(相对于Leaderer言的“客户端”)连接并同步到Leader的初始化连接时间，以tickTime为单位。当初始化连接时间超过该值，则表示连接失败。</p>
+<p><strong>(2) syncLimit</strong></p>
+<p>此配置项表示Leader与Follower之间发送消息时，请求和应答时间长度。如果follower在设置时间内不能与leader通信，那么此follower将会被丢弃。</p>
+<p><strong>(3) server.A=B：C：D</strong></p>
+<p>A：其中 A 是一个数字，表示这个是服务器的编号；<br>B：是这个服务器的 ip 地址；<br>C：Leader选举的端口；<br>D：Zookeeper服务器之间的通信端口。</p>
+<p><strong>(4) myid 和 zoo.cfg</strong></p>
+<p>除了修改 zoo.cfg 配置文件，集群模式下还要配置一个文件 myid，这个文件在 dataDir 目录下，这个文件里面就有一个数据就是 A 的值，Zookeeper 启动时会读取这个文件，拿到里面的数据与 zoo.cfg 里面的配置信息比较从而判断到底是那个 server。</p>
+<h1 id="三、搭建ZooKeeper服务器集群"><a href="#三、搭建ZooKeeper服务器集群" class="headerlink" title="三、搭建ZooKeeper服务器集群"></a>三、搭建ZooKeeper服务器集群</h1><p><strong>搭建要求：</strong></p>
+<p>(1) zk服务器集群规模不小于3个节点<br>(2) 要求各服务器之间系统时间要保持一致。</p>
+<h2 id="3-1-安装配置ZK"><a href="#3-1-安装配置ZK" class="headerlink" title="3.1 安装配置ZK"></a>3.1 安装配置ZK</h2><p><strong>(1)</strong> 使用WinScp将Zk传输到Hadoop主机上的/usr/local，我用的版本是zookeeper-3.4.5.tar.gz。</p>
+<p><strong>(2)</strong> 在hadoop的/usr/local目录下，解压缩zk….tar.gz，设置环境变量</p>
+<p><strong> 解压缩</strong>: 在/usr/local目录下，执行命令：tar -zxvf zookeeper-3.4.5.tar.gz，如下图所示:<br><img src="/2019/03/19/31908/4.png" alt="4"></p>
+<p><strong>重命名</strong>：解压后将文件夹，重命名为zk，执行命令： mv zookeeper-3.4.5 zk，如下图所示:<br><img src="/2019/03/19/31908/5.png" alt="5"></p>
+<p><strong>设置环境变量</strong>：执行命令： vi /etc/profile ，添加 ：export ZOOKEEPER_HOME=/usr/local/zk，如图2.3所示的内容。执行命令：source /etc/profile 如下图所示:</p>
+<p><img src="/2019/03/19/31908/6.png" alt="6"></p>
+<p><img src="/2019/03/19/31908/15.png" alt="15"></p>
+<h2 id="3-2-修改ZK配置文件"><a href="#3-2-修改ZK配置文件" class="headerlink" title="3.2 修改ZK配置文件"></a>3.2 修改ZK配置文件</h2><p><strong>(1) 重命名</strong>：将/usr/local/zk/conf目录下zoo_sample.cfg，重命名为zoo.cfg，执行命令：mv zoo_sample.cfg zoo.cfg。如如下图所示:<br><img src="/2019/03/19/31908/7.png" alt="7"></p>
+<p><strong>(2) 查看</strong>：在/usr/local/zk/conf目录下，修改文件 vi zoo.cfg，文件内容如下图所示。在该文件中dataDir表示文件存放目录，它的默认设置为/tmp/zookeeper这是一个临时存放目录，每 次重启后会丢失，在这我们自己设一个目录，/usr/local/zk/data。</p>
+<p><img src="/2019/03/19/31908/8.png" alt="8"></p>
+<p><strong>(3) 创建文件夹</strong>：mkdir /usr/local/zk/data</p>
+<p><strong>(4) 创建myid</strong>：在data目录下，创建文件myid，值为0；vi myid ;内容为0。</p>
+<p><strong>(5) 编辑</strong>：编辑该文件，执行vi zoo.cfg ，修改dataDir=/usr/local/zk/data。</p>
+<p><strong>新增</strong>：</p>
+<p>server.0=hadoop:2888:3888<br>server.1=hadoop0:2888:3888<br>server.2=hadoop1:2888:3888</p>
+<blockquote>
+<p>tickTime ：这个时间是作为 Zookeeper 服务器之间或客户端与服务器之间维持心跳的时间间隔，也就是每个 tickTime  时间就会发送一个心跳；</p>
+<p>dataDir：顾名思义就是 Zookeeper 保存数据的目录，默认情况下，Zookeeper 将写数据的日志文件也保存在这个目录里；</p>
+<p>clientPort：这个端口就是客户端连接 Zookeeper 服务器的端口，Zookeeper 会监听这个端口，接受客户端的访问请求。</p>
+<p>当这些配置项配置好后，就可以启动 Zookeeper 了，启动后使用命令echo ruok | nc localhost 2181检查 Zookeeper 是否已经在服务。</p>
+</blockquote>
+<h2 id="2-3-配置其他节点"><a href="#2-3-配置其他节点" class="headerlink" title="2.3 配置其他节点"></a>2.3 配置其他节点</h2><p><strong>(1)</strong> 把haooop主机的zk目录和/etc/profile目录，复制到hadoop0和hadoop1中。执行命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">scp -r /usr/local/zk/ hadoop0:/usr/local/</span><br><span class="line">scp -r /usr/local/zk/ hadoop1:/usr/local/</span><br><span class="line">　　　　　　scp /etc/profile hadoop0:/etc/</span><br><span class="line">　　　　　　scp /etc/profile hadoop1:/etc/</span><br><span class="line"></span><br><span class="line">　　　　　　ssh hadoop0</span><br><span class="line">　　　　　　suorce /etc/profile</span><br><span class="line">　　　　　　vi /usr/local/zk/data/myid</span><br><span class="line">　　　　　　exit</span><br><span class="line"></span><br><span class="line">　　　　　　ssh hadoop1</span><br><span class="line">　　　　　　suorce /etc/profile</span><br><span class="line">　　　　　　vi /usr/local/zk/data/myid</span><br><span class="line">　　　　　　exit</span><br></pre></td></tr></table></figure></p>
+<p><strong>(2)</strong> 把hadoop1中相应的myid的值改为1，把hadoop2中相应的myid的值改为2。　　　</p>
+<h1 id="四、启动检验"><a href="#四、启动检验" class="headerlink" title="四、启动检验"></a>四、启动检验</h1><p><strong>(1)</strong> 启动，在三个节点上分别执行命令zkServer.sh start</p>
+<p><strong>hadoop节点</strong>：</p>
+<p><img src="/2019/03/19/31908/9.png" alt="9"></p>
+<p><strong>hadoop0节点</strong>：</p>
+<p><img src="/2019/03/19/31908/10.png" alt="10"></p>
+<p><strong>hadoop1节点</strong>：</p>
+<p><img src="/2019/03/19/31908/11.png" alt="11"></p>
+<p><strong>(2)</strong> 检验，在三个节点上分别执行命令zkServer.sh status，从下面的图中我们会发现hadoop和hadoop1为Follower，hadoop0为Leader。</p>
+<p><strong>hadoop节点</strong>：</p>
+<p><img src="/2019/03/19/31908/12.png" alt="12"></p>
+<p><strong>hadoop0节点</strong>：</p>
+<p><img src="/2019/03/19/31908/13.png" alt="13"></p>
+<p><strong>hadoop1节点</strong>：</p>
+<p><img src="/2019/03/19/31908/14.png" alt="14"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31908/" data-id="cjyvgh1n7001cq4urtyctudca" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31907" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31907/" class="article-date">
+  <time datetime="2019-03-19T07:54:27.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31907/">RabbitMQ基础概念</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>你是否遇到过两个（多个）系统间需要通过定时任务来同步某些数据？你是否在为异构系统的不同进程间相互调用、通讯的问题而苦恼、挣扎？如果是，那么恭喜你，消息服务让你可以很轻松地解决这些问题。<br>消息服务擅长于解决多系统、异构系统间的数据交换（消息通知/通讯）问题，你也可以把它用于系统间服务的相互调用（RPC）。本文将要介绍的RabbitMQ就是当前最主流的[消息中间件]</p>
+<h2 id="RabbitMQ简介"><a href="#RabbitMQ简介" class="headerlink" title="RabbitMQ简介"></a>RabbitMQ简介</h2><p>AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。<br>AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。<br>RabbitMQ是一个开源的AMQP实现，服务器端用Erlang语言编写，支持多种客户端，如：Python、Ruby、.NET、Java、JMS、C、PHP、ActionScript、XMPP、STOMP等，支持AJAX。用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。</p>
+<p>下面将重点介绍RabbitMQ中的一些基础概念，了解了这些概念，是使用好RabbitMQ的基础。</p>
+<h2 id="ConnectionFactory、Connection、Channel"><a href="#ConnectionFactory、Connection、Channel" class="headerlink" title="ConnectionFactory、Connection、Channel"></a>ConnectionFactory、Connection、Channel</h2><p>ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最基本的对象。Connection是RabbitMQ的socket链接，它封装了socket协议相关部分逻辑。ConnectionFactory为Connection的制造工厂。<br>Channel是我们与RabbitMQ打交道的最重要的一个接口，我们大部分的业务操作是在Channel这个接口中完成的，包括定义Queue、定义Exchange、绑定Queue与Exchange、发布消息等。</p>
+<h2 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h2><p>Queue（队列）是RabbitMQ的内部对象，用于存储消息.</p>
+<p>RabbitMQ中的消息都只能存储在Queue中，生产者生产消息并最终投递到Queue中，消费者可以从Queue中获取消息并消费。</p>
+<p>多个消费者可以订阅同一个Queue，这时Queue中的消息会被平均分摊给多个消费者进行处理，而不是每个消费者都收到所有的消息并处理。</p>
+<h2 id="Message-acknowledgment"><a href="#Message-acknowledgment" class="headerlink" title="Message acknowledgment"></a>Message acknowledgment</h2><p>在实际应用中，可能会发生消费者收到Queue中的消息，但没有处理完成就宕机（或出现其他意外）的情况，这种情况下就可能会导致消息丢失。为了避免这种情况发生，我们可以要求消费者在消费完消息后发送一个回执给RabbitMQ，RabbitMQ收到消息回执（Message acknowledgment）后才将该消息从Queue中移除；如果RabbitMQ没有收到回执并检测到消费者的RabbitMQ连接断开，则RabbitMQ会将该消息发送给其他消费者（如果存在多个消费者）进行处理。这里不存在timeout概念，一个消费者处理消息时间再长也不会导致该消息被发送给其他消费者，除非它的RabbitMQ连接断开。</p>
+<p>这里会产生另外一个问题，如果我们的开发人员在处理完业务逻辑后，忘记发送回执给RabbitMQ，这将会导致严重的bug——Queue中堆积的消息会越来越多；消费者重启后会重复消费这些消息并重复执行业务逻辑…</p>
+<p>另外pub message是没有ack的。</p>
+<h2 id="Message-durability"><a href="#Message-durability" class="headerlink" title="Message durability"></a>Message durability</h2><p>如果我们希望即使在RabbitMQ服务重启的情况下，也不会丢失消息，我们可以将Queue与Message都设置为可持久化的（durable），这样可以保证绝大部分情况下我们的RabbitMQ消息不会丢失。但依然解决不了小概率丢失事件的发生（比如RabbitMQ服务器已经接收到生产者的消息，但还没来得及持久化该消息时RabbitMQ服务器就断电了），如果我们需要对这种小概率事件也要管理起来，那么我们要用到事务。由于这里仅为RabbitMQ的简单介绍，所以这里将不讲解RabbitMQ相关的事务。</p>
+<h2 id="Prefetch-count"><a href="#Prefetch-count" class="headerlink" title="Prefetch count"></a>Prefetch count</h2><p>前面我们讲到如果有多个消费者同时订阅同一个Queue中的消息，Queue中的消息会被平摊给多个消费者。这时如果每个消息的处理时间不同，就有可能会导致某些消费者一直在忙，而另外一些消费者很快就处理完手头工作并一直空闲的情况。我们可以通过设置prefetchCount来限制Queue每次发送给每个消费者的消息数，比如我们设置prefetchCount=1，则Queue每次给每个消费者发送一条消息；消费者处理完这条消息后Queue会再给该消费者发送一条消息。</p>
+<h2 id="Exchange"><a href="#Exchange" class="headerlink" title="Exchange"></a>Exchange</h2><p>在上一节我们看到生产者将消息投递到Queue中，实际上这在RabbitMQ中这种事情永远都不会发生。实际的情况是，生产者将消息发送到Exchange（交换器，下图中的X），由Exchange将消息路由到一个或多个Queue中（或者丢弃）。</p>
+<p>Exchange是按照什么逻辑将消息路由到Queue的？这个将在Binding一节介绍。<br>RabbitMQ中的Exchange有四种类型，不同的类型有着不同的路由策略，这将在Exchange Types一节介绍。</p>
+<h2 id="routing-key"><a href="#routing-key" class="headerlink" title="routing key"></a>routing key</h2><p>生产者在将消息发送给Exchange的时候，一般会指定一个routing key，来指定这个消息的路由规则，而这个routing key需要与Exchange Type及binding key联合使用才能最终生效。<br>在Exchange Type与binding key固定的情况下（在正常使用时一般这些内容都是固定配置好的），我们的生产者就可以在发送消息给Exchange时，通过指定routing key来决定消息流向哪里。<br>RabbitMQ为routing key设定的长度限制为255 bytes。</p>
+<h2 id="Binding"><a href="#Binding" class="headerlink" title="Binding"></a>Binding</h2><p>RabbitMQ中通过Binding将Exchange与Queue关联起来，这样RabbitMQ就知道如何正确地将消息路由到指定的Queue了。</p>
+<h2 id="Binding-key"><a href="#Binding-key" class="headerlink" title="Binding key"></a>Binding key</h2><p>在绑定（Binding）Exchange与Queue的同时，一般会指定一个binding key；消费者将消息发送给Exchange时，一般会指定一个routing key；当binding key与routing key相匹配时，消息将会被路由到对应的Queue中。这个将在Exchange Types章节会列举实际的例子加以说明。<br>在绑定多个Queue到同一个Exchange的时候，这些Binding允许使用相同的binding key。</p>
+<p>binding key 并不是在所有情况下都生效，它依赖于Exchange Type，比如fanout类型的Exchange就会无视binding key，而是将消息路由到所有绑定到该Exchange的Queue。</p>
+<h2 id="Exchange-Types"><a href="#Exchange-Types" class="headerlink" title="Exchange Types"></a>Exchange Types</h2><p>RabbitMQ常用的Exchange Type有fanout、direct、topic、headers这四种（AMQP规范里还提到两种Exchange Type，分别为system与自定义，这里不予以描述），下面分别进行介绍。</p>
+<h3 id="fanout"><a href="#fanout" class="headerlink" title="fanout"></a>fanout</h3><p>fanout类型的Exchange路由规则非常简单，它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中。</p>
+<p>上图中，生产者（P）发送到Exchange（X）的所有消息都会路由到图中的两个Queue，并最终被两个消费者（C1与C2）消费。</p>
+<h3 id="direct"><a href="#direct" class="headerlink" title="direct"></a>direct</h3><p>direct类型的Exchange路由规则也很简单，它会把消息路由到那些binding key与routing key完全匹配的Queue中。</p>
+<p>我们以routingKey=”error”发送消息到Exchange，则消息会路由到Queue1（amqp.gen-S9b…，这是由RabbitMQ自动生成的Queue名称）和Queue2（amqp.gen-Agl…）；如果我们以routingKey=”info”或routingKey=”warning”来发送消息，则消息只会路由到Queue2。如果我们以其他routingKey发送消息，则消息不会路由到这两个Queue中。</p>
+<h3 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h3><p>前面讲到direct类型的Exchange路由规则是完全匹配binding key与routing key，但这种严格的匹配方式在很多情况下不能满足实际业务需求。topic类型的Exchange在匹配规则上进行了扩展，它与direct类型的Exchage相似，也是将消息路由到binding key与routing key相匹配的Queue中，但这里的匹配规则有些不同，它约定：</p>
+<ul>
+<li>routing key为一个句点号“. ”分隔的字符串（我们将被句点号“. ”分隔开的每一段独立的字符串称为一个单词），如“stock.usd.nyse”、“nyse.vmw”、“quick.orange.rabbit”</li>
+<li>binding key与routing key一样也是句点号“. ”分隔的字符串</li>
+<li>binding key中可以存在两种特殊字符“<em>”与“#”，用于做模糊匹配，其中“</em>”用于匹配一个单词，“#”用于匹配多个单词（可以是零个）<br><img src="/2019/03/19/31907/topic.png" alt="topic"></li>
+</ul>
+<p>以上图中的配置为例，routingKey=”quick.orange.rabbit”的消息会同时路由到Q1与Q2，routingKey=”lazy.orange.fox”的消息会路由到Q1与Q2，routingKey=”lazy.brown.fox”的消息会路由到Q2，routingKey=”lazy.pink.rabbit”的消息会路由到Q2（只会投递给Q2一次，虽然这个routingKey与Q2的两个bindingKey都匹配）；routingKey=”quick.brown.fox”、routingKey=”orange”、routingKey=”quick.orange.male.rabbit”的消息将会被丢弃，因为它们没有匹配任何bindingKey。</p>
+<h3 id="headers"><a href="#headers" class="headerlink" title="headers"></a>headers</h3><p>headers类型的Exchange不依赖于routing key与binding key的匹配规则来路由消息，而是根据发送的消息内容中的headers属性进行匹配。<br>在绑定Queue与Exchange时指定一组键值对；当消息发送到Exchange时，RabbitMQ会取到该消息的headers（也是一个键值对的形式），对比其中的键值对是否完全匹配Queue与Exchange绑定时指定的键值对；如果完全匹配则消息会路由到该Queue，否则不会路由到该Queue。<br>该类型的Exchange没有用到过（不过也应该很有用武之地，所以不做介绍。</p>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><p>MQ本身是基于异步的消息处理，前面的示例中所有的生产者（P）将消息发送到RabbitMQ后不会知道消费者（C）处理成功或者失败（甚至连有没有消费者来处理这条消息都不知道）。<br>但实际的应用场景中，我们很可能需要一些同步处理，需要同步等待服务端将我的消息处理完成后再进行下一步处理。这相当于RPC（Remote Procedure Call，远程过程调用）。在RabbitMQ中也支持RPC。</p>
+<p>RabbitMQ中实现RPC的机制是：</p>
+<ul>
+<li>客户端发送请求（消息）时，在消息的属性（MessageProperties，在AMQP协议中定义了14中properties，这些属性会随着消息一起发送）中设置两个值replyTo（一个Queue名称，用于告诉服务器处理完成后将通知我的消息发送到这个Queue中）和correlationId（此次请求的标识号，服务器处理完成后需要将此属性返还，客户端将根据这个id了解哪条请求被成功执行了或执行失败）</li>
+<li>服务器端收到消息并处理</li>
+<li>服务器端处理完消息后，将生成一条应答消息到replyTo指定的Queue，同时带上correlationId属性</li>
+<li>客户端之前已订阅replyTo指定的Queue，从中收到服务器的应答消息后，根据其中的correlationId属性分析哪条请求被执行了，根据执行结果进行后续业务处理</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了RabbitMQ中个人认为最重要的概念，充分利用RabbitMQ提供的这些功能就可以处理我们绝大部分的异步业务了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31907/" data-id="cjyvgh1n5001bq4urduyh6x2h" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31906" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31906/" class="article-date">
+  <time datetime="2019-03-19T06:53:58.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31906/">Joda-Time</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>一 Jode-Time 介绍</strong></p>
+<p>任何企业应用程序都需要处理时间问题。应用程序需要知道当前的时间点和下一个时间点，有时它们还必须计算这两个<br>时间点之间的路径。使用 JDK 完成这项任务将非常痛苦和繁琐。<br>既然无法摆脱时间，为何不设法简化时间处理？现在来看看 Joda Time，一个面向 Java™ 平台的易于<br>使用的开源时间/日期库。正如您在本文中了解的那样，JodaTime轻松化解了处理日期和时间的痛苦和繁琐。</p>
+<p>Joda-Time 令时间和日期值变得易于管理、操作和理解。事实上，易于使用是 Joda 的主要设计目标。其他目标包括可扩展性、完整的特性集以及对多种日历系统的支持。<br>并且 Joda 与 JDK 是百分之百可互操作的，因此您无需替换所有 Java 代码，只需要替换执行日期/时间计算的那部分代码。<br>Joda-Time提供了一组Java类包用于处理包括ISO8601标准在内的date和time。可以利用它把JDK Date和Calendar类完全替换掉，而且仍然能够提供很好的集成。</p>
+<p>为什么要使用 Joda？<br>考虑创建一个用时间表示的某个随意的时刻 — 比如，2000 年 1 月 1 日 0 时 0 分。<br>我如何创建一个用时间表示这个瞬间的 JDK 对象？使用 java.util.Date？<br>事实上这是行不通的，因为自 JDK 1.1 之后的每个 Java 版本的 Javadoc 都声明应当使用 java.util.Calendar。<br>Date 中不赞成使用的构造函数的数量严重限制了您创建此类对象的途径。</p>
+<p>那么 Calendar 又如何呢？我将使用下面的方式创建必需的实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0);</span><br></pre></td></tr></table></figure>
+<p>使用 Joda，代码应该类似如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new</span><br><span class="line">DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br></pre></td></tr></table></figure>
+<p>这一行简单代码没有太大的区别。但是现在我将使问题稍微复杂化。<br>假设我希望在这个日期上加上 90 天并输出结果。使用 JDK，我需要使用清单 1 中的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 以 JDK 的方式向某一个瞬间加上 90 天并输出结果</span><br><span class="line"></span><br><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line"></span><br><span class="line">calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">SimpleDateFormat sdf =</span><br><span class="line"></span><br><span class="line">new SimpleDateFormat(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br><span class="line"></span><br><span class="line">calendar.add(Calendar.DAY_OF_MONTH, 90);</span><br><span class="line"></span><br><span class="line">System.out.println(sdf.format(calendar.getTime()));</span><br></pre></td></tr></table></figure>
+<p>// 以 Joda 的方式向某一个瞬间加上 90 天并输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new </span><br><span class="line">DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">System.out.println(dateTime.plusDays(90).toString(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>两者之间的差距拉大了（Joda 用了两行代码，JDK 则是 5 行代码）。<br>现在假设我希望输出这样一个日期：距离 2000.1.1日 45 天之后的某天在下一个月的当前周的最后一天的日期。<br>坦白地说，我甚至不想使用 Calendar 处理这个问题。<br>使用 JDK 实在太痛苦了，即使是简单的日期计算，比如上面这个计算。<br>正是多年前的这样一个时刻，我第一次领略到 JodaTime的强大。使用 Joda，用于计算的代码所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime(2000, 1, 1, 0, 0, 0, 0);</span><br><span class="line"></span><br><span class="line">System.out.println(dateTime.plusDays(45).plusMonths(1).dayOfWeek().withMaximumValue().toString(&quot;E MM/dd/yyyy HH:mm:ss.SSS&quot;);</span><br><span class="line"></span><br><span class="line">输出为：</span><br><span class="line"></span><br><span class="line">Sun 03/19/2000 00:00:00.000</span><br></pre></td></tr></table></figure>
+<p>如果您正在寻找一种易于使用的方式替代 JDK 日期处理，那么您真的应该考虑 Joda。</p>
+<p>二 <strong>创建Joda-Time对象</strong></p>
+<p> 现在，我将展示在采用该库时会经常遇到的一些 Joda 类，并展示如何创建这些类的实例。</p>
+<p><strong>ReadableInstant</strong><br>Joda 通过 ReadableInstant 类实现了瞬间性这一概念。表示时间上的不可变瞬间的 Joda 类都属于这个类的子类。<br>（将这个类命名为ReadOnlyInstant 可能更好，我认为这才是设计者需要传达的意思）。<br>换句话说，ReadableInstant 表示时间上的某一个不可修改的瞬间。<br>其中的两个子类分别为 <strong>DateTime 和 DateMidnight</strong>：</p>
+<p><strong>DateTime</strong>：这是最常用的一个类。它以毫秒级的精度封装时间上的某个瞬间时刻。<br>DateTime 始终与 DateTimeZone 相关，如果您不指定它的话，它将被默认设置为运行代码的机器所在的时区。<br>可以使用多种方式构建 DateTime 对象。这个构造函数使用系统时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime();</span><br></pre></td></tr></table></figure>
+<p>如果您创建了一个 DateTime 的实例，并且没有提供 Chronology 或 DateTimeZone，Joda将使用 ISOChronology（默认）和DateTimeZone（来自系统设置）</p>
+<p>Joda 可以使您精确地控制创建 DateTime 对象的方式，该对象表示时间上的某个特定的瞬间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = new DateTime( 2 2000, //year</span><br><span class="line">1, // month</span><br><span class="line">1, // day</span><br><span class="line">0, // hour (midnight is zero)</span><br><span class="line">0, // minute</span><br><span class="line">0, // second</span><br><span class="line">0 // milliseconds</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>下一个构造函数将指定从 epoch（1970年1月1日 子时 格林威治标准时间） 到某个时刻所经过的毫秒数。<br>它根据 JDK Date 对象的毫秒值创建一个DateTime 对象，其时间精度用毫秒表示，因为 epoch 与 Joda 是相同的：</p>
+<p>1 java.util.Date jdkDate = new Date(); 2 long timeInMillis = jdkDate.getTime(); 3 DateTime dateTime = new DateTime(timeInMillis);</p>
+<p>或者Date 对象直接传递给构造函数:</p>
+<p><code>dateTime = new DateTime(new Date());</code></p>
+<p>Joda 支持使用许多其他对象作为构造函数的参数，用于创建 DateTime:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Use a Calendar</span><br><span class="line">  dateTime = new DateTime(calendar); 3 </span><br><span class="line">  // Use another Joda DateTime</span><br><span class="line">  dateTime = new DateTime(anotherDateTime); 6 </span><br><span class="line">  // Use a String (must be formatted properly)</span><br><span class="line">  String timeString = &quot;2006-01-26T13:30:00-06:00&quot;;</span><br><span class="line">  dateTime = new DateTime(timeString); 10   timeString = &quot;2006-01-26&quot;; 11   dateTime = new DateTime(timeString);</span><br></pre></td></tr></table></figure>
+<p>注意，如果您准备使用 String（必须经过解析），您必须对其进行精确地格式化。</p>
+<p>DateMidnight：这个类封装某个时区（通常为默认时区）在特定年/月/日的午夜时分的时刻。<br>它基本上类似于 DateTime，不同之处在于时间部分总是为与该对象关联的特定 DateTimeZone 时区的午夜时分。</p>
+<p><strong>ReadablePartial</strong><br>应用程序所需处理的日期问题并不全部都与时间上的某个完整时刻有关，因此您可以处理一个局部时刻。<br>例如，有时您比较关心年/月/日，或者一天中的时间，甚至是一周中的某天。Joda 设计者使用ReadablePartial 接口捕捉这种表示局部时间的概念，<br>这是一个不可变的局部时间片段。用于处理这种时间片段的两个有用类分别为 <strong>LocalDate 和 LocalTime</strong>：</p>
+<p><strong>LocalDate</strong>：该类封装了一个年/月/日的组合。当地理位置（即时区）变得不重要时，使用它存储日期将非常方便。<br>例如，某个特定对象的出生日期 可能为 1999 年 4 月 16 日，但是从技术角度来看，<br>在保存所有业务值的同时不会了解有关此日期的任何其他信息（比如这是一周中的星期几，或者这个人出生地所在的时区）。<br>在这种情况下，应当使用 LocalDate。</p>
+<p><strong>LocalTime</strong>：这个类封装一天中的某个时间，当地理位置不重要的情况下，可以使用这个类来只存储一天当中的某个时间。<br>例如，晚上 11:52 可能是一天当中的一个重要时刻（比如，一个 cron 任务将启动，它将备份文件系统的某个部分），<br>但是这个时间并没有特定于某一天，因此我不需要了解有关这一时刻的其他信息。</p>
+<p>创建对象代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">  package com.jt.joda;  </span><br><span class="line">  import java.util.Date;  </span><br><span class="line">  import org.joda.time.DateTime; </span><br><span class="line">  import org.joda.time.LocalDate; </span><br><span class="line">  import org.joda.time.LocalTime; </span><br><span class="line">  import org.junit.Test;  </span><br><span class="line"> public class Demo &#123;  </span><br><span class="line">@Test      </span><br><span class="line">public void test1()&#123;          </span><br><span class="line">         //方法一：取系统点间 </span><br><span class="line">         DateTime dt1 = new DateTime();  System.out.println(dt1);            </span><br><span class="line">         //方法二：通过java.util.Date对象生成 </span><br><span class="line">         DateTime dt2 = new DateTime(new Date()); </span><br><span class="line"> System.out.println(dt2);          </span><br><span class="line">         //方法三：指定年月日点分秒生成(参数依次是：年,月,日,时,分,秒,毫秒) </span><br><span class="line">         DateTime dt3 = new DateTime(2012, 5, 20, 13, 14, 0, 0); </span><br><span class="line"> System.out.println(dt3); </span><br><span class="line">         //方法四：ISO8601形式生成 </span><br><span class="line">         DateTime dt4 = new DateTime(&quot;2012-05-20&quot;);  System.out.println(dt4);         </span><br><span class="line"> DateTime dt5 = new DateTime(&quot;2012-05-20T13:14:00&quot;);  System.out.println(dt5);            </span><br><span class="line">         //只需要年月日的时候 </span><br><span class="line">         LocalDate localDate = new LocalDate(2009, 9, 6);// September 6, 2009 </span><br><span class="line"> System.out.println(localDate);          </span><br><span class="line">         //只需要时分秒毫秒的时候 </span><br><span class="line">         LocalTime localTime = new LocalTime(13, 30, 26, 0);// 1:30:26PM </span><br><span class="line"> System.out.println(localTime);  </span><br><span class="line"> &#125; </span><br><span class="line">  /*    </span><br><span class="line"> 2015-09-25T17:51:12.900+08:00 </span><br><span class="line"> 2015-09-25T17:51:12.977+08:00 </span><br><span class="line"> 2012-05-20T13:14:00.000+08:00 </span><br><span class="line"> 2012-05-20T00:00:00.000+08:00 </span><br><span class="line"> 2012-05-20T13:14:00.000+08:00 </span><br><span class="line"> 2009-09-06 </span><br><span class="line"> 13:30:26.000  */</span><br><span class="line">     </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>三 与JDK日期对象转换</p>
+<p>许多代码都使用了 JDK Date 和 Calendar 类。但是幸亏有 Joda，可以执行任何必要的日期算法，然后再转换回 JDK 类。<br>这将两者的优点集中到一起。您在本文中看到的所有 Joda 类都可以从 JDK Calendar 或 Date 创建，正如您在 创建 JodaTime对象 中看到的那样。<br>出于同样的原因，可以从您所见过的任何 Joda 类创建 JDK Calendar 或 Date。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DateTime dt = new DateTime(); </span><br><span class="line"> </span><br><span class="line">//转换成java.util.Date对象 </span><br><span class="line">Date d1 = new Date(dt.getMillis()); </span><br><span class="line">Date d2 = dt.toDate(); </span><br><span class="line"> </span><br><span class="line">//转换成java.util.Calendar对象 </span><br><span class="line">Calendar c1 = Calendar.getInstance(); </span><br><span class="line">c1.setTimeInMillis(dt.getMillis()); </span><br><span class="line">Calendar c2 = dt.toCalendar(Locale.getDefault());</span><br></pre></td></tr></table></figure>
+<p>对于 ReadablePartial 子类，您还需要经过额外一步，如所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Date date = localDate.toDateMidnight().toDate();</span><br></pre></td></tr></table></figure>
+<p>要创建 Date 对象，您必须首先将它转换为一个 DateMidnight 对象，然后只需要将 DateMidnight 对象作为 Date。<br>（当然，产生的 Date 对象将把它自己的时间部分设置为午夜时刻）。<br>JDK 互操作性被内置到 Joda API 中，因此您无需全部替换自己的接口，如果它们被绑定到 JDK 的话。比<br>如，您可以使用 Joda 完成复杂的部分，然后使用 JDK 处理接口。</p>
+<p><strong>四 日期计算</strong></p>
+<p>现在，您已经了解了如何创建一些非常有用的 Joda 类，我将向您展示如何使用它们执行日期计算。</p>
+<p>假设在当前的系统日期下，我希望计算上一个月的最后一天。对于这个例子，我并不关心一天中的时间，因为我只需要获得年/月/日，如所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LocalDate now = SystemFactory.getClock().getLocalDate();</span><br><span class="line"></span><br><span class="line">LocalDate lastDayOfPreviousMonth = now.minusMonths(1).dayOfMonth().withMaximumValue();</span><br></pre></td></tr></table></figure>
+<p>首先，我从当前月份减去一个月，得到 “上一个月”。<br>接着，我要求获得 dayOfMonth 的最大值，它使我得到这个月的最后一天。<br>注意，这些调用被连接到一起（注意 Joda ReadableInstant 子类是不可变的），这样您只需要捕捉调用链中最后一个方法的结果，从而获得整个计算的结果。</p>
+<p>您可能对dayOfMonth() 调用感兴趣。这在 Joda 中被称为属性（property）。它相当于 Java对象的属性。<br>属性是根据所表示的常见结构命名的，并且它被用于访问这个结构，用于完成计算目的。<br>属性是实现 Joda 计算威力的关键。您目前所见到的所有 4 个 Joda 类都具有这样的属性。一些例子包括：<br><strong>yearOfCentury</strong><br><strong>dayOfYear</strong><br><strong>monthOfYear</strong><br><strong>dayOfMonth</strong><br><strong>dayOfWeek</strong></p>
+<p>假设您希望获得任何一年中的第 11 月的第一个星期二的日期，而这天必须是在这个月的第一个星期一之后。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">LocalDate now = SystemFactory.getClock().getLocalDate();</span><br><span class="line"></span><br><span class="line">LocalDate electionDate = now.monthOfYear()</span><br><span class="line"></span><br><span class="line">.setCopy(11) // November</span><br><span class="line"></span><br><span class="line">.dayOfMonth() // Access Day Of Month Property</span><br><span class="line"></span><br><span class="line">.withMinimumValue() // Get its minimum value</span><br><span class="line"></span><br><span class="line">.plusDays(6) // Add 6 days</span><br><span class="line"></span><br><span class="line">.dayOfWeek() // Access Day Of Week Property</span><br><span class="line"></span><br><span class="line">.setCopy(&quot;Monday&quot;) // Set to Monday (it will round down)</span><br><span class="line"></span><br><span class="line">.plusDays(1); // Gives us Tuesday</span><br></pre></td></tr></table></figure>
+<p>.setCopy(“Monday”) 是整个计算的关键。不管中间LocalDate 值是多少，将其 dayOfWeek 属性设置为 Monday 总是能够四舍五入，<br>这样的话，在每月的开始再加上 6 天就能够让您得到第一个星期一。再加上一天就得到第一个星期二。Joda 使得执行此类计算变得非常容易。</p>
+<p>下面是其他一些因为使用 Joda 而变得超级简单的计算：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">  DateTime dt = new DateTime(); </span><br><span class="line"></span><br><span class="line">//昨天 </span><br><span class="line"></span><br><span class="line"> DateTime yesterday = dt.minusDays(1); </span><br><span class="line"></span><br><span class="line">  //明天 </span><br><span class="line"></span><br><span class="line">  DateTime tomorrow = dt.plusDays(1); </span><br><span class="line"></span><br><span class="line">  //1个月前 </span><br><span class="line"></span><br><span class="line">  DateTime before1month = dt.minusMonths(1);  </span><br><span class="line"></span><br><span class="line">  //3个月后 </span><br><span class="line"></span><br><span class="line"> DateTime after3month = dt.plusMonths(3); </span><br><span class="line"></span><br><span class="line"> //2年前 </span><br><span class="line"></span><br><span class="line"> DateTime before2year = dt.minusYears(2);</span><br><span class="line"></span><br><span class="line"> //5年后 </span><br><span class="line"></span><br><span class="line"> DateTime after5year = dt.plusYears(5);</span><br></pre></td></tr></table></figure>
+<p><strong>五 格式化时间</strong></p>
+<p>使用 JDK 格式化日期以实现打印是完全可以的，但是我始终认为它应该更简单一些。<br>这是 Joda 设计者进行了改进的另一个特性。要格式化一个 Joda 对象，调用它的 toString() 方法，<br>并且如果您愿意的话，传递一个标准的 ISO8601或一个 JDK 兼容的控制字符串，以告诉 JDK 如何执行格式化。<br>不需要创建单独的 SimpleDateFormat 对象<br>（但是 Joda 的确为那些喜欢自找麻烦的人提供了一个DateTimeFormatter 类）。<br>调用 Joda 对象的 toString() 方法，仅此而已。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dateTime.toString(ISODateTimeFormat.basicDateTime());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicDateTimeNoMillis());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicOrdinalDateTime());</span><br><span class="line">dateTime.toString(ISODateTimeFormat.basicWeekDateTime());</span><br><span class="line"></span><br><span class="line">20090906T080000.000-0500 20090906T080000-0500 2009249T080000.000-0500 2009W367T080000.000-0500</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DateTime dateTime = DateTime.now();</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy hh:mm:ss.SSSa&quot;);</span><br><span class="line">dateTime.toString(&quot;dd-MM-yyyy HH:mm:ss&quot;);</span><br><span class="line">dateTime.toString(&quot;EEEE dd MMMM, yyyy HH:mm:ssa&quot;);</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy HH:mm ZZZZ&quot;);</span><br><span class="line">dateTime.toString(&quot;MM/dd/yyyy HH:mm Z&quot;); 09/06/2009 02:30:00.000PM 06-Sep-2009 14:30:00 Sunday 06 September, 2009 14:30:00PM 09/06/2009 14:30 America/Chicago 09/06/2009 14:30 -0500</span><br></pre></td></tr></table></figure>
+<p><strong>结束语</strong></p>
+<p>谈到日期处理，Joda 是一种令人惊奇的高效工具。无论您是计算日期、打印日期，或是解析日期，Joda都将是工具箱中的便捷工具。<br>在本文中，我首先介绍了 Joda，它可以作为 JDK 日期/时间库的替代选择。然后介绍了一些 Joda 概念，以及如何使用 Joda 执行日期计算和格式化。</p>
+<p><strong>六 使用代码案例</strong></p>
+<p><code>2`</code>、获取年月日点分秒`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.  <code></code>//年 `</p>
+<p><code>3`</code>.  <code></code>int<code></code>year = dt.getYear(); `</p>
+<p><code>4`</code>.  <code></code>//月 `</p>
+<p><code>5`</code>.  <code></code>int<code></code>month = dt.getMonthOfYear(); `</p>
+<p><code>6`</code>.  <code></code>//日 `</p>
+<p><code>7`</code>.  <code></code>int<code></code>day = dt.getDayOfMonth(); `</p>
+<p><code>8`</code>.  <code></code>//星期 `</p>
+<p><code>9`</code>.  <code></code>int<code></code>week = dt.getDayOfWeek(); `</p>
+<p><code>10`</code>. <code></code>//点 `</p>
+<p><code>11`</code>. <code></code>int<code></code>hour = dt.getHourOfDay(); `</p>
+<p><code>12`</code>. <code></code>//分 `</p>
+<p><code>13`</code>. <code></code>int<code></code>min = dt.getMinuteOfHour(); `</p>
+<p><code>14`</code>. <code></code>//秒 `</p>
+<p><code>15`</code>. <code></code>int<code></code>sec = dt.getSecondOfMinute(); `</p>
+<p><code>16`</code>. <code></code>//毫秒 `</p>
+<p><code>17`</code>. <code></code>int<code></code>msec = dt.getMillisOfSecond(); `</p>
+<p><code>3</code> <code>星期的特殊处理</code></p>
+<p><code>dt.getDayOfWeek()</code></p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//星期 `</p>
+<p><code>4`</code>.  <code>switch</code>(dt.getDayOfWeek()) { `</p>
+<p><code>5`</code>.  <code></code>case<code></code>DateTimeConstants.SUNDAY: `</p>
+<p><code>6`</code>.      System.out.println(<code>&quot;星期日&quot;</code>); `</p>
+<p><code>7`</code>.      <code>break</code>; `</p>
+<p><code>8`</code>.  <code></code>case<code></code>DateTimeConstants.MONDAY: `</p>
+<p><code>9`</code>.      System.out.println(<code>&quot;星期一&quot;</code>); `</p>
+<p><code>10`</code>.     <code>break</code>; `</p>
+<p><code>11`</code>. <code></code>case<code></code>DateTimeConstants.TUESDAY: `</p>
+<p><code>12`</code>.     System.out.println(<code>&quot;星期二&quot;</code>); `</p>
+<p><code>13`</code>.     <code>break</code>; `</p>
+<p><code>14`</code>. <code></code>case<code></code>DateTimeConstants.WEDNESDAY: `</p>
+<p><code>15`</code>.     System.out.println(<code>&quot;星期三&quot;</code>); `</p>
+<p><code>16`</code>.     <code>break</code>; `</p>
+<p><code>17`</code>. <code></code>case<code></code>DateTimeConstants.THURSDAY: `</p>
+<p><code>18`</code>.     System.out.println(<code>&quot;星期四&quot;</code>); `</p>
+<p><code>19`</code>.     <code>break</code>; `</p>
+<p><code>20`</code>. <code></code>case<code></code>DateTimeConstants.FRIDAY: `</p>
+<p><code>21`</code>.     System.out.println(<code>&quot;星期五&quot;</code>); `</p>
+<p><code>22`</code>.     <code>break</code>; `</p>
+<p><code>23`</code>. <code></code>case<code></code>DateTimeConstants.SATURDAY: `</p>
+<p><code>24`</code>.     System.out.println(<code>&quot;星期六&quot;</code>); `</p>
+<p><code>25`</code>.     <code>break</code>; `</p>
+<p><code>26`</code>. } `</p>
+<p><code>4`</code>、与JDK日期对象的转换`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//转换成java.util.Date对象 `</p>
+<p><code>4`</code>.  Date d1 = <code></code>new<code></code>Date(dt.getMillis()); `</p>
+<p><code>5`</code>.  Date d2 = dt.toDate(); `</p>
+<p><code>6`</code>.   `</p>
+<p><code>7`</code>.  <code></code>//转换成java.util.Calendar对象 `</p>
+<p><code>8`</code>.  Calendar c1 = Calendar.getInstance(); `</p>
+<p><code>9`</code>.  c1.setTimeInMillis(dt.getMillis()); `</p>
+<p><code>10`</code>. Calendar c2 = dt.toCalendar(Locale.getDefault());`</p>
+<p><code>5`</code>、日期前后推算`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//昨天 `</p>
+<p><code>4`</code>.  DateTime yesterday = dt.minusDays(<code>1</code>);        `</p>
+<p><code>5`</code>.  <code></code>//明天 `</p>
+<p><code>6`</code>.  DateTime tomorrow = dt.plusDays(<code>1</code>);      `</p>
+<p><code>7`</code>.  <code></code>//1个月前 `</p>
+<p><code>8`</code>.  DateTime before1month = dt.minusMonths(<code>1</code>);       `</p>
+<p><code>9`</code>.  <code></code>//3个月后 `</p>
+<p><code>10`</code>. DateTime after3month = dt.plusMonths(<code>3</code>);         `</p>
+<p><code>11`</code>. <code></code>//2年前 `</p>
+<p><code>12`</code>. DateTime before2year = dt.minusYears(<code>2</code>);         `</p>
+<p><code>13`</code>. <code></code>//5年后 `</p>
+<p><code>14`</code>. DateTime after5year = dt.plusYears(<code>5</code>); `</p>
+<p><code>6`</code>、取特殊日期`</p>
+<p><code>1`</code>.  DateTime dt = <code></code>new<code></code>DateTime();    `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  <code></code>//月末日期   `</p>
+<p><code>4`</code>.  DateTime lastday = dt.dayOfMonth().withMaximumValue(); `</p>
+<p><code>5`</code>.   `</p>
+<p><code>6`</code>.  <code></code>//90天后那周的周一 `</p>
+<p><code>7`</code>.  DateTime firstday = dt.plusDays(<code>90</code>).dayOfWeek().withMinimumValue(); `</p>
+<p><code>7`</code>、时区`</p>
+<p><code>1`</code>.  <code></code>//默认设置为日本时间 `</p>
+<p><code>2`</code>.  DateTimeZone.setDefault(DateTimeZone.forID(<code>&quot;Asia/Tokyo&quot;</code>)); `</p>
+<p><code>3`</code>.  DateTime dt1 = <code></code>new<code></code>DateTime(); `</p>
+<p><code>4`</code>.   `</p>
+<p><code>5`</code>.  <code></code>//伦敦时间 `</p>
+<p><code>6`</code>.  DateTime dt2 = <code>new` `DateTime(DateTimeZone.forID(</code>“Europe/London”<code></code>)); `</p>
+<p><code>8`</code>、计算区间`</p>
+<p><code>1`</code>.  DateTime begin = <code>new` `DateTime(</code>“2012-02-01”<code></code>); `</p>
+<p><code>2`</code>.  DateTime end = <code>new` `DateTime(</code>“2012-05-01”<code></code>); `</p>
+<p><code>3`</code>.   `</p>
+<p><code>4`</code>.  <code></code>//计算区间毫秒数 `</p>
+<p><code>5`</code>.  Duration d = <code></code>new<code></code>Duration(begin, end); `</p>
+<p><code>6`</code>.  <code></code>long<code></code>time = d.getMillis(); `</p>
+<p><code>7`</code>.   `</p>
+<p><code>8`</code>.  <code></code>//计算区间天数 `</p>
+<p><code>9`</code>.  Period p = <code></code>new<code></code>Period(begin, end, PeriodType.days()); `</p>
+<p><code>10`</code>. <code></code>int<code></code>days = p.getDays(); `</p>
+<p><code>11`</code>.  `</p>
+<p><code>12`</code>. <code></code>//计算特定日期是否在该区间内 `</p>
+<p><code>13`</code>. Interval i = <code></code>new<code></code>Interval(begin, end); `</p>
+<p><code>14`</code>. <code>boolean` `contained = i.contains(</code>new<code></code>DateTime(<code>&quot;2012-03-01&quot;</code>)); `</p>
+<p><code>9`</code>、日期比较`</p>
+<p><code>1`</code>.  DateTime d1 = <code>new` `DateTime(</code>“2012-02-01”<code></code>); `</p>
+<p><code>2`</code>.  DateTime d2 = <code>new` `DateTime(</code>“2012-05-01”<code></code>); `</p>
+<p><code>3`</code>.   `</p>
+<p><code>4`</code>.  <code></code>//和系统时间比 `</p>
+<p><code>5`</code>.  <code></code>boolean<code></code>b1 = d1.isAfterNow(); `</p>
+<p><code>6`</code>.  <code></code>boolean<code></code>b2 = d1.isBeforeNow(); `</p>
+<p><code>7`</code>.  <code></code>boolean<code></code>b3 = d1.isEqualNow(); `</p>
+<p><code>8`</code>.   `</p>
+<p><code>9`</code>.  <code></code>//和其他日期比 `</p>
+<p><code>10`</code>. <code></code>boolean<code></code>f1 = d1.isAfter(d2); `</p>
+<p><code>11`</code>. <code></code>boolean<code></code>f2 = d1.isBefore(d2); `</p>
+<p><code>12`</code>. <code></code>boolean<code></code>f3 = d1.isEqual(d2); `</p>
+<p><code>10`</code>、格式化输出`</p>
+<p><code>1`</code>.  DateTime dateTime = <code></code>new<code></code>DateTime(); `</p>
+<p><code>2`</code>.   `</p>
+<p><code>3`</code>.  String s1 = dateTime.toString(<code>&quot;yyyy/MM/dd hh:mm:ss.SSSa&quot;</code>); `</p>
+<p><code>4`</code>.  String s2 = dateTime.toString(<code>&quot;yyyy-MM-dd HH:mm:ss&quot;</code>); `</p>
+<p><code>5`</code>.  String s3 = dateTime.toString(<code>&quot;EEEE dd MMMM, yyyy HH:mm:ssa&quot;</code>); `</p>
+<p><code>6`</code>.  String s4 = dateTime.toString(<code>&quot;yyyy/MM/dd HH:mm ZZZZ&quot;</code>); `</p>
+<p><code>7`</code>.  String s5 = dateTime.toString(<code>&quot;yyyy/MM/dd HH:mm Z&quot;</code>); `</p>
+<p> |</p>
+<p>案例：</p>
+<pre><code>public static DateTime getNowWeekMonday() { 
+    DateTime date = DateTime.now(); 
+    int dayOfWeek = date.getDayOfWeek(); 
+    return DateTime.parse(date.minusDays(dayOfWeek - 1).toString(&quot;yyyy-MM-dd&quot;)); 
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private static final String DATE_FORMAT = &quot;yyyy-MM-dd&quot;;</span><br><span class="line"></span><br><span class="line">  //每周一0点0分0秒触发，处理上上周</span><br><span class="line">  @Scheduled(cron = &quot;0 0 0 ? * MON &quot;)</span><br><span class="line">  public void weeklyRemind() &#123;</span><br><span class="line">      logger.info(&quot;CyclePendingReminderTask.weeklyRemind&quot;);</span><br><span class="line">      logger.info(&quot;周期性待处理提醒任务开始&quot;);</span><br><span class="line">      String now = DateTime.now().toString(DATE_FORMAT);</span><br><span class="line">      //往前推2周，上上周周一</span><br><span class="line">      String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">              .minusWeeks(2).toString(DATE_FORMAT);</span><br><span class="line">      //上上周周日</span><br><span class="line">      String to = DateTime.parse(from, ISODateTimeFormat.dateElementParser())</span><br><span class="line">              .plusWeeks(1).minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">      //上上周周一0点时间戳</span><br><span class="line">      long fromTime = DateTime.parse(from, ISODateTimeFormat.dateElementParser()).getMillis();</span><br><span class="line">      //上周周一0点时间戳</span><br><span class="line">      long toTime = DateTime.parse(to, ISODateTimeFormat.dateElementParser()).plus(1).getMillis();</span><br><span class="line">      List&lt;String&gt; userIdList = ideaService.getUserIdList();</span><br><span class="line">      for (String userId : userIdList) &#123;</span><br><span class="line">          List&lt;Idea&gt; ideaList = ideaService.findIdeasByCreateAt(userId, fromTime, toTime);</span><br><span class="line">          //有创建想法才会有提醒</span><br><span class="line">          if (ideaList.size() &gt; 0) &#123;</span><br><span class="line">              CyclePendingIdeaReminder reminder = new CyclePendingIdeaReminder();</span><br><span class="line">              reminder.setUserId(userId);</span><br><span class="line">              reminder.setFrom(from);</span><br><span class="line">              reminder.setTo(to);</span><br><span class="line">              reminder.setFinished(false);</span><br><span class="line">              cpiReminderService.save(reminder);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      logger.info(&quot;周期性待处理提醒任务完成&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">//每月一号0点0分0秒触发</span><br><span class="line">    //当中再判断当前月份进行季度和年度的处理操作</span><br><span class="line">    @Scheduled(cron = &quot;0 0 0 1 * ? &quot;)</span><br><span class="line">    public void monthlySelectionRemind() &#123;</span><br><span class="line">        logger.info(&quot;IdeaSelectionReminderTask monthlySelectionRemind start.&quot;);</span><br><span class="line">        DateTime nowTime = DateTime.now();</span><br><span class="line">        int month = nowTime.getMonthOfYear();</span><br><span class="line">        String now = nowTime.toString(DATE_FORMAT);</span><br><span class="line">        //年度处理:  1</span><br><span class="line">        if (month == 1) &#123;</span><br><span class="line">            logger.info(&quot;年度精选任务开始&quot;);</span><br><span class="line">            String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusYears(1).toString(DATE_FORMAT);</span><br><span class="line">            String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">            doMonthly(from, to, OriginalityType.year);</span><br><span class="line">            logger.info(&quot;年度精选任务完成&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //季度处理： 3(4)  6(7)  9(10)  12(1)</span><br><span class="line">        if (month == 4 || month == 7 || month == 10 || month == 1) &#123;</span><br><span class="line">            logger.info(&quot;季度精选任务开始&quot;);</span><br><span class="line">            String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                    .minusMonths(3).toString(DATE_FORMAT);</span><br><span class="line">            String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                    .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">            doMonthly(from, to, OriginalityType.quarter);</span><br><span class="line">            logger.info(&quot;季度精选任务完成&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //月份处理</span><br><span class="line">        logger.info(&quot;月精选任务开始&quot;);</span><br><span class="line">        String from = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusMonths(1).toString(DATE_FORMAT);</span><br><span class="line">        String to = DateTime.parse(now, ISODateTimeFormat.dateElementParser())</span><br><span class="line">                .minusDays(1).toString(DATE_FORMAT);</span><br><span class="line">        doMonthly(from, to, OriginalityType.month);</span><br><span class="line">        logger.info(&quot;月精选任务完成&quot;);</span><br><span class="line">        logger.info(&quot;IdeaSelectionReminderTask monthlySelectionRemind finish.&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> // 今日凌晨</span><br><span class="line">Date date = DateTime.parse(DateTime.now().toString(&quot;yyyy-MM-dd&quot;)).toDate()</span><br><span class="line">// 今天9点对应的日期</span><br><span class="line">Date date = DateTime.parse(DateTime.now().toString(&quot;yyyy-MM-dd&quot;)).hourOfDay().addToCopy(9).toDate();</span><br><span class="line">// 当前时间加1分钟</span><br><span class="line">Date date = DateTime.now().minuteOfHour().addToCopy(1)).toDate()</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31906/" data-id="cjyvgh1ow001rq4ur39jhd5l8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31905" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31905/" class="article-date">
+  <time datetime="2019-03-19T06:46:11.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31905/">Github的webhooks</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GitHub的webhooks设置包括 url设置 ,Content type设置(application/json或application/x-www-form-urlencoded请求内容方式), secret设置(可选,采用HMAC 方式加密) ,event设置(全选，或部分)，页面如下：</p>
+<p><img src="/2019/03/19/31905/h1.png" alt="h1"></p>
+<p>点击add webhook则设置成功，同时github会发出ping请求测试填写的url是否可用，请求如下：</p>
+<p><img src="/2019/03/19/31905/h2.png" alt="h2"></p>
+<p>之后当所设置的event发生时，github则会向设置的url发送请求，所有请求全部为post方式，并且记录请求发送内容和url返回的情况，页面如下：</p>
+<p><img src="/2019/03/19/31905/h3.png" alt="h3"></p>
+<p>无论hook请求是否成功，都会有列表记录，并且都有重发按钮进行请求重新发送，页面如下：</p>
+<p><img src="/2019/03/19/31905/h4.png" alt="h4"></p>
+<p><img src="/2019/03/19/31905/h5.png" alt="h5"></p>
+<p>GitHub官网介绍：<a href="https://developer.github.com/webhooks/" target="_blank" rel="noopener">webhooks</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31905/" data-id="cjyvgh1le000eq4urcrhyp2pr" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31904" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31904/" class="article-date">
+  <time datetime="2019-03-19T04:05:33.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31904/">Jackson使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Java生态圈中有很多处理JSON和XML格式化的类库，Jackson是其中比较著名的一个。虽然JDK自带了XML处理类库，但是相对来说比较低级，使用本文介绍的Jackson等高级类库处理起来会方便很多。</p>
+<h2 id="引入类库"><a href="#引入类库" class="headerlink" title="引入类库"></a>引入类库</h2><p>由于Jackson相关类库按照功能分为几个相对独立的，所以需要同时引入多个类库，为了方便我将版本号单独提取出来设置，相关Gradle配置如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">ext &#123;</span><br><span class="line">    jacksonVersion = &apos;2.9.5&apos;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.core&apos;, name: &apos;jackson-core&apos;, version: jacksonVersion</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.core&apos;, name: &apos;jackson-databind&apos;, version: jacksonVersion</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.core&apos;, name: &apos;jackson-annotations&apos;, version: jacksonVersion</span><br><span class="line">    // 引入XML功能</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.dataformat&apos;, name: &apos;jackson-dataformat-xml&apos;, version: jacksonVersion</span><br><span class="line">    // 比JDK自带XML实现更高效的类库</span><br><span class="line">    compile group: &apos;com.fasterxml.woodstox&apos;, name: &apos;woodstox-core&apos;, version: &apos;5.1.0&apos;</span><br><span class="line">    // Java 8 新功能</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.datatype&apos;, name: &apos;jackson-datatype-jsr310&apos;, version: jacksonVersion</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.module&apos;, name: &apos;jackson-module-parameter-names&apos;, version: jacksonVersion</span><br><span class="line">    compile group: &apos;com.fasterxml.jackson.datatype&apos;, name: &apos;jackson-datatype-jdk8&apos;, version: jacksonVersion</span><br><span class="line"></span><br><span class="line">    compileOnly group: &apos;org.projectlombok&apos;, name: &apos;lombok&apos;, version: &apos;1.16.22&apos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Maven配置请去mvnrepository搜索。</p>
+<h2 id="Jackson注解"><a href="#Jackson注解" class="headerlink" title="Jackson注解"></a>Jackson注解</h2><p>Jackson类库包含了很多注解，可以让我们快速建立Java类与JSON之间的关系。详细文档可以参考Jackson-Annotations。下面介绍一下常用的。</p>
+<p><strong>属性命名</strong><br>==@JsonProperty==注解指定一个属性用于JSON映射，默认情况下映射的JSON属性与注解的属性名称相同，不过可以使用该注解的value值修改JSON属性名，该注解还有一个index属性指定生成JSON属性的顺序，如果有必要的话。</p>
+<p><strong>属性包含</strong><br>还有一些注解可以管理在映射JSON的时候包含或排除某些属性，下面介绍一下常用的几个。</p>
+<p>==@JsonIgnore==注解用于排除某个属性，这样该属性就不会被Jackson序列化和反序列化。</p>
+<p>==@JsonIgnoreProperties==注解是类注解。在序列化为JSON的时候，@JsonIgnoreProperties({“prop1”, “prop2”})会忽略pro1和pro2两个属性。在从JSON反序列化为Java类的时候，@JsonIgnoreProperties(ignoreUnknown=true)会忽略所有没有Getter和Setter的属性。该注解在Java类和JSON不完全匹配的时候很有用。</p>
+<p>==@JsonIgnoreType==也是类注解，会排除所有指定类型的属性。</p>
+<p><strong>序列化相关</strong><br>==@JsonPropertyOrder==和==@JsonProperty的index==属性类似，指定属性序列化时的顺序。</p>
+<p>==@JsonRootName==注解用于指定JSON根属性的名称。</p>
+<h2 id="处理JSON"><a href="#处理JSON" class="headerlink" title="处理JSON"></a>处理JSON</h2><h3 id="简单映射"><a href="#简单映射" class="headerlink" title="简单映射"></a>简单映射</h3><p>我们用Lombok设置一个简单的Java类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">public class Friend &#123;</span><br><span class="line">    private String nickname;</span><br><span class="line">    private int age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后就可以处理JSON数据了。首先需要一个ObjectMapper对象，序列化和反序列化都需要它。</p>
+<pre><code>ObjectMapper mapper = new ObjectMapper();
+Friend friend = new Friend(&quot;yitian&quot;, 25);
+// 写为字符串
+String text = mapper.writeValueAsString(friend);
+// 写为文件
+mapper.writeValue(new File(&quot;friend.json&quot;), friend);
+// 写为字节流
+byte[] bytes = mapper.writeValueAsBytes(friend);
+System.out.println(text);
+// 从字符串中读取
+Friend newFriend = mapper.readValue(text, Friend.class);
+// 从字节流中读取
+newFriend = mapper.readValue(bytes, Friend.class);
+// 从文件中读取
+newFriend = mapper.readValue(new File(&quot;friend.json&quot;), Friend.class);
+System.out.println(newFriend);
+</code></pre><p>程序结果如下。可以看到生成的JSON属性和Java类中定义的一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;nickname&quot;:&quot;yitian&quot;,&quot;age&quot;:25&#125;</span><br><span class="line">Friend(nickname=yitian, age=25)</span><br></pre></td></tr></table></figure>
+<h2 id="集合的映射"><a href="#集合的映射" class="headerlink" title="集合的映射"></a>集合的映射</h2><p>除了使用Java类进行映射之外，我们还可以直接使用Map和List等Java集合组织JSON数据，在需要的时候可以使用readTree方法直接读取JSON中的某个属性值。需要注意的是从JSON转换为Map对象的时候，由于Java的类型擦除，所以类型需要我们手动用new TypeReference<t>给出。</t></p>
+<pre><code>ObjectMapper mapper = new ObjectMapper();
+Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+map.put(&quot;age&quot;, 25);
+map.put(&quot;name&quot;, &quot;yitian&quot;);
+map.put(&quot;interests&quot;, new String[]{&quot;pc games&quot;, &quot;music&quot;});
+String text = mapper.writeValueAsString(map);
+System.out.println(text);
+Map&lt;String, Object&gt; map2 = mapper.readValue(text, new TypeReference&lt;Map&lt;String, Object&gt;&gt;() {
+});
+System.out.println(map2);
+JsonNode root = mapper.readTree(text);
+String name = root.get(&quot;name&quot;).asText();
+int age = root.get(&quot;age&quot;).asInt();
+System.out.println(&quot;name:&quot; + name + &quot; age:&quot; + age);
+</code></pre><p>程序结果如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;name&quot;:&quot;yitian&quot;,&quot;interests&quot;:[&quot;pc games&quot;,&quot;music&quot;],&quot;age&quot;:25&#125;</span><br><span class="line">&#123;name=yitian, interests=[pc games, music], age=25&#125;</span><br><span class="line">name:yitian age:25</span><br></pre></td></tr></table></figure></p>
+<h2 id="Jackson配置"><a href="#Jackson配置" class="headerlink" title="Jackson配置"></a>Jackson配置</h2><p>Jackson预定义了一些配置，我们通过启用和禁用某些属性可以修改Jackson运行的某些行为。详细文档参考JacksonFeatures。下面我简单翻译一下Jackson README上列出的一些属性。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 美化输出</span><br><span class="line">mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">// 允许序列化空的POJO类</span><br><span class="line">// （否则会抛出异常）</span><br><span class="line">mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);</span><br><span class="line">// 把java.util.Date, Calendar输出为数字（时间戳）</span><br><span class="line">mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span><br><span class="line"></span><br><span class="line">// 在遇到未知属性的时候不抛出异常</span><br><span class="line">mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);</span><br><span class="line">// 强制JSON 空字符串(&quot;&quot;)转换为null对象值:</span><br><span class="line">mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);</span><br><span class="line"></span><br><span class="line">// 在JSON中允许C/C++ 样式的注释(非标准，默认禁用)</span><br><span class="line">mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);</span><br><span class="line">// 允许没有引号的字段名（非标准）</span><br><span class="line">mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);</span><br><span class="line">// 允许单引号（非标准）</span><br><span class="line">mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);</span><br><span class="line">// 强制转义非ASCII字符</span><br><span class="line">mapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);</span><br><span class="line">// 将内容包裹为一个JSON属性，属性名由@JsonRootName注解指定</span><br><span class="line">mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, true);</span><br></pre></td></tr></table></figure></p>
+<p>这里有三个方法，configure方法接受配置名和要设置的值，Jackson 2.5版本新加的enable和disable方法则直接启用和禁用相应属性，我推荐使用后面两个方法。</p>
+<h2 id="用注解管理映射"><a href="#用注解管理映射" class="headerlink" title="用注解管理映射"></a>用注解管理映射</h2><p>前面介绍了一些Jackson注解，下面来应用一下这些注解。首先来看看使用了注解的Java类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">@JsonRootName(&quot;FriendDetail&quot;)</span><br><span class="line">@JsonIgnoreProperties(&#123;&quot;uselessProp1&quot;, &quot;uselessProp3&quot;&#125;)</span><br><span class="line">public class FriendDetail &#123;</span><br><span class="line">    @JsonProperty(&quot;NickName&quot;)</span><br><span class="line">    private String name;</span><br><span class="line">    @JsonProperty(&quot;Age&quot;)</span><br><span class="line">    private int age;</span><br><span class="line">    private String uselessProp1;</span><br><span class="line">    @JsonIgnore</span><br><span class="line">    private int uselessProp2;</span><br><span class="line">    private String uselessProp3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后看看代码。需要注意的是，由于设置了排除的属性，所以生成的JSON和Java类并不是完全对应关系，所以禁用DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES是必要的。</p>
+<pre><code>ObjectMapper mapper = new ObjectMapper();
+//mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+FriendDetail fd = new FriendDetail(&quot;yitian&quot;, 25, &quot;&quot;, 0, &quot;&quot;);
+String text = mapper.writeValueAsString(fd);
+System.out.println(text);
+FriendDetail fd2 = mapper.readValue(text, FriendDetail.class);
+System.out.println(fd2);
+</code></pre><p>运行结果如下。可以看到生成JSON的时候忽略了我们制定的值，而且在转换为Java类的时候对应的属性为空。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;NickName&quot;:&quot;yitian&quot;,&quot;Age&quot;:25&#125;</span><br><span class="line">FriendDetail(name=yitian, age=25, uselessProp1=null, uselessProp2=0, uselessProp3=null)</span><br></pre></td></tr></table></figure></p>
+<p>然后取消注释代码中的那行，也就是启用WRAP_ROOT_VALUE功能，再运行一下程序，运行结果如下。可以看到生成的JSON结果发生了变化，而且由于JSON结果变化，所以Java类转换失败（所有字段值全为空）。WRAP_ROOT_VALUE这个功能在有些时候比较有用，因为有些JSON文件需要这种结构。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;FriendDetail&quot;:&#123;&quot;NickName&quot;:&quot;yitian&quot;,&quot;Age&quot;:25&#125;&#125;</span><br><span class="line">FriendDetail(name=null, age=0, uselessProp1=null, uselessProp2=0, uselessProp3=null)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Java8日期时间类支持"><a href="#Java8日期时间类支持" class="headerlink" title="Java8日期时间类支持"></a>Java8日期时间类支持</h2><p>Java8增加了一套全新的日期时间类，Jackson对此也有支持。这些支持是以Jackson模块形式提供的，所以首先就是注册这些模块。</p>
+<pre><code>ObjectMapper mapper = new ObjectMapper()
+        .registerModule(new JavaTimeModule())
+        .registerModule(new ParameterNamesModule())
+        .registerModule(new Jdk8Module());
+</code></pre><p>导入类库之后，Jackson也可以自动搜索所有模块，不需要我们手动注册。</p>
+<pre><code>mapper.findAndRegisterModules();
+</code></pre><p>我们新建一个带有LocalDate字段的Java类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">@JsonRootName(&quot;Person&quot;)</span><br><span class="line">public class Person &#123;</span><br><span class="line">    @JsonProperty(&quot;Name&quot;)</span><br><span class="line">    private String name;</span><br><span class="line">    @JsonProperty(&quot;NickName&quot;)</span><br><span class="line">    private String nickname;</span><br><span class="line">    @JsonProperty(&quot;Age&quot;)</span><br><span class="line">    private int age;</span><br><span class="line">    @JsonProperty(&quot;IdentityCode&quot;)</span><br><span class="line">    private String identityCode;</span><br><span class="line">    @JsonProperty</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-DD&quot;)</span><br><span class="line">    private LocalDate birthday;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后来看看代码。</p>
+<pre><code>static void java8DateTime() throws IOException {
+    Person p1 = new Person(&quot;yitian&quot;, &quot;易天&quot;, 25, &quot;10000&quot;, LocalDate.of(1994, 1, 1));
+    ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
+    //mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    String text = mapper.writeValueAsString(p1);
+    System.out.println(text);
+    Person p2 = mapper.readValue(text, Person.class);
+    System.out.println(p2);
+}
+</code></pre><p>运行结果如下。可以看到，生成的JSON日期变成了[1994,1,1]这样的时间戳形式，一般情况下不符合我们的要求。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;birthday&quot;:[1994,1,1],&quot;Name&quot;:&quot;yitian&quot;,&quot;NickName&quot;:&quot;易天&quot;,&quot;Age&quot;:25,&quot;IdentityCode&quot;:&quot;10000&quot;&#125;</span><br><span class="line">Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)</span><br></pre></td></tr></table></figure></p>
+<p>取消注释那行代码，程序运行结果如下。这样一来就变成了我们一般使用的形式了。如果有格式需要的话，可以使用@JsonFormat(pattern = “yyyy-MM-DD”)注解格式化日期显示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;birthday&quot;:&quot;1994-01-01&quot;,&quot;Name&quot;:&quot;yitian&quot;,&quot;NickName&quot;:&quot;易天&quot;,&quot;Age&quot;:25,&quot;IdentityCode&quot;:&quot;10000&quot;&#125;</span><br><span class="line">Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)</span><br></pre></td></tr></table></figure></p>
+<h2 id="处理XML"><a href="#处理XML" class="headerlink" title="处理XML"></a>处理XML</h2><p>Jackson是一个处理JSON的类库，不过它也通过jackson-dataformat-xml包提供了处理XML的功能。Jackson建议我们在处理XML的时候使用woodstox-core包，它是一个XML的实现，比JDK自带XML实现更加高效，也更加安全。</p>
+<p>这里有个注意事项，如果你正在使用Java 9以上的JDK，可能会出现java.lang.NoClassDefFoundError: javax/xml/bind/JAXBException异常，这是因为Java 9实现了JDK的模块化，将原本和JDK打包在一起的JAXB实现分隔出来。所以这时候需要我们手动添加JAXB的实现。在Gradle中添加下面的代码即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compile group: &apos;javax.xml.bind&apos;, name: &apos;jaxb-api&apos;, version: &apos;2.3.0&apos;</span><br></pre></td></tr></table></figure></p>
+<p><strong>注解</strong><br>Jackson XML除了使用Jackson JSON和JDK JAXB的一些注解之外，自己也定义了一些注解。下面简单介绍一下几个常用注解。</p>
+<p>==@JacksonXmlProperty==注解有三个属性，namespace和localname属性用于指定XML命名空间的名称，isAttribute指定该属性作为XML的属性（）还是作为子标签（）.</p>
+<p>==@JacksonXmlRootElement==注解有两个属性，namespace和localname属性用于指定XML根元素命名空间的名称。</p>
+<p>==@JacksonXmlText==注解将属性直接作为未被标签包裹的普通文本表现。</p>
+<p>==@JacksonXmlCData==将属性包裹在CDATA标签中。</p>
+<p><strong>XML映射</strong><br>新建如下一个Java类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">@JsonRootName(&quot;Person&quot;)</span><br><span class="line">public class Person &#123;</span><br><span class="line">    @JsonProperty(&quot;Name&quot;)</span><br><span class="line">    private String name;</span><br><span class="line">    @JsonProperty(&quot;NickName&quot;)</span><br><span class="line">    //@JacksonXmlText</span><br><span class="line">    private String nickname;</span><br><span class="line">    @JsonProperty(&quot;Age&quot;)</span><br><span class="line">    private int age;</span><br><span class="line">    @JsonProperty(&quot;IdentityCode&quot;)</span><br><span class="line">    @JacksonXmlCData</span><br><span class="line">    private String identityCode;</span><br><span class="line">    @JsonProperty(&quot;Birthday&quot;)</span><br><span class="line">    //@JacksonXmlProperty(isAttribute = true)</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy/MM/DD&quot;)</span><br><span class="line">    private LocalDate birthday;</span><br></pre></td></tr></table></figure></p>
+<p>下面是代码示例，基本上和JSON的API非常相似，XmlMapper实际上就是ObjectMapper的子类。</p>
+<pre><code>Person p1 = new Person(&quot;yitian&quot;, &quot;易天&quot;, 25, &quot;10000&quot;, LocalDate.of(1994, 1, 1));
+XmlMapper mapper = new XmlMapper();
+mapper.findAndRegisterModules();
+mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+mapper.enable(SerializationFeature.INDENT_OUTPUT);
+String text = mapper.writeValueAsString(p1);
+System.out.println(text);
+Person p2 = mapper.readValue(text, Person.class);
+System.out.println(p2);
+</code></pre><p>运行结果如下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;Person&gt;</span><br><span class="line">  &lt;Name&gt;yitian&lt;/Name&gt;</span><br><span class="line">  &lt;NickName&gt;易天&lt;/NickName&gt;</span><br><span class="line">  &lt;Age&gt;25&lt;/Age&gt;</span><br><span class="line">  &lt;IdentityCode&gt;&lt;![CDATA[10000]]&gt;&lt;/IdentityCode&gt;</span><br><span class="line">  &lt;Birthday&gt;1994/01/01&lt;/Birthday&gt;</span><br><span class="line">&lt;/Person&gt;</span><br><span class="line"></span><br><span class="line">Person(name=yitian, nickname=易天, age=25, identityCode=10000, birthday=1994-01-01)</span><br></pre></td></tr></table></figure></p>
+<p>如果取消那两行注释，那么运行结果如下。可以看到Jackson XML注解对生成的XML的控制效果。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;Person birthday=&quot;1994/01/01&quot;&gt;</span><br><span class="line">  &lt;Name&gt;yitian&lt;/Name&gt;易天</span><br><span class="line">  &lt;Age&gt;25&lt;/Age&gt;</span><br><span class="line">  &lt;IdentityCode&gt;&lt;![CDATA[10000]]&gt;&lt;/IdentityCode&gt;</span><br><span class="line">&lt;/Person&gt;</span><br><span class="line"></span><br><span class="line">Person(name=yitian, nickname=null, age=25, identityCode=10000, birthday=1994-01-01)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Spring-Boot集成"><a href="#Spring-Boot集成" class="headerlink" title="Spring Boot集成"></a>Spring Boot集成</h2><p><strong>自动配置</strong><br>Spring Boot对Jackson的支持非常完善，只要我们引入相应类库，Spring Boot就可以自动配置开箱即用的Bean。Spring自动配置的ObjectMapper（或者XmlMapper）作了如下配置，基本上可以适应大部分情况。</p>
+<p>禁用了MapperFeature.DEFAULT_VIEW_INCLUSION<br>禁用了DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES<br>禁用了SerializationFeature.WRITE_DATES_AS_TIMESTAMPS<br>如果需要修改自动配置的ObjectMapper属性也非常简单，Spring Boot提供了一组环境变量，直接在application.properties文件中修改即可。</p>
+<p>|Jackson枚举|Spring环境变量|<br>|—–|—–|<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">com.fasterxml.jackson.databind.DeserializationFeature|spring.jackson.deserialization.=true|false </span><br><span class="line">com.fasterxml.jackson.core.JsonGenerator.Feature|spring.jackson.generator.=true|false </span><br><span class="line">com.fasterxml.jackson.databind.MapperFeature|spring.jackson.mapper.=true|false </span><br><span class="line">com.fasterxml.jackson.core.JsonParser.Feature|spring.jackson.parser.=true|false </span><br><span class="line">com.fasterxml.jackson.databind.SerializationFeature|spring.jackson.serialization.=true|false </span><br><span class="line">com.fasterxml.jackson.annotation.JsonInclude.Include|spring.jackson.default-property-inclusion=always|non_null|non_absent|non_default|non_empty</span><br></pre></td></tr></table></figure></p>
+<p>由于Spring会同时配置相应的HttpMessageConverters，所以我们其实要做的很简单，用Jackson注解标注好要映射的Java类，然后直接让控制器返回对象即可！下面是一个Java类。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@JsonRootName(&quot;person&quot;)</span><br><span class="line">public class Person &#123;</span><br><span class="line">    @JsonProperty</span><br><span class="line">    private String name;</span><br><span class="line">    @JsonProperty</span><br><span class="line">    private int id;</span><br><span class="line">    @JsonFormat(pattern = &quot;yyyy-MM-DD&quot;)</span><br><span class="line">    private LocalDate birthday;</span><br><span class="line"></span><br><span class="line">    public Person(String name, int id, LocalDate birthday) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.birthday = birthday;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后是控制器代码。在整个过程中我们只需要引入Jackson类库，然后编写业务代码就好了。关于如何配置Jackson类库，我们完全不需要管，这就是Spring Boot的方便之处。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class MainController &#123;</span><br><span class="line">    private Person person = new Person(&quot;yitian&quot;, 10000, LocalDate.of(1994, 1, 1));</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/&quot;)</span><br><span class="line">    public String index() &#123;</span><br><span class="line">        return &quot;index&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/json&quot;, produces = &quot;application/json&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public Person json() &#123;</span><br><span class="line">        return person;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>进入localhost:8080/xml就可以看到对应结果了。 </p>
+<p><img src="/2019/03/19/31904/json.png" alt="json"></p>
+<p><strong>手动配置</strong><br>Spring Boot自动配置非常方便，但不是万能的。在必要的时候，我们需要手动配置Bean来替代自动配置的Bean。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class JacksonConfig &#123;</span><br><span class="line">    @Bean</span><br><span class="line">    @Primary</span><br><span class="line">    @Qualifier(&quot;xml&quot;)</span><br><span class="line">    public XmlMapper xmlMapper(Jackson2ObjectMapperBuilder builder) &#123;</span><br><span class="line">        XmlMapper mapper = builder.createXmlMapper(true)</span><br><span class="line">                .build();</span><br><span class="line">        mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span><br><span class="line">        return mapper;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @Qualifier(&quot;json&quot;)</span><br><span class="line">    public ObjectMapper jsonMapper(Jackson2ObjectMapperBuilder builder) &#123;</span><br><span class="line">        ObjectMapper mapper = builder.createXmlMapper(false)</span><br><span class="line">                .build();</span><br><span class="line">        mapper.enable(SerializationFeature.INDENT_OUTPUT);</span><br><span class="line">        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span><br><span class="line">        return mapper;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后在需要的地方进行依赖注入。需要注意为了区分ObjectMapper和XmlMapper，需要使用@Qualifier注解进行标记。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class MainController &#123;</span><br><span class="line">    private ObjectMapper jsonMapper;</span><br><span class="line">    private XmlMapper xmlMapper;</span><br><span class="line">    private Person person = new Person(&quot;yitian&quot;, 10000, LocalDate.of(1994, 1, 1));</span><br><span class="line"></span><br><span class="line">    public MainController(@Autowired @Qualifier(&quot;json&quot;) ObjectMapper jsonMapper, @Autowired @Qualifier(&quot;xml&quot;) XmlMapper xmlMapper) &#123;</span><br><span class="line">        this.jsonMapper = jsonMapper;</span><br><span class="line">        this.xmlMapper = xmlMapper;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>以上就是Jackson类库的一些介绍，希望对大家有所帮助。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31904/" data-id="cjyvgh1nt001nq4urdlng6s1l" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31903" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31903/" class="article-date">
+  <time datetime="2019-03-19T03:48:34.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31903/">jdbcTemplate和namedParameterJdbcTemplate</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我们开发DAO层时用的最多的就是ORM框架(Mybatis,hibernate)了。在有些特殊的情况下,ORM框架的搭建略显笨重,这时最好的选择就是Spring中的jdbcTemplate了。本文对jdbcTemplate进行详解，并且会对具名参数namedParameterJdbcTemplate进行讲解。</p>
+<h1 id="jdbcTemplate讲解"><a href="#jdbcTemplate讲解" class="headerlink" title="jdbcTemplate讲解"></a>jdbcTemplate讲解</h1><h3 id="jdbcTemplate提供的主要方法"><a href="#jdbcTemplate提供的主要方法" class="headerlink" title="jdbcTemplate提供的主要方法:"></a>jdbcTemplate提供的主要方法:</h3><ul>
+<li>execute方法：可以用于执行任何SQL语句，一般用于执行DDL语句；</li>
+<li>update方法及batchUpdate方法：update方法用于执行新增、修改、删除等语句；batchUpdate方法用于执行批处理相关语句；</li>
+<li>query方法及queryForXXX方法：用于执行查询相关语句；</li>
+<li>call方法：用于执行存储过程、函数相关语句。<h3 id="jdbcTemplate环境搭建"><a href="#jdbcTemplate环境搭建" class="headerlink" title="jdbcTemplate环境搭建:"></a>jdbcTemplate环境搭建:</h3></li>
+</ul>
+<p>1 在spring配置文件中加上jdbcTemplate的bean:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--注入jdbcTemplate--&gt;</span><br><span class="line">&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>注意:在这之前我们需要先配置好数据库数据源dateSource。<br>2.在使用jdbcTemplate类中使用@Autowired进行注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private JdbcTemplate jdbcTemplate;</span><br></pre></td></tr></table></figure>
+<p><strong>1.查询单个对象queryForObject:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testQuery()&#123;</span><br><span class="line">    String sql = &quot;select id,username,password from user where id=?&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    User user = jdbcTemplate.queryForObject(sql, rowMapper,1);</span><br><span class="line">    System.out.println(user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果: User{id=1, username=’123’, password=’123’}<br><strong>2.查询多个对象query:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testMutiQuery()&#123;</span><br><span class="line">    String sql = &quot;select id,username,password from user&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    List&lt;User&gt; users = jdbcTemplate.query(sql, rowMapper);</span><br><span class="line">    for (User user : users) &#123;</span><br><span class="line">        System.out.println(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:<br>User{id=1, username=’123’, password=’123’}<br>User{id=2, username=’1234’, password=’1234’}<br><strong>3.查询count、avg、sum等函数返回唯一值:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testCountQuery()&#123;</span><br><span class="line">    String sql = &quot;select count(*) from user&quot;;</span><br><span class="line"></span><br><span class="line">    BeanPropertyRowMapper&lt;User&gt; rowMapper = new BeanPropertyRowMapper&lt;User&gt;(User.class);</span><br><span class="line">    Integer result = jdbcTemplate.queryForObject(sql, Integer.class);</span><br><span class="line">    System.out.println(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果:2<br><strong>4.增删改方法测试:</strong><br><strong>新增:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testCreate()&#123;</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (?,?)&quot;;</span><br><span class="line">    int create = jdbcTemplate.update(sql, new Object[]&#123;255, 255&#125;);</span><br><span class="line">    System.out.println(create);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为1,去数据库查看也确实插入这条。</p>
+<p><strong>修改:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testUpdate()&#123;</span><br><span class="line">    String sql = &quot;update user set username=? , password=? where id=?&quot;;</span><br><span class="line">    int update = jdbcTemplate.update(sql, new Object[]&#123;256, 256,3&#125;);</span><br><span class="line">    System.out.println(update);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果为1,并且确实数据已经修改<br><strong>删除:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testDelete()&#123;</span><br><span class="line">    String sql = &quot;delete from user where id=?&quot;;</span><br><span class="line">    int delete = jdbcTemplate.update(sql, new Object[]&#123;3&#125;);</span><br><span class="line">    System.out.println(delete);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>5.批量操作:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testBatch()&#123;</span><br><span class="line">    List&lt;Object[]&gt; batchArgs=new ArrayList&lt;Object[]&gt;();</span><br><span class="line">    batchArgs.add(new Object[]&#123;777,888&#125;);</span><br><span class="line">    batchArgs.add(new Object[]&#123;666,888&#125;);</span><br><span class="line">    batchArgs.add(new Object[]&#123;555,888&#125;);</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (?,?)&quot;;</span><br><span class="line">    jdbcTemplate.batchUpdate(sql, batchArgs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上方法基本满足了日常我们多DAO层进行的操作,不过当你进行CRUD操作时如果传入的参数不确定,这时候你可能会想起ORM框架的便利。没关系！Spring也为我们提供了这样的操作NamedParameterJdbcTemplate。</p>
+<h1 id="NamedParameterJdbcTemplate讲解"><a href="#NamedParameterJdbcTemplate讲解" class="headerlink" title="NamedParameterJdbcTemplate讲解"></a>NamedParameterJdbcTemplate讲解</h1><p>在经典的 JDBC 用法中, SQL 参数是用占位符 ? 表示,并且受到位置的限制. 定位参数的问题在于, 一旦参数的顺序发生变化, 就必须改变参数绑定.<br>在 Spring JDBC 框架中, 绑定 SQL 参数的另一种选择是使用具名参数(named parameter).<br><strong>那么什么是具名参数？</strong><br>具名参数: SQL 按名称(以冒号开头)而不是按位置进行指定. 具名参数更易于维护, 也提升了可读性. 具名参数由框架类在运行时用占位符取代<br>具名参数只在 NamedParameterJdbcTemplate 中得到支持。NamedParameterJdbcTemplate可以使用全部jdbcTemplate方法,除此之外,我们来看看使用它的具名参数案例:<br><strong>具名新增：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testNamedParameter()&#123;</span><br><span class="line">    String sql = &quot;insert into user (username,password) values (:username,:password)&quot;;</span><br><span class="line">    User u = new User();</span><br><span class="line">    u.setUsername(&quot;555&quot;);</span><br><span class="line">    SqlParameterSource sqlParameterSource=new BeanPropertySqlParameterSource(u);</span><br><span class="line">    namedParameterJdbcTemplate.update(sql,sqlParameterSource);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就可以根据pojo类的属性值使用JDBC来操作数据库了。<br><strong>获取新增的主键:</strong><br>NamedParameterJdbcTemplate还新增了KeyHolder类,使用它我们可以获得主键,类似Mybatis中的useGeneratedKeys。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line"> public void testKeyHolder()&#123;</span><br><span class="line">     String sql = &quot;insert into user (username,password) values (:username,:password)&quot;;</span><br><span class="line">     User u = new User();</span><br><span class="line">     u.setUsername(&quot;555&quot;);</span><br><span class="line">     SqlParameterSource sqlParameterSource=new BeanPropertySqlParameterSource(u);</span><br><span class="line">     KeyHolder keyHolder = new GeneratedKeyHolder();</span><br><span class="line">     namedParameterJdbcTemplate.update(sql, sqlParameterSource, keyHolder);</span><br><span class="line">     int k = keyHolder.getKey().intValue();</span><br><span class="line">     System.out.println(k);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果就是新增的主键。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31903/" data-id="cjyvgh1ld000dq4urjp087v69" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31902" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31902/" class="article-date">
+  <time datetime="2019-03-19T03:43:44.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31902/">paxos协议的理解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="paxos"><a href="#paxos" class="headerlink" title="paxos"></a><strong>paxos</strong></h2><p>协议分为两大阶段，每个阶段又分为A/B两小步骤：</p>
+<p><strong>1.准备阶段（占坑阶段）</strong></p>
+<p>第一阶段A：Proposer选择一个提议编号n，向所有的Acceptor广播Prepare（n）请求。</p>
+<p>第一阶段B：Acceptor接收到Prepare（n）请求，若提议编号n比之前接收的Prepare请求都要大，则承诺将不会接收提议编号比n小的提议，并且带上之前Accept的提议中编号小于n的最大的提议，否则不予理会。</p>
+<p><strong>2.接受阶段（提交阶段）</strong></p>
+<p>第二阶段A：整个协议最为关键的点：Proposer得到了Acceptor响应</p>
+<p>如果未超过半数accpetor响应，直接转为提议失败；</p>
+<p>如果超过多数Acceptor的承诺，又分为不同情况：</p>
+<p>如果所有Acceptor都未接收过值（都为null），那么向所有的Acceptor发起自己的值和提议编号n，记住，一定是所有Acceptor都没接受过值；</p>
+<p>如果有部分Acceptor接收过值，那么从所有接受过的值中选择对应的提议编号最大的作为提议的值，提议编号仍然为n。但此时Proposer就不能提议自己的值，只能信任Acceptor通过的值，维护一但获得确定性取值就不能更改原则；</p>
+<p>第二阶段B：Acceptor接收到提议后，如果该提议版本号不等于自身保存记录的版本号（第一阶段记录的），不接受该请求，相等则写入本地。</p>
+<p><img src="/2019/03/19/31902/paxos-flow.png" alt="paxos-flow"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31902/" data-id="cjyvgh1l8000aq4urvw9cf3m9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-31901" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/31901/" class="article-date">
+  <time datetime="2019-03-19T02:46:57.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/31901/">2pc和3pc</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a><strong>2PC</strong></h2><h3 id="1-1-简述"><a href="#1-1-简述" class="headerlink" title="1.1 简述"></a><strong>1.1 简述</strong></h3><p>2PC(tow phase commit)两阶段提交。</p>
+<p>所谓的两个阶段是指：第一阶段：准备阶段(投票阶段)和第二阶段：提交阶段（执行阶段）。</p>
+<p>我们将提议的节点称为协调者(coordinator)，其他参与决议节点称为参与者(participants, 或cohorts)。</p>
+<h3 id="1-2-阶段1"><a href="#1-2-阶段1" class="headerlink" title="1.2 阶段1"></a><strong>1.2 阶段1</strong></h3><p>在阶段1中，协调者发起一个提议，分别问询各参与者是否接受，如下图：</p>
+<p><img src="/2019/03/19/31901/1.png" alt="1"></p>
+<h3 id="1-3-阶段2"><a href="#1-3-阶段2" class="headerlink" title="1.3 阶段2"></a><strong>1.3 阶段2</strong></h3><p>在阶段2中，协调者根据参与者的反馈，提交或中止事务，如果参与者全部同意则提交，只要有一个参与者不同意就中止。</p>
+<p>如下图：</p>
+<p><img src="/2019/03/19/31901/3.png" alt="3"></p>
+<h3 id="1-4-优缺点"><a href="#1-4-优缺点" class="headerlink" title="1.4 优缺点"></a><strong>1.4 优缺点</strong></h3><p>在异步环境并且没有节点宕机的模型下，2PC可以满足全认同、值合法、可结束，是解决一致性问题的一种协议。从协调者接收到一次事务请求、发起提议到事务完成，经过2PC协议后增加了2次RTT(propose+commit)，带来的时延增加相对较少。</p>
+<p><strong>二阶段提交有几个缺点：</strong></p>
+<p>· <strong>同步阻塞问题</strong>。执行过程中，所有参与节点都是事务阻塞型的。当参与者占有公共资源时，其他第三方节点访问公共资源不得不处于阻塞状态。</p>
+<p>· <strong>单点故障</strong>。由于协调者的重要性，一旦协调者发生故障。参与者会一直阻塞下去。尤其在第二阶段，协调者发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。（如果是协调者挂掉，可以重新选举一个协调者，但是无法解决因为协调者宕机导致的参与者处于阻塞状态的问题）</p>
+<p>· <strong>数据不一致</strong>。在二阶段提交的阶段二中，当协调者向参与者发送commit请求之后，发生了局部网络异常或者在发送commit请求过程中协调者发生了故障，这回导致只有一部分参与者接受到了commit请求。而在这部分参与者接到commit请求之后就会执行commit操作。但是其他部分未接到commit请求的机器则无法执行事务提交。于是整个分布式系统便出现了数据部一致性的现象。</p>
+<p>· <strong>二阶段无法解决的问题</strong>：协调者再发出commit消息之后宕机，而唯一接收到这条消息的参与者同时也宕机了。那么即使协调者通过选举协议产生了新的协调者，这条事务的状态也是不确定的，没人知道事务是否被已经提交。</p>
+<h2 id="3pc"><a href="#3pc" class="headerlink" title="3pc"></a><strong>3pc</strong></h2><h3 id="2-1-简述"><a href="#2-1-简述" class="headerlink" title="2.1 简述"></a><strong>2.1 简述</strong></h3><p>三阶段提交（Three-phase commit），是二阶段提交（2PC）的改进版本。</p>
+<p>与两阶段提交不同的是，三阶段提交有两个改动点。</p>
+<p>· 引入超时机制。同时在协调者和参与者中都引入超时机制。</p>
+<p>· 在第一阶段和第二阶段中插入一个准备阶段。保证了在最后提交阶段之前各参与节点的状态是一致的。</p>
+<p> 也就是说，除了引入超时机制之外，3PC把2PC的准备阶段再次一分为二，这样三阶段提交就有CanCommit、PreCommit、DoCommit三个阶段。</p>
+<h3 id="2-2-CanCommit阶段"><a href="#2-2-CanCommit阶段" class="headerlink" title="2.2 CanCommit阶段"></a><strong>2.2 CanCommit阶段</strong></h3><p>3PC的CanCommit阶段其实和2PC的准备阶段很像。协调者向参与者发送commit请求，参与者如果可以提交就返回Yes响应，否则返回No响应。</p>
+<p>· <strong>事务询问</strong> 协调者向参与者发送CanCommit请求。询问是否可以执行事务提交操作。然后开始等待参与者的响应。</p>
+<p>· <strong>响应反馈</strong> 参与者接到CanCommit请求之后，正常情况下，如果其自身认为可以顺利执行事务，则返回Yes响应，并进入预备状态。否则反馈No</p>
+<h3 id="2-3-PreCommit阶段"><a href="#2-3-PreCommit阶段" class="headerlink" title="2.3 PreCommit阶段"></a><strong>2.3 PreCommit阶段</strong></h3><p>协调者根据参与者的反应情况来决定是否可以记性事务的PreCommit操作。根据响应情况，有以下两种可能。</p>
+<p>假如协调者从所有的参与者获得的反馈都是Yes响应，那么就会执行事务的预执行。</p>
+<p>· <strong>发送预提交请求</strong> 协调者向参与者发送PreCommit请求，并进入Prepared阶段。</p>
+<p>· <strong>事务预提交</strong> 参与者接收到PreCommit请求后，会执行事务操作，并将undo和redo信息记录到事务日志中。</p>
+<p>· <strong>响应反馈</strong> 如果参与者成功的执行了事务操作，则返回ACK响应，同时开始等待最终指令。</p>
+<p>假如有任何一个参与者向协调者发送了No响应，或者等待超时之后，协调者都没有接到参与者的响应，那么就执行事务的中断。</p>
+<p>· 发送中断请求 协调者向所有参与者发送abort请求。</p>
+<p>· 中断事务 参与者收到来自协调者的abort请求之后（或超时之后，仍未收到协调者的请求），执行事务的中断。</p>
+<h3 id="2-4-doCommit阶段"><a href="#2-4-doCommit阶段" class="headerlink" title="2.4 doCommit阶段"></a><strong>2.4 doCommit阶段</strong></h3><p>该阶段进行真正的事务提交，也可以分为以下两种情况。</p>
+<p><strong>执行提交</strong></p>
+<p>· <strong>发送提交请求</strong> 协调接收到参与者发送的ACK响应，那么他将从预提交状态进入到提交状态。并向所有参与者发送doCommit请求。</p>
+<p>· <strong>事务提交</strong> 参与者接收到doCommit请求之后，执行正式的事务提交。并在完成事务提交之后释放所有事务资源。</p>
+<p>· <strong>响应反馈</strong> 事务提交完之后，向协调者发送Ack响应。</p>
+<p>· <strong>完成事务</strong> 协调者接收到所有参与者的ack响应之后，完成事务。</p>
+<p><strong>中断事务</strong></p>
+<p>协调者没有接收到参与者发送的ACK响应（可能是接受者发送的不是ACK响应，也可能响应超时），那么就会执行中断事务。</p>
+<p>· 发送中断请求 协调者向所有参与者发送abort请求</p>
+<p>· 事务回滚 参与者接收到abort请求之后，利用其在阶段二记录的undo信息来执行事务的回滚操作，并在完成回滚之后释放所有的事务资源。</p>
+<p>· 反馈结果 参与者完成事务回滚之后，向协调者发送ACK消息</p>
+<p>· 中断事务 协调者接收到参与者反馈的ACK消息之后，执行事务的中断。</p>
+<p><img src="/2019/03/19/31901/2.png" alt="2"></p>
+<h3 id="2-5-2pc和3pc的区别"><a href="#2-5-2pc和3pc的区别" class="headerlink" title="2.5 2pc和3pc的区别"></a><strong>2.5 2pc和3pc的区别</strong></h3><p>相对于2PC，3PC主要解决的单点故障问题，并减少阻塞，因为一旦参与者无法及时收到来自协调者的信息之后，他会默认执行commit。而不会一直持有事务资源并处于阻塞状态。但是这种机制也会导致数据一致性问题，因为，由于网络原因，协调者发送的abort响应没有及时被参与者接收到，那么参与者在等待超时之后执行了commit操作。这样就和其他接到abort命令并执行回滚的参与者之间存在数据不一致的情况。</p>
+<p>在2PC中一个参与者的状态只有它自己和协调者知晓，假如协调者提议后自身宕机，在协调者备份启用前一个参与者又宕机，其他参与者就会进入既不能回滚、又不能强制commit的阻塞状态，直到参与者宕机恢复。</p>
+<p>参与者如果在不同阶段宕机，我们来看看3PC如何应对：</p>
+<p>· <strong>阶段1</strong>: 协调者或协调者备份未收到宕机参与者的vote，直接中止事务；宕机的参与者恢复后，读取logging发现未发出赞成vote，自行中止该次事务</p>
+<p>· <strong>阶段2</strong>: 协调者未收到宕机参与者的precommit ACK，但因为之前已经收到了宕机参与者的赞成反馈(不然也不会进入到阶段2)，协调者进行commit；协调者备份可以通过问询其他参与者获得这些信息，过程同理；宕机的参与者恢复后发现收到precommit或已经发出赞成vote，则自行commit该次事务</p>
+<p>· <strong>阶段3</strong>: 即便协调者或协调者备份未收到宕机参与者t的commit ACK，也结束该次事务；宕机的参与者恢复后发现收到commit或者precommit，也将自行commit该次事务</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/31901/" data-id="cjyvgh1lc000cq4urdnd8zmq3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-总结0315" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/总结0315/" class="article-date">
+  <time datetime="2019-03-19T02:01:16.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/19/总结0315/">总结0319</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>–1.save和saveandflush<br>save不会立刻提交到数据库，flush则立刻提交生效，save可能只是修改在内存中的<br>–2.webhook<br>3.HMAC,SHA1<br>–4.ngrok<br><a href="https://tonybai.com/2015/05/14/ngrok-source-intro/" target="_blank" rel="noopener">https://tonybai.com/2015/05/14/ngrok-source-intro/</a><br>–5.node vue<br>–6.JodaTimeConverter</p>
+<p>–7.jackson </p>
+<p>–8.jdbctemplate namedParameterJdbcTemplate<br><a href="https://segmentfault.com/a/1190000010907688" target="_blank" rel="noopener">https://segmentfault.com/a/1190000010907688</a><br>–9.rabbit(exchange type,routingkey,queue,channel)<br>–0.zookeeper的配置属性，集群(hostname)<br>11.npm i和npm install的区别<br><a href="https://blog.csdn.net/chern1992/article/details/79193211" target="_blank" rel="noopener">https://blog.csdn.net/chern1992/article/details/79193211</a><br>–12.搭建hexo博客相关<br><a href="https://blog.csdn.net/sinat_37781304/article/details/82729029" target="_blank" rel="noopener">https://blog.csdn.net/sinat_37781304/article/details/82729029</a><br>13.阿里巴巴为什么不用 ZooKeeper 做服务发现？<br><a href="https://yq.aliyun.com/articles/599997" target="_blank" rel="noopener">https://yq.aliyun.com/articles/599997</a><br>14.what are webhooks?<br><a href="https://zapier.com/blog/what-are-webhooks/" target="_blank" rel="noopener">https://zapier.com/blog/what-are-webhooks/</a><br>You’re only limited by your imagination.<br>15.windows中的换行符为CRLF，而Linux下的换行符为LF<br>禁用自动转换，即将设置：git config –global core.autocrlf false</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/总结0315/" data-id="cjyvgh1mt0019q4ur7282dxd4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-technology" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/16/technology/" class="article-date">
+  <time datetime="2019-03-16T06:19:41.000Z" itemprop="datePublished">2019-03-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/16/technology/">technology</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/16/technology/" data-id="cjyvgh1mn0012q4urbl1g41sl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

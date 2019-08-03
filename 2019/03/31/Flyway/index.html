@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flyway | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="什么是Flyway? Flyway is an open-source database migration tool. It strongly favors simplicity and convention over configuration.  Flyway是一款开源的数据库版本管理工具，它更倾向于规约优于配置的方式。Flyway可以独立于应用实现管理并跟踪数据库变更，支持数据库版本自动升">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flyway">
+<meta property="og:url" content="http://yoursite.com/2019/03/31/Flyway/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="什么是Flyway? Flyway is an open-source database migration tool. It strongly favors simplicity and convention over configuration.  Flyway是一款开源的数据库版本管理工具，它更倾向于规约优于配置的方式。Flyway可以独立于应用实现管理并跟踪数据库变更，支持数据库版本自动升">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/8.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/9.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/31/Flyway/10.png">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flyway">
+<meta name="twitter:description" content="什么是Flyway? Flyway is an open-source database migration tool. It strongly favors simplicity and convention over configuration.  Flyway是一款开源的数据库版本管理工具，它更倾向于规约优于配置的方式。Flyway可以独立于应用实现管理并跟踪数据库变更，支持数据库版本自动升">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/31/Flyway/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flyway" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/31/Flyway/" class="article-date">
+  <time datetime="2019-03-31T09:11:04.000Z" itemprop="datePublished">2019-03-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flyway
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="什么是Flyway"><a href="#什么是Flyway" class="headerlink" title="什么是Flyway?"></a>什么是Flyway?</h2><blockquote>
+<p>Flyway is an open-source database migration tool. It strongly favors simplicity and convention over configuration.</p>
+</blockquote>
+<p>Flyway是一款开源的数据库版本管理工具，它更倾向于规约优于配置的方式。Flyway可以独立于应用实现管理并跟踪数据库变更，支持数据库版本自动升级，并且有一套默认的规约，不需要复杂的配置，Migrations可以写成SQL脚本，也可以写在Java代码中，不仅支持Command Line和Java API，还支持Build构建工具和Spring Boot等，同时在分布式环境下能够安全可靠地升级数据库，同时也支持失败恢复等。</p>
+<p>Flyway主要基于6种基本命令：<code>Migrate</code>, <code>Clean</code>, <code>Info</code>, <code>Validate</code>, <code>Baseline</code> and <code>Repair</code>，稍候会逐一分析讲解。目前支持的数据库主要有：Oracle, SQL Server, SQL Azure, DB2, DB2 z/OS, MySQL(including Amazon RDS), MariaDB, Google Cloud SQL, PostgreSQL(including Amazon RDS and Heroku), Redshift, Vertica, H2, Hsql, Derby, SQLite, SAP HANA, solidDB, Sybase ASE and Phoenix.</p>
+<p>关于Flyway的优势，支持的数据库以及与其他数据库版本工具的对比，可以阅读<a href="https://flywaydb.org/" target="_blank" rel="noopener">Flyway官网介绍</a>。</p>
+<h2 id="为什么使用Flyway"><a href="#为什么使用Flyway" class="headerlink" title="为什么使用Flyway?"></a>为什么使用Flyway?</h2><p>通常在项目开始时会针对数据库进行全局设计，但在开发产品新特性过程中，难免会遇到需要更新数据库Schema的情况，比如：添加新表，添加新字段和约束等，这种情况在实际项目中也经常发生。那么，当开发人员完成了对数据库更的SQL脚本后，如何快速地在其他开发者机器上同步？并且如何在测试服务器上快速同步？以及如何保证集成测试能够顺利执行并通过呢？</p>
+<p>假设以Spring Boot技术栈项目为例，可能有人会说，本地使用Hibernate自动更新数据库Schema模式，然后让QA或DEV到测试服务器上手动执行SQL脚本，同时可以写一个Gradle任务自动执行更新。</p>
+<p>个人觉得，对于Hibernate自动更新数据库，感觉不靠谱，不透明，控制自由度不高，而且有时很容易就会犯错，比如：用SQL创建的某个字段为VARCHAR类型，而在Entity中配置的为CHAR类型，那么在运行集成测试时，自动创建的数据库表中的字段为CHAR类型，而实际SQL脚本期望的是VARCHAR类型，虽然测试通过了，但不是期望的行为，并且在本地bootRun或服务器上运行Service时都会失败。另外，到各测试服务器上手动执行SQL脚本费时费神费力的，干嘛不自动化呢，当然，对于高级别和PROD环境，还是需要DBA手动执行的。最后，写一段自动化程序来自动执行更新，想法是很好的，那如果已经有了一些插件或库可以帮助你更好地实现这样的功能，为何不好好利用一下呢，当然，如果是为了学习目的，重复造轮子是无可厚非的。</p>
+<p>其实，以上问题可以通过Flyway工具来解决，Flyway可以实现自动化的数据库版本管理，并且能够记录数据库版本更新记录，Flyway官网对<a href="https://flywaydb.org/getstarted/why" target="_blank" rel="noopener">Why database migrations</a>结合示例进行了详细的阐述，有兴趣可以参阅一下。</p>
+<h2 id="Flyway如何工作的"><a href="#Flyway如何工作的" class="headerlink" title="Flyway如何工作的?"></a>Flyway如何工作的?</h2><p>Flyway对数据库进行版本管理主要由Metadata表和6种命令完成，Metadata主要用于记录元数据，每种命令功能和解决的问题范围不一样，以下分别对metadata表和这些命令进行阐述，其中的示意图都来自Flyway的官方文档。</p>
+<h4 id="Metadata-Table"><a href="#Metadata-Table" class="headerlink" title="Metadata Table"></a>Metadata Table</h4><p>Flyway中最核心的就是用于记录所有版本演化和状态的Metadata表，在Flyway首次启动时会创建默认名为<code>SCHEMA_VERSION</code>的元数据表，其表结构为(以MySQL为例)：</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Null</th>
+<th>Key</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version_rank</td>
+<td>int(11)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_rank</td>
+<td>int(11)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>version</td>
+<td>varchar(50)</td>
+<td>NO</td>
+<td>PRI</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>description</td>
+<td>varchar(200)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>type</td>
+<td>varchar(20)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>script</td>
+<td>varchar(1000)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>checksum</td>
+<td>int(11)</td>
+<td>YES</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_by</td>
+<td>varchar(100)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>installed_on</td>
+<td>timestamp</td>
+<td>NO</td>
+<td></td>
+<td>CURRENT_TIMESTAMP</td>
+</tr>
+<tr>
+<td>execution_time</td>
+<td>int(11)</td>
+<td>NO</td>
+<td></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>success</td>
+<td>tinyint(1)</td>
+<td>NO</td>
+<td>MUL</td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<p>Flyway官网上提供了一个很清晰的示例<a href="https://flywaydb.org/getstarted/how" target="_blank" rel="noopener">How Flyway works</a>，可以参阅一下。</p>
+<h4 id="Migrate"><a href="#Migrate" class="headerlink" title="Migrate"></a>Migrate</h4><p>Migrate是指把数据库Schema迁移到最新版本，是Flyway工作流的核心功能，Flyway在Migrate时会检查Metadata(元数据)表，如果不存在会创建Metadata表，Metadata表主要用于记录版本变更历史以及Checksum之类的。<br><img src="/2019/03/31/Flyway/1.png" alt="1"><br>Migrate时会扫描指定文件系统或Classpath下的Migrations(可以理解为数据库的版本脚本)，并且会逐一比对Metadata表中的已存在的版本记录，如果有未应用的Migrations，Flyway会获取这些Migrations并按次序Apply到数据库中，否则不需要做任何事情。另外，通常在应用程序启动时应默认执行Migrate操作，从而避免程序和数据库的不一致性。</p>
+<h4 id="Clean"><a href="#Clean" class="headerlink" title="Clean"></a>Clean</h4><p>Clean相对比较容易理解，即清除掉对应数据库Schema中的所有对象，包括表结构，视图，存储过程，函数以及所有的数据等都会被清除。<br><img src="/2019/03/31/Flyway/2.png" alt="2"><br>Clean操作在开发和测试阶段是非常有用的，它能够帮助快速有效地更新和重新生成数据库表结构，但特别注意的是：不应在Production的数据库上使用！</p>
+<h4 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h4><p>Info用于打印所有Migrations的详细和状态信息，其实也是通过Metadata表和Migrations完成的，下图很好地示意了Info打印出来的信息。<br><img src="/2019/03/31/Flyway/3.png" alt="3"></p>
+<p>Info能够帮助快速定位当前的数据库版本，以及查看执行成功和失败的Migrations。</p>
+<h4 id="Validate"><a href="#Validate" class="headerlink" title="Validate"></a>Validate</h4><p>Validate是指验证已经Apply的Migrations是否有变更，Flyway是默认是开启验证的。<br><img src="/2019/03/31/Flyway/4.png" alt="4"><br>Validate原理是对比Metadata表与本地Migrations的Checksum值，如果值相同则验证通过，否则验证失败，从而可以防止对已经Apply到数据库的本地Migrations的无意修改。</p>
+<h4 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h4><p>Baseline针对已经存在Schema结构的数据库的一种解决方案，即实现在非空数据库中新建Metadata表，并把Migrations应用到该数据库。<br><img src="/2019/03/31/Flyway/5.png" alt="5"><br>Baseline可以应用到特定的版本，这样在已有表结构的数据库中也可以实现添加Metadata表，从而利用Flyway进行新Migrations的管理了。</p>
+<h4 id="Repair"><a href="#Repair" class="headerlink" title="Repair"></a>Repair</h4><p>Repair操作能够修复Metadata表，该操作在Metadata表出现错误时是非常有用的。<br><img src="/2019/03/31/Flyway/6.png" alt="6"></p>
+<p>Repair会修复Metadata表的错误，通常有两种用途：</p>
+<ul>
+<li>移除失败的Migration记录，该问题只是针对不支持DDL事务的数据库。</li>
+<li>重新调整已经应用的Migratons的Checksums值，比如：某个Migratinon已经被应用，但本地进行了修改，又期望重新应用并调整Checksum值，不过尽量不要这样操作，否则可能造成其它环境失败。</li>
+</ul>
+<h2 id="如何使用Flyway"><a href="#如何使用Flyway" class="headerlink" title="如何使用Flyway?"></a>如何使用Flyway?</h2><p>这里将主要关注在Gradle和Spring Boot中集成并使用Flyway，数据库通常会采用MySQL、PostgreSQL、H2或Hsql等。</p>
+<h4 id="正确创建Migrations"><a href="#正确创建Migrations" class="headerlink" title="正确创建Migrations"></a>正确创建Migrations</h4><p><strong>Migrations</strong>是指Flyway在更新数据库时是使用的版本脚本，比如：一个基于Sql的Migration命名为<code>V1__init_tables.sql</code>，内容即是创建所有表的sql语句，另外，Flyway也支持基于Java的Migration。Flyway加载Migrations的默认Locations为<code>classpath:db/migration</code>，也可以指定<code>filesystem:/project/folder</code>，其加载是在Runtime自动递归地执行的。<br><img src="/2019/03/31/Flyway/8.png" alt="8"></p>
+<p>除了需要指定Location外，Flyway对Migrations的扫描还必须遵从一定的命名模式，Migration主要分为两类：Versioned和Repeatable。</p>
+<ul>
+<li><p><strong>Versioned migrations</strong><br>一般常用的是Versioned类型，用于版本升级，每一个版本都有一个唯一的标识并且只能被应用一次，并且不能再修改已经加载过的Migrations，因为Metadata表会记录其Checksum值。其中的version标识版本号，由一个或多个数字构成，数字之间的分隔符可以采用点或下划线，在运行时下划线其实也是被替换成点了，每一部分的前导零会被自动忽略。</p>
+</li>
+<li><p><strong>Repeatable migrations</strong><br>Repeatable是指可重复加载的Migrations，其每一次的更新会影响Checksum值，然后都会被重新加载，并不用于版本升级。对于管理不稳定的数据库对象的更新时非常有用。Repeatable的Migrations总是在Versioned之后按顺序执行，但开发者必须自己维护脚本并且确保可以重复执行，通常会在sql语句中使用<code>CREATE OR REPLACE</code>来保证可重复执行。</p>
+</li>
+</ul>
+<p>默认情况下基于Sql的Migration文件的命令规则如下图所示：<br><img src="/2019/03/31/Flyway/9.png" alt="9"></p>
+<p>其中的文件名由以下部分组成，除了使用默认配置外，某些部分还可自定义规则。</p>
+<ul>
+<li>prefix: 可配置，前缀标识，默认值<code>V</code>表示Versioned，<code>R</code>表示Repeatable</li>
+<li>version: 标识版本号，由一个或多个数字构成，数字之间的分隔符可用点<code>.</code>或下划线<code>_</code></li>
+<li>separator: 可配置，用于分隔版本标识与描述信息，默认为两个下划线<code>__</code></li>
+<li>description: 描述信息，文字之间可以用下划线或空格分隔</li>
+<li>suffix: 可配置，后续标识，默认为<code>.sql</code></li>
+</ul>
+<p>另外，关于如何使用基于Java的Migrations，有兴趣可以参考<a href="https://flywaydb.org/documentation/migration/java" target="_blank" rel="noopener">Java-based migrations</a>。</p>
+<h4 id="支持的数据库"><a href="#支持的数据库" class="headerlink" title="支持的数据库"></a>支持的数据库</h4><p>目前Flyway支持的数据库还是挺多的，包括：Oracle, SQL Server, SQL Azure, DB2, DB2 z/OS, MySQL(including Amazon RDS), MariaDB, Google Cloud SQL, PostgreSQL(including Amazon RDS and Heroku), Redshift, Vertica, H2, Hsql, Derby, SQLite, SAP HANA, solidDB, Sybase ASE and Phoenix。<br>目前来说，个人用得比较多的数据库是<a href="https://flywaydb.org/documentation/database/postgresql" target="_blank" rel="noopener">PostgreSQL</a>、<a href="https://flywaydb.org/documentation/database/mysql" target="_blank" rel="noopener">MySQL</a>、<a href="https://flywaydb.org/documentation/database/h2" target="_blank" rel="noopener">H2</a>和<a href="https://flywaydb.org/documentation/database/hsql" target="_blank" rel="noopener">Hsql</a>，针对每种数据库的<code>flyway.url</code>示例配置为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># PostgreSQL</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:postgresql://localhost:5432/postgres?currentSchema=myschema</span><br><span class="line"></span><br><span class="line"># MySQL</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC&amp;useSSL=true</span><br><span class="line"></span><br><span class="line"># H2</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:h2:./.tmp/testdb</span><br><span class="line"></span><br><span class="line"># Hsql</span><br><span class="line"></span><br><span class="line">flyway.url = jdbc:hsqldb:hsql//localhost:1476/testdb</span><br></pre></td></tr></table></figure>
+<h4 id="Flyway命令行"><a href="#Flyway命令行" class="headerlink" title="Flyway命令行"></a>Flyway命令行</h4><p>Flyway的命令行工具支持直接在命令行中运行<code>Migrate</code>, <code>Clean</code>, <code>Info</code>, <code>Validate</code>, <code>Baseline</code>和<code>Repair</code>6种命令，不需要借助其他Build工具，不需要应用程序运行在JVM中，只需要单纯的命令行即可，但需要根据不同的操作系统<a href="https://flywaydb.org/documentation/commandline/" target="_blank" rel="noopener">下载</a>并安装该命令行工具。Flyway会依次搜索以下配置文件，越靠后的配置会覆盖靠前的配置：</p>
+<ul>
+<li>/conf/flyway.conf</li>
+<li>/flyway.conf</li>
+<li>/flyway.conf</li>
+</ul>
+<p>一个典型Flyway项目示例目录结构如下：<br><img src="/2019/03/31/Flyway/10.png" alt="10"></p>
+<p>更多关于Flyway命令行使用可以参考<a href="https://flywaydb.org/documentation/commandline/migrate" target="_blank" rel="noopener">Flyway Command-line</a>。</p>
+<h4 id="在Gradle中的应用"><a href="#在Gradle中的应用" class="headerlink" title="在Gradle中的应用"></a>在Gradle中的应用</h4><p>首先需要在Gradle中引入Flyway插件，通常有两种方式：</p>
+<ul>
+<li><p>方式一：采用buildscript依赖方式。</p>
+<p>buildscript {<br>repositories {<br>mavenCentral()<br>}<br>dependencies {<br>classpath(“org.flywaydb:flyway-gradle-plugin:4.0.3”)<br>}<br>}<br>apply plugin: ‘org.flywaydb.flyway’</p>
+</li>
+</ul>
+<ul>
+<li><p>方式二（推荐）：采用DSL方式引用Plugins。</p>
+<p>plugins {<br>id “org.flywaydb.flyway” version “4.0.3”<br>}</p>
+</li>
+</ul>
+<p>而在Gradle中配置Flyway Properties有两种方式：</p>
+<ul>
+<li><p>方式一：在<code>build.gradle</code>中配置Flyway Properties。</p>
+<p>flyway {<br>url = jdbc:h2:./.tmp/testdb<br>user = sa<br>password =<br>}</p>
+<h1 id="或者写成："><a href="#或者写成：" class="headerlink" title="或者写成："></a>或者写成：</h1><p>project.ext[‘flyway.url’] = ‘jdbc:h2:./.tmp/testdb’<br>project.ext[‘flyway.user’] = ‘sa’<br>project.ext[‘flyway.password’] = ‘’</p>
+</li>
+<li><p>方式二：在<code>gradle.properties</code>中配置Flyway Properties。</p>
+<p>flyway.url = jdbc:h2:./.tmp/testdb<br>flyway.user = sa<br>flyway.password =</p>
+</li>
+</ul>
+<p>如果期望在运行Gradle Clean/Build Tasks时自动执行Flyway的某些任务，可以设置<code>dependsOn</code>，若不期望隐式执行Flyway任务，可以不配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clean.dependsOn flywayRepair # To repair the Flyway metadata table</span><br><span class="line">build.dependsOn flywayMigrate # To migrate the schema to the latest version</span><br></pre></td></tr></table></figure></p>
+<p>另外，其它Tasks：<code>flywayInfo</code>, <code>flywayValidate</code>, <code>flywayBaseline</code>分别对应到Flyway的命令。在使用Spring Boot时，运行<code>./gradlew bootRun</code>会自动检查并加载最新的db.migration脚本。</p>
+<p><strong>特别注意：</strong>在Production环境中不应执行<code>./gradlew flywayClean</code>，除非你知道自己的行为和目的，因为该命令会清除所有的数据库对象，相当危险。</p>
+<p>更多关于Flyway在Gradle中的使用请参阅<a href="https://flywaydb.org/documentation/gradle/migrate" target="_blank" rel="noopener">Flyway Gradle Plugin</a>。</p>
+<h4 id="与Spring-Boot集成"><a href="#与Spring-Boot集成" class="headerlink" title="与Spring Boot集成"></a>与Spring Boot集成</h4><p>在Spring Boot中，如果加入Flyway的依赖，则会自动引用Flyway并使用默认值，但可以修改并配置<a href="https://github.com/spring-projects/spring-boot/tree/v1.4.0.RELEASE/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/flyway/FlywayProperties.java" target="_blank" rel="noopener">FlywayProperties</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">flyway.baseline-description= # The description to tag an existing schema with when executing baseline.</span><br><span class="line"></span><br><span class="line">flyway.baseline-version=1 # Version to start migration.</span><br><span class="line"></span><br><span class="line">flyway.baseline-on-migrate=false # Whether to execute migration against a non-empty schema with no metadata table</span><br><span class="line"></span><br><span class="line">flyway.check-location=false # Check that migration scripts location exists.</span><br><span class="line"></span><br><span class="line">flyway.clean-on-validation-error=false # will clean all objects. Warning! Do NOT enable in production!</span><br><span class="line"></span><br><span class="line">flyway.enabled=true # Enable flyway.</span><br><span class="line"></span><br><span class="line">flyway.encoding=UTF-8 # The encoding of migrations.</span><br><span class="line"></span><br><span class="line">flyway.ignore-failed-future-migration=true # Ignore future migrations when reading the metadata table.</span><br><span class="line"></span><br><span class="line">flyway.init-sqls= # SQL statements to execute to initialize a connection immediately after obtaining it.</span><br><span class="line"></span><br><span class="line">flyway.locations=classpath:db/migration # locations of migrations scripts.</span><br><span class="line"></span><br><span class="line">flyway.out-of-order=false # Allows migrations to be run &quot;out of order&quot;.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-prefix= # The prefix of every placeholder.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-replacement=true # Whether placeholders should be replaced.</span><br><span class="line"></span><br><span class="line">flyway.placeholder-suffix=&#125; # The suffix of every placeholder.</span><br><span class="line"></span><br><span class="line">flyway.placeholders.*= # Placeholders to replace in Sql migrations.</span><br><span class="line"></span><br><span class="line">flyway.schemas= # Default schema of the connection and updating</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-prefix=V # The file name prefix for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-separator=__ # The file name separator for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.sql-migration-suffix=.sql # The file name suffix for Sql migrations</span><br><span class="line"></span><br><span class="line">flyway.table=schema_version # The name of Flyway&apos;s metadata table.</span><br><span class="line"></span><br><span class="line">flyway.url= # JDBC url of the database to migrate. If not set, the primary configured data source is used.</span><br><span class="line"></span><br><span class="line">flyway.user= # Login user of the database to migrate. If not set, use spring.datasource.username value.</span><br><span class="line"></span><br><span class="line">flyway.password= # JDBC password if you want Flyway to create its own DataSource.</span><br><span class="line"></span><br><span class="line">flyway.validate-on-migrate=true # Validate sql migration CRC32 checksum in classpath.</span><br></pre></td></tr></table></figure>
+<p>若使用Gradle，通常在<code>build.gradle</code>引入<code>org.flywaydb:flyway-core:4.0.3</code>依赖后即可使用。可能会有以下几种需求：</p>
+<ul>
+<li><p>在本地Run和Tests都会使用内存数据库，其中的<code>spring.jpa.hibernate.ddl-auto</code>都设置为<code>validate</code>，Schema不需要Hibernate自动生成，并期望使用Flyway，而在线上环境会使用真实数据库，并不期望使用Flyway，如何实现呢？<br><strong>解决方案：</strong>可以在<code>common.properties</code>中配置<code>flyway.enabled=false</code>，然后在local或dev的配置中启用Flyway即可。通常推荐使用此模式，毕竟可以对不同的环境进行控制，另外本地Run不会依赖真实数据库，又能保证数据库Schema是按脚本创建的。</p>
+</li>
+<li><p>在运行Tests会使用内存数据库，有单独的配置文件，不使用Flyway，而在本地bootRun时会使用真实数据库，使用Flyway，毕竟不想每次Schema改后都在本地手动去执行脚本，如何实现？<br><strong>解决方案：</strong>设置<code>bootRun.dependsOn</code>动态添加Flyway的依赖即可：</p>
+<p>addFlywayDenpendency {<br>doLast {<br>dependencies {<br>compile(‘org.flywaydb:flyway-core:4.0.3’)<br>}<br>}<br>}<br>bootRun.dependsOn=addFlywayDenpendency</p>
+</li>
+<li><p>若项目有多个团队同时开发不同的功能，需要新建多个分支，并且都会涉及到数据库Schema更改，当后期Merge时，Migration的版本如何控制并且不会产生数据库更改的冲突呢？<br><strong>解决方案：</strong>如果两个分支的数据库更改有冲突，要么最初数据库设计不合理，要么目前数据库更改不合理，所以需要团队进行全局考虑和协调。而针对数据库在同一段时间有修改，但不会造成冲突的情况，通常实际项目中主要存在这样的情况，那可以设置<code>flyway.out-of-order=true</code>，这样允许当v1和v3已经被应用后，v2出现时同样也可以被应用。其实在本地使用内存数据库不会存在该问题，因为数据库所有对象会自动清除掉，而在local或dev中使用真实数据库时可遇到这样的问题，因此需要注意一下了。<br>另外，值得一提的是Flyway的参数<code>ignore-failed-future-migration</code>默认为<code>true</code>，使用情形为：当Rollback数据库更改到旧版本，而metadata表中已存在了新版本时，Flyway会忽略此错误，只会显示警告信息。</p>
+</li>
+</ul>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>总得来说，Flyway可以有效改善数据库版本管理方式，如果项目中还未使用，不防尝试一下。如果有兴趣，也可以关注<a href="http://mybatis.github.io/migrations/" target="_blank" rel="noopener">MyBatis Migration</a>，功能支持没有Flyway多，属于更轻量级的数据库版本管理工具。如果在使用过程中遇到了问题或坑，欢迎留言一起交流讨论。</p>
+<hr>
+<p>References</p>
+<ul>
+<li><a href="https://flywaydb.org/documentation/" target="_blank" rel="noopener">Flyway Documentation</a></li>
+<li><a href="https://flywaydb.org/documentation/gradle/" target="_blank" rel="noopener">Gradle Plugin: Flyway</a></li>
+<li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html" target="_blank" rel="noopener">Spring Common application properties</a></li>
+<li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/howto-database-initialization.html#howto-execute-flyway-database-migrations-on-startup" target="_blank" rel="noopener">Execute Flyway database migrations on startup</a></li>
+</ul>
+<p>参考：<a href="https://blog.csdn.net/u014091123/article/details/78133522" target="_blank" rel="noopener">https://blog.csdn.net/u014091123/article/details/78133522</a><br><a href="https://www.jianshu.com/p/5b3ee67e3598" target="_blank" rel="noopener">https://www.jianshu.com/p/5b3ee67e3598</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/31/Flyway/" data-id="cjyvgh1nu001oq4urke5f1uue" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/31/HikariCP/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          HikariCP
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/31/总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">总结0331</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

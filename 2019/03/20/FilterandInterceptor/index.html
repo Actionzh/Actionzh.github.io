@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>拦截器和过滤器 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GenericFilterBeanhttps://blog.csdn.net/liangxw1/article/details/51095484RequestInterceptorhttps://www.jianshu.com/p/919d066a07aa Servlet中提供了8个监听器 ==一类==:监听三个域对象的创建和销毁的监听器对象类型    对应的监听器ServletContext">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拦截器和过滤器">
+<meta property="og:url" content="http://yoursite.com/2019/03/20/FilterandInterceptor/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="GenericFilterBeanhttps://blog.csdn.net/liangxw1/article/details/51095484RequestInterceptorhttps://www.jianshu.com/p/919d066a07aa Servlet中提供了8个监听器 ==一类==:监听三个域对象的创建和销毁的监听器对象类型    对应的监听器ServletContext">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拦截器和过滤器">
+<meta name="twitter:description" content="GenericFilterBeanhttps://blog.csdn.net/liangxw1/article/details/51095484RequestInterceptorhttps://www.jianshu.com/p/919d066a07aa Servlet中提供了8个监听器 ==一类==:监听三个域对象的创建和销毁的监听器对象类型    对应的监听器ServletContext">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-FilterandInterceptor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/20/FilterandInterceptor/" class="article-date">
+  <time datetime="2019-03-19T16:00:00.000Z" itemprop="datePublished">2019-03-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      拦截器和过滤器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>GenericFilterBean<br><a href="https://blog.csdn.net/liangxw1/article/details/51095484" target="_blank" rel="noopener">https://blog.csdn.net/liangxw1/article/details/51095484</a><br>RequestInterceptor<br><a href="https://www.jianshu.com/p/919d066a07aa" target="_blank" rel="noopener">https://www.jianshu.com/p/919d066a07aa</a></p>
+<p>Servlet中提供了8个监听器</p>
+<p>==一类==:监听三个域对象的创建和销毁的监听器<br>对象类型    对应的监听器<br>ServletContext    ServletContextListener<br>HttpSession    HttpSessionListener<br>HttpServletRequest    ServletRequestListener</p>
+<p>==二类==:监听三个域对象的属性变更的监听器.(属性添加,属性移除,属性替换)<br>对象类型    对应的监听器<br>ServletContext    ServletContextAttributeListener<br>HttpServletRequest    ServletRequestAttributeListener<br>HttpSession    HttpSessionAttributeListener</p>
+<p>==三类==:监听HttpSession对象中的JavaBean的状态的改变.(绑定,解除绑定,钝化和活化)2个<br>对象类型    对应的监听器<br>HttpSession    HttpSessionBindingListener(绑定,解除绑定)<br>HttpSession    HttpSessionActivationListener(钝化和活化)<br>​</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/20/FilterandInterceptor/" data-id="cjyvgh1ll000lq4urjg7s4b6i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/24/32401/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Java8(forEach)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/20/sql/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">insert和replace相关</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

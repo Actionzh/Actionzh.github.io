@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>logback实践 | Actionzh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、logback介绍Logback是由log4j创始人设计的一个开源日志组件。LogBack被分为3个组件，logback-core, logback-classic 和 logback-access。 1231\. logback-core:提供了LogBack的核心功能，是另外两个组件的基础。2\. logback-classic:实现了Slf4j的API，所以当想配合Slf4j使用时，需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="logback实践">
+<meta property="og:url" content="http://yoursite.com/2019/04/21/logback/index.html">
+<meta property="og:site_name" content="Actionzh">
+<meta property="og:description" content="一、logback介绍Logback是由log4j创始人设计的一个开源日志组件。LogBack被分为3个组件，logback-core, logback-classic 和 logback-access。 1231\. logback-core:提供了LogBack的核心功能，是另外两个组件的基础。2\. logback-classic:实现了Slf4j的API，所以当想配合Slf4j使用时，需要">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/11806186-f57f61c096181fc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/11806186-1008f8cf2b04796e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+<meta property="og:updated_time" content="2019-08-03T11:27:06.653Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="logback实践">
+<meta name="twitter:description" content="一、logback介绍Logback是由log4j创始人设计的一个开源日志组件。LogBack被分为3个组件，logback-core, logback-classic 和 logback-access。 1231\. logback-core:提供了LogBack的核心功能，是另外两个组件的基础。2\. logback-classic:实现了Slf4j的API，所以当想配合Slf4j使用时，需要">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/11806186-f57f61c096181fc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Actionzh</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/technology">Technology</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-logback" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/logback/" class="article-date">
+  <time datetime="2019-04-21T08:01:08.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      logback实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、logback介绍"><a href="#一、logback介绍" class="headerlink" title="一、logback介绍"></a>一、logback介绍</h3><p>Logback是由log4j创始人设计的一个开源日志组件。LogBack被分为3个组件，logback-core, logback-classic 和 logback-access。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1\. logback-core:提供了LogBack的核心功能，是另外两个组件的基础。</span><br><span class="line">2\. logback-classic:实现了Slf4j的API，所以当想配合Slf4j使用时，需要引入logback-classic。</span><br><span class="line">3\. logback-access:为了集成Servlet环境而准备的，可提供HTTP-access的日志接口。</span><br></pre></td></tr></table></figure>
+<p>Logback是要与SLF4J结合起来。这两个组件的官方网站如下：</p>
+<p>logback官方网站: <a href="http://logback.qos.ch" target="_blank" rel="noopener">logback官方网站</a></p>
+<p>SLF4J官方网站： <a href="http://www.slf4j.org" target="_blank" rel="noopener">SLF4J官方网站</a></p>
+<ul>
+<li>Slf4j：简单日志门面(Simple Logging Facade for Java)，不是具体的日志解决方案，它只服务于各种各样的日志系统。</li>
+<li>在使用SLF4J的时候，不需要在代码中或配置文件中指定你打算使用那个具体的日志系统。</li>
+</ul>
+<h3 id="二、slf4j-logback是如何绑定的"><a href="#二、slf4j-logback是如何绑定的" class="headerlink" title="二、slf4j + logback是如何绑定的"></a>二、slf4j + logback是如何绑定的</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">1. private static final Logger LOGGER = LoggerFactory.getLogger(LogbackTest.class);</span><br><span class="line"></span><br><span class="line">2. 查看LoggerFactory.getLogger()方法</span><br><span class="line">    public static Logger getLogger(Class&lt;?&gt; clazz) &#123;</span><br><span class="line">        // 获取Logger对象</span><br><span class="line">        Logger logger = getLogger(clazz.getName());</span><br><span class="line">        if (DETECT_LOGGER_NAME_MISMATCH) &#123;</span><br><span class="line">            Class&lt;?&gt; autoComputedCallingClass = Util.getCallingClass();</span><br><span class="line">            if (autoComputedCallingClass != null &amp;&amp; nonMatchingClasses(clazz, autoComputedCallingClass)) &#123;</span><br><span class="line">                Util.report(String.format(&quot;Detected logger name mismatch. Given name: \&quot;%s\&quot;; computed name: \&quot;%s\&quot;.&quot;, logger.getName(),</span><br><span class="line">                                autoComputedCallingClass.getName()));</span><br><span class="line">                Util.report(&quot;See &quot; + LOGGER_NAME_MISMATCH_URL + &quot; for an explanation&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return logger;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">3. 继续跟进 getLogger()</span><br><span class="line">    /**</span><br><span class="line">     * Return a logger named according to the name parameter using the</span><br><span class="line">     * statically bound &#123;@link ILoggerFactory&#125; instance.</span><br><span class="line">     * </span><br><span class="line">     * @param name</span><br><span class="line">     *            The name of the logger.</span><br><span class="line">     * @return logger</span><br><span class="line">     */</span><br><span class="line">    public static Logger getLogger(String name) &#123;</span><br><span class="line">        // 获取日志工厂</span><br><span class="line">        ILoggerFactory iLoggerFactory = getILoggerFactory();</span><br><span class="line">        // 返回日志对象 </span><br><span class="line">        return iLoggerFactory.getLogger(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">4. 获取工厂实例</span><br><span class="line">    /**</span><br><span class="line">     * Return the &#123;@link ILoggerFactory&#125; instance in use.</span><br><span class="line">     * &lt;p/&gt;</span><br><span class="line">     * &lt;p/&gt;</span><br><span class="line">     * ILoggerFactory instance is bound with this class at compile time.  </span><br><span class="line">     * 编译时绑定工厂实例</span><br><span class="line">     * </span><br><span class="line">     * @return the ILoggerFactory instance in use</span><br><span class="line">     */</span><br><span class="line">    public static ILoggerFactory getILoggerFactory() &#123;</span><br><span class="line">        // 没有初始化情况</span><br><span class="line">        // 双重检测锁</span><br><span class="line">        if (INITIALIZATION_STATE == UNINITIALIZED) &#123;</span><br><span class="line">            synchronized (LoggerFactory.class) &#123;</span><br><span class="line">                if (INITIALIZATION_STATE == UNINITIALIZED) &#123;</span><br><span class="line">                    // 初始化</span><br><span class="line">                    INITIALIZATION_STATE = ONGOING_INITIALIZATION;</span><br><span class="line">                    performInitialization();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        switch (INITIALIZATION_STATE) &#123;</span><br><span class="line">        case SUCCESSFUL_INITIALIZATION:</span><br><span class="line">            return StaticLoggerBinder.getSingleton().getLoggerFactory();</span><br><span class="line">        case NOP_FALLBACK_INITIALIZATION:</span><br><span class="line">            return NOP_FALLBACK_FACTORY;</span><br><span class="line">        case FAILED_INITIALIZATION:</span><br><span class="line">            throw new IllegalStateException(UNSUCCESSFUL_INIT_MSG);</span><br><span class="line">        case ONGOING_INITIALIZATION:</span><br><span class="line">            // support re-entrant behavior.</span><br><span class="line">            // See also http://jira.qos.ch/browse/SLF4J-97</span><br><span class="line">            return SUBST_FACTORY;</span><br><span class="line">        &#125;</span><br><span class="line">        throw new IllegalStateException(&quot;Unreachable code&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">5. 初始化</span><br><span class="line">    private final static void performInitialization() &#123;</span><br><span class="line">        bind();</span><br><span class="line">        if (INITIALIZATION_STATE == SUCCESSFUL_INITIALIZATION) &#123;</span><br><span class="line">            versionSanityCheck();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">6. 绑定</span><br><span class="line">    private final static void bind() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Set&lt;URL&gt; staticLoggerBinderPathSet = null;</span><br><span class="line">            // skip check under android, see also</span><br><span class="line">            // http://jira.qos.ch/browse/SLF4J-328</span><br><span class="line">            if (!isAndroid()) &#123;</span><br><span class="line">                staticLoggerBinderPathSet = findPossibleStaticLoggerBinderPathSet();</span><br><span class="line">                reportMultipleBindingAmbiguity(staticLoggerBinderPathSet);</span><br><span class="line">            &#125;</span><br><span class="line">            // the next line does the binding</span><br><span class="line">            // 真正的绑定，将具体的实现绑定到slf4j</span><br><span class="line">            StaticLoggerBinder.getSingleton();</span><br><span class="line">            INITIALIZATION_STATE = SUCCESSFUL_INITIALIZATION;</span><br><span class="line">            reportActualBinding(staticLoggerBinderPathSet);</span><br><span class="line">            fixSubstituteLoggers();</span><br><span class="line">            replayEvents();</span><br><span class="line">            // release all resources in SUBST_FACTORY</span><br><span class="line">            SUBST_FACTORY.clear();</span><br><span class="line">         &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">7. logback-classic: org.slf4j.impl.StaticLoggerBinder</span><br><span class="line">    public static StaticLoggerBinder getSingleton() &#123;</span><br><span class="line">        return SINGLETON;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">由此可以看出slf4j在编译时就找了具体的日志实现了，也就是 org.slf4j.impl.StaticLoggerBinder。</span><br></pre></td></tr></table></figure>
+<h3 id="三、logback对配置文件的加载"><a href="#三、logback对配置文件的加载" class="headerlink" title="三、logback对配置文件的加载"></a>三、logback对配置文件的加载</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">1. getSingleton()方法获取logback实例对象，说明在对象之前已经加载了相关的配置文件，跟进 StaticLoggerBinder</span><br><span class="line">    static &#123;</span><br><span class="line">        // 初始化</span><br><span class="line">        SINGLETON.init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean initialized = false;</span><br><span class="line">    private LoggerContext defaultLoggerContext = new LoggerContext();</span><br><span class="line">    private final ContextSelectorStaticBinder contextSelectorBinder = ContextSelectorStaticBinder.getSingleton();</span><br><span class="line"></span><br><span class="line">    private StaticLoggerBinder() &#123;</span><br><span class="line">        defaultLoggerContext.setName(CoreConstants.DEFAULT_CONTEXT_NAME);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static StaticLoggerBinder getSingleton() &#123;</span><br><span class="line">        return SINGLETON;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">2. 查看 init()</span><br><span class="line">    /**</span><br><span class="line">     * Package access for testing purposes.</span><br><span class="line">     */</span><br><span class="line">    void init() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                // 上下文初始化环境 </span><br><span class="line">                new ContextInitializer(defaultLoggerContext).autoConfig();</span><br><span class="line">            &#125; catch (JoranException je) &#123;</span><br><span class="line">                Util.report(&quot;Failed to auto configure default logger context&quot;, je);</span><br><span class="line">            &#125;</span><br><span class="line">            // logback-292</span><br><span class="line">            if (!StatusUtil.contextHasStatusListener(defaultLoggerContext)) &#123;</span><br><span class="line">                StatusPrinter.printInCaseOfErrorsOrWarnings(defaultLoggerContext);</span><br><span class="line">            &#125;</span><br><span class="line">            contextSelectorBinder.init(defaultLoggerContext, KEY);</span><br><span class="line">            initialized = true;</span><br><span class="line">        &#125; catch (Throwable t) &#123;</span><br><span class="line">            // we should never get here</span><br><span class="line">            Util.report(&quot;Failed to instantiate [&quot; + LoggerContext.class.getName() + &quot;]&quot;, t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">3. 跟进autoConfig()</span><br><span class="line">    public void autoConfig() throws JoranException &#123;</span><br><span class="line">        StatusListenerConfigHelper.installIfAsked(loggerContext);</span><br><span class="line">        // 寻找默认配置文件</span><br><span class="line">        URL url = findURLOfDefaultConfigurationFile(true);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            configureByResource(url);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            Configurator c = EnvUtil.loadFromServiceLoader(Configurator.class);</span><br><span class="line">            if (c != null) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    c.setContext(loggerContext);</span><br><span class="line">                    c.configure(loggerContext);</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    throw new LogbackException(String.format(&quot;Failed to initialize Configurator: %s using ServiceLoader&quot;, c != null ? c.getClass()</span><br><span class="line">                                    .getCanonicalName() : &quot;null&quot;), e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // 没有找到配置文件，则使用默认的配置器，那么日志只会打印在控制台</span><br><span class="line">                BasicConfigurator basicConfigurator = new BasicConfigurator();</span><br><span class="line">                basicConfigurator.setContext(loggerContext);</span><br><span class="line">                basicConfigurator.configure(loggerContext);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">4. findURLOfDefaultConfigurationFile() logback配置文件加载规则</span><br><span class="line">    public URL findURLOfDefaultConfigurationFile(boolean updateStatus) &#123;</span><br><span class="line">        // 获取当前实例的类加载器，目的是在classpath下寻找配置文件</span><br><span class="line">        ClassLoader myClassLoader = Loader.getClassLoaderOfObject(this);</span><br><span class="line">        // 先找logback.configurationFile文件</span><br><span class="line">        URL url = findConfigFileURLFromSystemProperties(myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback.configurationFile文件没找到，再找logback.groovy</span><br><span class="line">        url = getResource(GROOVY_AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback.groovy没找到，再找logback-test.xml</span><br><span class="line">        url = getResource(TEST_AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">        if (url != null) &#123;</span><br><span class="line">            return url;</span><br><span class="line">        &#125;</span><br><span class="line">        // logback-test.xml没找到，最后找logback.xml</span><br><span class="line">        return getResource(AUTOCONFIG_FILE, myClassLoader, updateStatus);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>小结：<br>编译期间，完成slf4j的绑定已经logback配置文件的加载。slf4j会在classpath中寻找org/slf4j/impl/StaticLoggerBinder.class(会在具体的日志框架如log4j、logback等中存在)，找到并完成绑定；同时，logback也会在classpath中寻找配置文件，先找logback.configurationFile、没有则找logback.groovy，若logback.groovy也没有，则找logback-test.xml，若logback-test.xml还是没有，则找logback.xml，若连logback.xml也没有，那么说明没有配置logback的配置文件，那么logback则会启用默认的配置(日志信息只会打印在控制台)。</p>
+<h3 id="四、使用步骤"><a href="#四、使用步骤" class="headerlink" title="四、使用步骤"></a>四、使用步骤</h3><p>1.引入slf4j、logback相关依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- slf4j --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;slf4j.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- logback --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-core&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-classic&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logback-access&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;$&#123;logback.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>2.添加配置文件logback.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 定义日志文件的存储地址 --&gt;</span><br><span class="line">    &lt;!--</span><br><span class="line">        关于catalina.base解释如下：</span><br><span class="line">            catalina.home指向公用信息的位置，就是bin和lib的父目录。</span><br><span class="line">            catalina.base指向每个Tomcat目录私有信息的位置，就是conf、logs、temp、webapps和work的父目录。</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;property name=&quot;LOG_DIR&quot; value=&quot;$&#123;catalina.base&#125;/logs&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        %p:输出优先级，即DEBUG,INFO,WARN,ERROR,FATAL</span><br><span class="line">        %r:输出自应用启动到输出该日志讯息所耗费的毫秒数</span><br><span class="line">        %t:输出产生该日志事件的线程名</span><br><span class="line">        %f:输出日志讯息所属的类别的类别名</span><br><span class="line">        %c:输出日志讯息所属的类的全名</span><br><span class="line">        %d:输出日志时间点的日期或时间，指定格式的方式： %d&#123;yyyy-MM-dd HH:mm:ss&#125;</span><br><span class="line">        %l:输出日志事件的发生位置，即输出日志讯息的语句在他所在类别的第几行。</span><br><span class="line">        %m:输出代码中指定的讯息，如log(message)中的message</span><br><span class="line">        %n:输出一个换行符号</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符--&gt;</span><br><span class="line">    &lt;property name=&quot;pattern&quot; value=&quot;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125; [%thread] %-5level  %msg%n&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        Appender: 设置日志信息的去向,常用的有以下几个</span><br><span class="line">            ch.qos.logback.core.ConsoleAppender (控制台)</span><br><span class="line">            ch.qos.logback.core.rolling.RollingFileAppender (文件大小到达指定尺寸的时候产生一个新文件)</span><br><span class="line">            ch.qos.logback.core.FileAppender (文件)</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;</span><br><span class="line">        &lt;!-- 字符串System.out（默认）或者System.err --&gt;</span><br><span class="line">        &lt;target&gt;System.out&lt;/target&gt;</span><br><span class="line">        &lt;!-- 对记录事件进行格式化 --&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;SQL_INFO&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;!-- 被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建 --&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/sql_info.log&lt;/file&gt;</span><br><span class="line">        &lt;!-- 当发生滚动时，决定RollingFileAppender的行为，涉及文件移动和重命名。属性class定义具体的滚动策略类 --&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;!-- 必要节点，包含文件名及&quot;%d&quot;转换符，&quot;%d&quot;可以包含一个java.text.SimpleDateFormat指定的时间格式，默认格式是 yyyy-MM-dd --&gt;</span><br><span class="line">            &lt;fileNamePattern&gt;$&#123;LOG_DIR&#125;/sql_info_%d&#123;yyyy-MM-dd&#125;.log.%i.gz&lt;/fileNamePattern&gt;</span><br><span class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;</span><br><span class="line">                &lt;maxFileSize&gt;20MB&lt;/maxFileSize&gt;</span><br><span class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;</span><br><span class="line">            &lt;!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件。假设设置每个月滚动，如果是6，则只保存最近6个月的文件，删除之前的旧文件 --&gt;</span><br><span class="line">            &lt;maxHistory&gt;10&lt;/maxHistory&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;!-- LevelFilter： 级别过滤器，根据日志级别进行过滤 --&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">            &lt;!-- 用于配置符合过滤条件的操作 ACCEPT：日志会被立即处理，不再经过剩余过滤器 --&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;!-- 用于配置不符合过滤条件的操作 DENY：日志将立即被抛弃不再经过其他过滤器 --&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;SQL_ERROR&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/sql_error.log&lt;/file&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;fileNamePattern&gt;$&#123;LOG_DIR&#125;/sql_error_%d&#123;yyyy-MM-dd&#125;.log.%i.gz&lt;/fileNamePattern&gt;</span><br><span class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;</span><br><span class="line">                &lt;maxFileSize&gt;20MB&lt;/maxFileSize&gt;</span><br><span class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;</span><br><span class="line">            &lt;maxHistory&gt;10&lt;/maxHistory&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;pattern&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;ERROR&lt;/level&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;APP_INFO&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/info.log&lt;/file&gt;</span><br><span class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;</span><br><span class="line">            &lt;FileNamePattern&gt;$&#123;LOG_DIR&#125;/info.%d&#123;yyyy-MM-dd&#125;.log</span><br><span class="line">            &lt;/FileNamePattern&gt;</span><br><span class="line">        &lt;/rollingPolicy&gt;</span><br><span class="line">        &lt;encoder&gt;</span><br><span class="line">            &lt;Pattern&gt;[%date&#123;yyyy-MM-dd HH:mm:ss&#125;] [%-5level] [%thread] [%logger:%line]--%mdc&#123;client&#125; %msg%n&lt;/Pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;</span><br><span class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;FILE&quot; class=&quot;ch.qos.logback.core.FileAppender&quot;&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.core.encoder.LayoutWrappingEncoder&quot;&gt;</span><br><span class="line">            &lt;layout class=&quot;ch.qos.logback.classic.html.HTMLLayout&quot;&gt;</span><br><span class="line">                &lt;property name=&quot;pattern&quot; value=&quot;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125; [%thread] %-5level  %msg%n&quot;/&gt;</span><br><span class="line">                &lt;pattern&gt;%d&#123;yyyyMMdd:HH:mm:ss.SSS&#125;%thread%-5level%F&#123;32&#125;%M%L%msg&lt;/pattern&gt;</span><br><span class="line">            &lt;/layout&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;file&gt;$&#123;LOG_DIR&#125;/test.html&lt;/file&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。</span><br><span class="line">        &lt;loger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性</span><br><span class="line">        name:</span><br><span class="line">            用来指定受此logger约束的某一个包或者具体的某一个类。</span><br><span class="line">        level:</span><br><span class="line">            用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，</span><br><span class="line">            如果未设置此属性，那么当前logger将会继承上级的级别。</span><br><span class="line">        additivity:</span><br><span class="line">            是否向上级loger传递打印信息。默认是true。</span><br><span class="line">        &lt;logger&gt;可以包含零个或多个&lt;appender-ref&gt;元素，标识这个appender将会添加到这个logger</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;logger name=&quot;java.sql&quot; level=&quot;info&quot; additivity=&quot;false&quot;&gt;</span><br><span class="line">        &lt;level value=&quot;info&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_INFO&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_ERROR&quot;&gt;&lt;/appender-ref&gt;</span><br><span class="line">    &lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">    &lt;logger name=&quot;com.souche.LogbackTest&quot; additivity=&quot;false&quot;&gt;</span><br><span class="line">        &lt;level value=&quot;info&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;APP_INFO&quot; /&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;FILE&quot;/&gt;</span><br><span class="line">    &lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--</span><br><span class="line">        也是&lt;logger&gt;元素，但是它是根logger。默认debug</span><br><span class="line">        level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，</span><br><span class="line">        &lt;root&gt;可以包含零个或多个&lt;appender-ref&gt;元素，标识这个appender将会添加到这个logger。</span><br><span class="line">    --&gt;</span><br><span class="line">    &lt;root level=&quot;info&quot;&gt;</span><br><span class="line">        &lt;level&gt;info&lt;/level&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDOUT&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_INFO&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;SQL_ERROR&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;FILE&quot;/&gt;</span><br><span class="line">    &lt;/root&gt;</span><br><span class="line"></span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="五、实际应用"><a href="#五、实际应用" class="headerlink" title="五、实际应用"></a>五、实际应用</h3><p>就举例最近新做的项目弹个X中的应用吧。因为在与前端联调阶段，api自测感觉没啥问题的，然后联调就会有各种问题，没法避免，技术还是太水了，哈哈哈哈……..<br>调详情页的时候，听到有问题就赶紧看日志去，果然报错了。如下:</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11806186-f57f61c096181fc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p>
+<p>错误日志</p>
+<p>有错误信息就能当做本地控制台一样，可以直接看到错误信息。</p>
+<p>Cause: com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column ‘saler_phone’ at row 1<br>; SQL []; Data truncation: Data too long for column ‘saler_phone’ at row 1; nested exception is com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column ‘saler_phone’ at row 1</p>
+<p>然后进一步加了log日志</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11806186-1008f8cf2b04796e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p>
+<p>log日志</p>
+<p>传参错了，查了原因，登录失效，然后salerPhone居然还有值，而且多了一位……</p>
+<h3 id="六、为什么使用logback"><a href="#六、为什么使用logback" class="headerlink" title="六、为什么使用logback"></a>六、为什么使用logback</h3><p>logback具有以下优点：</p>
+<ul>
+<li>内核重写、测试充分、初始化内存加载更小，这一切让logback性能和log4j相比有诸多倍的提升</li>
+<li>logback非常自然地直接实现了slf4j，这个严格来说算不上优点，只是这样，再理解slf4j的前提下会很容易理解logback，也同时很容易用其他日志框架替换logbac</li>
+<li>logback有比较齐全的200多页的文档</li>
+<li>logback当配置文件修改了，支持自动重新加载配置文件，扫描过程快且安全，它并不需要另外创建一个扫描线程</li>
+<li>支持自动去除旧的日志文件，可以控制已经产生日志文件的最大数量</li>
+</ul>
+<p>总而言之，如果大家的项目里面需要选择一个日志框架，那么我个人非常建议使用logback。</p>
+<h3 id="七、logback性能大比拼"><a href="#七、logback性能大比拼" class="headerlink" title="七、logback性能大比拼"></a>七、logback性能大比拼</h3><p>log4j、logback、log4j2性能测试，直接引用公司的博客吧。<a href="https://blog.souche.com/logback-log4j-log4j2shi-ce/" target="_blank" rel="noopener">logback log4j log4j2 性能实测</a></p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ol>
+<li><a href="https://www.cnblogs.com/EasonJim/p/7800880.html" target="_blank" rel="noopener">Java日志框架-logback的介绍及配置使用方法</a></li>
+<li><a href="https://www.cnblogs.com/youzhibing/p/6849843.html" target="_blank" rel="noopener">从源码来理解slf4j的绑定，以及logback对配置文件的加载</a></li>
+<li><a href="https://www.cnblogs.com/nananana/p/8371805.html" target="_blank" rel="noopener">logback 配置详解和使用</a></li>
+<li><a href="https://blog.csdn.net/haidage/article/details/6794540" target="_blank" rel="noopener">logback.xml常用配置详解 : filter</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU1ODUyMDUzNw==&amp;mid=2247483962&amp;idx=1&amp;sn=ee98ec38dbca13730b6d87e793609acb&amp;chksm=fc24038ccb538a9aad19573c06c987dbdb6d72de407811db469f7d06e5afb095bbe81395ca3e&amp;mpshare=1&amp;scene=23&amp;srcid=0614XsPPbErSxUi2MOzweE0X#rd" target="_blank" rel="noopener">Java 日志框架：logback 详解</a></li>
+<li><a href="https://blog.souche.com/logback-log4j-log4j2shi-ce/" target="_blank" rel="noopener">logback log4j log4j2 性能实测</a></li>
+</ol>
+<p>链接：<a href="https://www.jianshu.com/p/b3dedb8fb61e" target="_blank" rel="noopener">https://www.jianshu.com/p/b3dedb8fb61e</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/logback/" data-id="cjyvgh1nv001pq4urp3d1t7c3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/21/springboot启动原理/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          springboot启动原理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/17/0417/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">总结0417</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/08/03/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/03/0707-md/">0707.md</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/Collectors-toMap的问题/">Collectors.toMap的问题</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/hystrix请求命令/">hystrix请求命令</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/16/cas单点登陆/">cas单点登陆</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Zavier<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/technology" class="mobile-nav-link">Technology</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
