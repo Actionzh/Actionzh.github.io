@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="Actionzh">
 <meta property="og:description" content="1、简介Spring Boot会检查你发布的jar中是否存在META-INF/spring.factories文件，该文件中以EnableAutoConfiguration为key的属性应该列出你的配置类： 123org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.mycorp.libx.autoconfigure">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/springboot%E8%AE%BE%E7%BD%AE-configuration%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png">
 <meta property="og:updated_time" content="2019-08-03T11:27:06.658Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="springboot设置@configuration的加载顺序">
 <meta name="twitter:description" content="1、简介Spring Boot会检查你发布的jar中是否存在META-INF/spring.factories文件，该文件中以EnableAutoConfiguration为key的属性应该列出你的配置类： 123org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.mycorp.libx.autoconfigure">
-<meta name="twitter:image" content="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/springboot%E8%AE%BE%E7%BD%AE-configuration%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png">
   
     <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
   
@@ -99,7 +99,7 @@
 <blockquote>
 <p>注：自动配置类只能通过这种方式加载，确保它们定义在一个特殊的package中，特别是不能成为组件扫描的目标。</p>
 </blockquote>
-<h4 id="2、例子"><a href="#2、例子" class="headerlink" title="2、例子"></a>2、例子</h4><p>例如下面的项目，想要保证加载<code>BananaConf.java</code>后再加载<code>AppleConf.java</code><br><img src="/2019/06/16/springboot设置-configuration的加载顺序/springboot%E8%AE%BE%E7%BD%AE-configuration%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png" alt="微信截图_20190616124419"></p>
+<h4 id="2、例子"><a href="#2、例子" class="headerlink" title="2、例子"></a>2、例子</h4><p>例如下面的项目，想要保证加载<code>BananaConf.java</code>后再加载<code>AppleConf.java</code><br><img src="/2019/06/16/springboot设置-configuration的加载顺序/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20190616124419.png" alt="微信截图_20190616124419"></p>
 <p>1）添加文件<code>spring.factories</code>（若没有<code>META-INF</code>文件夹，则需要先添加）<br>2）在<code>spring.factories</code>中加入</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</span><br><span class="line">com.example.demo.conf.AppleConf,\</span><br><span class="line">com.example.demo.conf.BananaConf</span><br></pre></td></tr></table></figure>
 <p>3）<code>AppleConf</code>中添加 <code>@AutoConfigureAfter(BananaConf.class)</code></p>
@@ -111,7 +111,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/" data-id="cjyvglqph000zs4ursjowny0r" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/16/springboot设置-configuration的加载顺序/" data-id="cjyvgp27n0010swururb5md71" class="article-share-link">Share</a>
       
       
     </footer>

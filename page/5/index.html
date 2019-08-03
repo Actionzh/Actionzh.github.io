@@ -66,9 +66,9 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-flow(active)" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-flow(ExecutorJob)" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/03/29/flow(active)/" class="article-date">
+    <a href="/2019/03/29/flow(ExecutorJob)/" class="article-date">
   <time datetime="2019-03-29T02:01:16.000Z" itemprop="datePublished">2019-03-29</time>
 </a>
     
@@ -80,7 +80,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/29/flow(active)/">flow(active)流程</a>
+      <a class="article-title" href="/2019/03/29/flow(ExecutorJob)/">flow(ExecutorJob)流程</a>
     </h1>
   
 
@@ -88,61 +88,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>active相关旅程。<br>CustomerJourneyController.activate方法：<br>1先保存customerJourney<br>2然后调用customerJourneyService.activate(triggerId)：<br>2.1查询出customerJourney，根据uimodel转换出LinkedJourney，<br>2.2再根据LinkedJourney得到相关得properties加入customerJourney<br>2.3根据customerJourney和linkedJourney进行deploy<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy(</span><br><span class="line">[1].bpmnGenerator.generateBPMN-&gt;converter出bpmnModel，[2].bpmnGenerator.getTriggerCondition(triggerNode)-&gt;根据triggerNode得到comditionstring，此处根据根节点workflowEvent得出beanname 从而得到对应得TriggerConditionGenerator接口得具体实现，核心方法generateInternal主要用来返回生成的condition字符串。(所有得trigger generator在此处使用)</span><br><span class="line">[3].customerJourney设置得到的bpmn，triggerType，workflowEvent，condition</span><br><span class="line">[4].根据customerJourneyname和bpmn进行deploy并返回ProcessDefinitionId,并设置到customerJourney中</span><br><span class="line">[5].customerJourney中每个properties都设置processDedfId和triggerId)</span><br></pre></td></tr></table></figure></p>
-<p>2.4 deploy结束返回customerJourney，设置ACTIVE状态，并更新表数据<br>2.5最后保存所有properties节点信息</p>
+        <ol>
+<li>CustomerJourneyExecutorJob.doWork<br>根据body转化出customerJourneyContext，然后调用</li>
+<li>workflowTrigger.trigger<br>调用doTrigger,得到(context.getTriggerId(), processDefId, processVariables)调用</li>
+<li>workflowManager.run(内部为acticiti的runtimeService启动流程)返回processInstanceId,生成CustomerJourneyInstance并入库</li>
+</ol>
+<h4 id="action的逻辑实现调用部分"><a href="#action的逻辑实现调用部分" class="headerlink" title="action的逻辑实现调用部分"></a>action的逻辑实现调用部分</h4><p>看bpmn的xml发现，serviceTask 节点内有activiti:delegateExpression的信息，值为#{TriggerDelegateDispatcher}，#{ActionDelegateDispatcher}联想到spring代码中的delegate，查看代码发现抽象BaseDispatcher的实现有ActionDelegateDispatcher和TriggerDelegateDispatcher证实了想法。</p>
+<p>ActionDelegateDispatcher的executeDelegate方法根据customerJourneyProperty.getEvent()得到beanname，从而得到AbstractDelegate的具体实现的bean对象，最终执行delegate.executeDelegate方法，实现自实现的逻辑（每个action的实现逻辑即在此进行调用和实现）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&apos;1.0&apos; encoding=&apos;UTF-8&apos;?&gt; &lt;definitions xmlns=&quot;http://www.omg.org/spec/BPMN/20100524/MODEL&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:activiti=&quot;http://activiti.org/bpmn&quot; xmlns:bpmndi=&quot;http://www.omg.org/spec/BPMN/20100524/DI&quot; xmlns:omgdc=&quot;http://www.omg.org/spec/DD/20100524/DC&quot; xmlns:omgdi=&quot;http://www.omg.org/spec/DD/20100524/DI&quot; typeLanguage=&quot;http://www.w3.org/2001/XMLSchema&quot; expressionLanguage=&quot;http://www.w3.org/1999/XPath&quot; targetNamespace=&quot;http://www.activiti.org/processdef&quot;&gt; &lt;process id=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; isExecutable=&quot;true&quot;&gt; &lt;startEvent id=&quot;START&quot;/&gt; &lt;sequenceFlow sourceRef=&quot;START&quot; targetRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot;/&gt; &lt;serviceTask id=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;TriggerDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;conditions&quot;:&quot;ANY&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;endEvent id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;sequenceFlow id=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548-flow&quot; sourceRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; targetRef=&quot;END-N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;serviceTask id=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot; name=&quot;微信&quot; activiti:delegateExpression=&quot;#&#123;ActionDelegateDispatcher&#125;&quot;&gt; &lt;extensionElements&gt; &lt;activiti:field name=&quot;parameterMap&quot;&gt; &lt;activiti:string&gt;&lt;![CDATA[&#123;&quot;triggerHistoryEvent&quot;:false,&quot;channelId&quot;:&quot;wx1f7fbd28ac009cd0&quot;,&quot;replyMessage&quot;:&#123;&quot;touser&quot;:&quot;#&#123;OPENID&#125;&quot;,&quot;text&quot;:&#123;&quot;content&quot;:&quot;近期活动 Upcoming events:\n\n2018/11/28 &lt;a href=\&quot; \&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 双语教育的模型与实践\nWhittle Talks | Bilingual Models and Practices\n\n2018/12/08 &lt;a href=\&quot;pages/order/order?event_id=82\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;报名 Register&lt;/a &gt;\n荟同开讲 | 小童书的大说法\nWhittle Talks | The big story behind a book for small children\n\n更多精彩活动，请&lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt;查看活动日历&lt;/a &gt;\n\nFind out more in our &lt;a href=\&quot;pages/calendar/calendar\&quot; data-miniprogram-appid=\&quot;wxf1d37b3137043a00\&quot;&gt; Event Calendar&lt;/a &gt;&quot;&#125;&#125;,&quot;resultVariable&quot;:&quot;gatewayc58&quot;&#125;]]&gt;&lt;/activiti:string&gt; &lt;/activiti:field&gt; &lt;/extensionElements&gt; &lt;/serviceTask&gt; &lt;sequenceFlow id=&quot;N-7f0dcb94-be72-4999-84dc-256fa65d9fd9&quot; sourceRef=&quot;N-8f2e9577-46e5-4833-8cb6-e0622d531496&quot; targetRef=&quot;N-d3219b76-e9c7-4a5b-b59e-5342c92f8548&quot;/&gt; &lt;/process&gt; &lt;bpmndi:BPMNDiagram id=&quot;BPMNDiagram_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;&gt; &lt;bpmndi:BPMNPlane bpmnElement=&quot;P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot; id=&quot;BPMNPlane_P9fbf8335-9f0a-4c8e-a1bf-a6c4ec856c1a&quot;/&gt; &lt;/bpmndi:BPMNDiagram&gt; &lt;/definitions&gt;</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/29/flow(active)/" data-id="cjyvglqpb000ts4urohib6mxt" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-32403" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/24/32403/" class="article-date">
-  <time datetime="2019-03-24T14:54:16.000Z" itemprop="datePublished">2019-03-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/24/32403/">subList</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="List接口中定义："><a href="#List接口中定义：" class="headerlink" title="List接口中定义："></a>List接口中定义：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br></pre></td></tr></table></figure>
-<h3 id="英文注释："><a href="#英文注释：" class="headerlink" title="英文注释："></a>英文注释：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fromIndex and toIndex are equal, the </span><br><span class="line">returned list is empty.) The returned list is backed by this list, so non-structural changes in the returned list are reflected in this list, and vice-versa. </span><br><span class="line">The returned list supports all of the optional list operations supported by this list.</span><br><span class="line"></span><br><span class="line">This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays). Any operation that expects a list can be used as a </span><br><span class="line">range operation by passing a subList view instead of a whole list. For example, the following idiom removes a range of elements from a list: </span><br><span class="line">      list.subList(from, to).clear();</span><br><span class="line"></span><br><span class="line">Similar idioms may be constructed for indexOf and lastIndexOf, and all of the algorithms in the Collections class can be applied to a subList.</span><br><span class="line">The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via </span><br><span class="line">the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in </span><br><span class="line">progress may yield incorrect results.)</span><br></pre></td></tr></table></figure>
-<p>根据注释得知：</p>
-<p>1，该方法返回的是父list的一个视图，从fromIndex（包含），到toIndex（不包含）。fromIndex=toIndex 表示子list为空</p>
-<p>2，父子list做的非结构性修改（non-structural changes）都会影响到彼此：所谓的“非结构性修改”，是指不涉及到list的大小改变的修改。相反，结构性修改，指改变了list大小的修改。</p>
-<p>3，对于结构性修改，子list的所有操作都会反映到父list上。但父list的修改将会导致返回的子list失效。</p>
-<p>4，tips：如何删除list中的某段数据：</p>
-<p>list.subList(from, to).clear();</p>
-<h3 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h3><p>来自<a href="http://www.cnblogs.com/weknow619/p/6251065.html" target="_blank" rel="noopener">【Java每日一题】20170105</a>，就是看到这个题目才让我知道list的这个方法我没有接触过</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package ques; import java.util.ArrayList; import java.util.List; public class Ques0105 &#123; public static void main(String[] args) &#123;  </span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();  </span><br><span class="line">        list.add(&quot;a&quot;); // 使用构造器创建一个包含list的列表list1 </span><br><span class="line">        List&lt;String&gt; list1 = new ArrayList&lt;String&gt;(list); // 使用subList生成与list相同的列表list2 </span><br><span class="line">        List&lt;String&gt; list2 = list.subList(0, list.size());  </span><br><span class="line">        list2.add(&quot;b&quot;);  </span><br><span class="line"></span><br><span class="line">        System.out.println(list.equals(list1));  </span><br><span class="line">        System.out.println(list.equals(list2));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>返回结果如下：<br><img src="/2019/03/24/32403/1.png" alt="1"></p>
-<p>可以发现，list2为list的子list，当list2发生结构性修改（list2.add(“b”)）后，list也发生相应改变，所以返回结果为false和true</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/24/32403/" data-id="cjyvglqp2000js4urspdafxmn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/29/flow(ExecutorJob)/" data-id="cjyvgp27f000sswurs3ldem1i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -199,7 +157,55 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/24/41601/" data-id="cjyvglqp4000ls4urrde1nwa2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/24/41601/" data-id="cjyvgp278000lswurpud02avj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-32403" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/32403/" class="article-date">
+  <time datetime="2019-03-24T14:54:16.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/24/32403/">subList</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="List接口中定义："><a href="#List接口中定义：" class="headerlink" title="List接口中定义："></a>List接口中定义：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br></pre></td></tr></table></figure>
+<h3 id="英文注释："><a href="#英文注释：" class="headerlink" title="英文注释："></a>英文注释：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Returns a view of the portion of this list between the specified fromIndex, inclusive, and toIndex, exclusive. (If fromIndex and toIndex are equal, the </span><br><span class="line">returned list is empty.) The returned list is backed by this list, so non-structural changes in the returned list are reflected in this list, and vice-versa. </span><br><span class="line">The returned list supports all of the optional list operations supported by this list.</span><br><span class="line"></span><br><span class="line">This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays). Any operation that expects a list can be used as a </span><br><span class="line">range operation by passing a subList view instead of a whole list. For example, the following idiom removes a range of elements from a list: </span><br><span class="line">      list.subList(from, to).clear();</span><br><span class="line"></span><br><span class="line">Similar idioms may be constructed for indexOf and lastIndexOf, and all of the algorithms in the Collections class can be applied to a subList.</span><br><span class="line">The semantics of the list returned by this method become undefined if the backing list (i.e., this list) is structurally modified in any way other than via </span><br><span class="line">the returned list. (Structural modifications are those that change the size of this list, or otherwise perturb it in such a fashion that iterations in </span><br><span class="line">progress may yield incorrect results.)</span><br></pre></td></tr></table></figure>
+<p>根据注释得知：</p>
+<p>1，该方法返回的是父list的一个视图，从fromIndex（包含），到toIndex（不包含）。fromIndex=toIndex 表示子list为空</p>
+<p>2，父子list做的非结构性修改（non-structural changes）都会影响到彼此：所谓的“非结构性修改”，是指不涉及到list的大小改变的修改。相反，结构性修改，指改变了list大小的修改。</p>
+<p>3，对于结构性修改，子list的所有操作都会反映到父list上。但父list的修改将会导致返回的子list失效。</p>
+<p>4，tips：如何删除list中的某段数据：</p>
+<p>list.subList(from, to).clear();</p>
+<h3 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h3><p>来自<a href="http://www.cnblogs.com/weknow619/p/6251065.html" target="_blank" rel="noopener">【Java每日一题】20170105</a>，就是看到这个题目才让我知道list的这个方法我没有接触过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package ques; import java.util.ArrayList; import java.util.List; public class Ques0105 &#123; public static void main(String[] args) &#123;  </span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();  </span><br><span class="line">        list.add(&quot;a&quot;); // 使用构造器创建一个包含list的列表list1 </span><br><span class="line">        List&lt;String&gt; list1 = new ArrayList&lt;String&gt;(list); // 使用subList生成与list相同的列表list2 </span><br><span class="line">        List&lt;String&gt; list2 = list.subList(0, list.size());  </span><br><span class="line">        list2.add(&quot;b&quot;);  </span><br><span class="line"></span><br><span class="line">        System.out.println(list.equals(list1));  </span><br><span class="line">        System.out.println(list.equals(list2));  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回结果如下：<br><img src="/2019/03/24/32403/1.png" alt="1"></p>
+<p>可以发现，list2为list的子list，当list2发生结构性修改（list2.add(“b”)）后，list也发生相应改变，所以返回结果为false和true</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/24/32403/" data-id="cjyvgp277000jswura8vcnats" class="article-share-link">Share</a>
       
       
     </footer>
@@ -285,7 +291,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/24/32402/" data-id="cjyvglqp5000ms4urdxwny88j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/24/32402/" data-id="cjyvgp277000kswurnsgedd56" class="article-share-link">Share</a>
       
       
     </footer>
@@ -339,7 +345,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/24/32401/" data-id="cjyvglqp0000gs4ur4uyb3vkk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/24/32401/" data-id="cjyvgp275000hswurhldxk80z" class="article-share-link">Share</a>
       
       
     </footer>
@@ -380,7 +386,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/20/FilterandInterceptor/" data-id="cjyvglqp3000ks4urn1hgo6q7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/20/FilterandInterceptor/" data-id="cjyvgp279000mswurc9s8p6fu" class="article-share-link">Share</a>
       
       
     </footer>
@@ -419,7 +425,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/20/sql/" data-id="cjyvglqpj0011s4urjj23i8c7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/20/sql/" data-id="cjyvgp27o0011swur91rh2h5w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -457,7 +463,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/19/31910/" data-id="cjyvglqp1000is4urhx88gajc" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/19/31910/" data-id="cjyvgp274000gswur0120ljc0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -496,7 +502,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/19/31909/" data-id="cjyvglqoz000fs4urehokalpn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/19/31909/" data-id="cjyvgp276000iswurfrtexk8j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -631,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/03/19/31908/" data-id="cjyvglqq2001bs4ur4saiu0xy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/03/19/31908/" data-id="cjyvgp286001bswurrjr3d5bz" class="article-share-link">Share</a>
       
       
     </footer>

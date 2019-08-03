@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="Actionzh">
 <meta property="og:description" content="1、结构体系在上面的文章中，我们介绍过，在CAS的结构中主要分两部分，一部分是CAS Server，另一部分是CAS Client。 CAS Server：CAS Server 负责完成对用户的认证工作 , 需要独立部署 , CAS Server 会处理用户名 / 密码等凭证(Credentials)。 CAS Client：负责处理对客户端受保护资源的访问请求，需要对请求方进行身份认证时，重定向">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/06/16/cas单点登陆/cas%E5%8D%95%E7%82%B9%E7%99%BB%E9%99%86/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/cas单点登陆/1.png">
 <meta property="og:updated_time" content="2019-08-03T11:27:06.636Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cas单点登陆">
 <meta name="twitter:description" content="1、结构体系在上面的文章中，我们介绍过，在CAS的结构中主要分两部分，一部分是CAS Server，另一部分是CAS Client。 CAS Server：CAS Server 负责完成对用户的认证工作 , 需要独立部署 , CAS Server 会处理用户名 / 密码等凭证(Credentials)。 CAS Client：负责处理对客户端受保护资源的访问请求，需要对请求方进行身份认证时，重定向">
-<meta name="twitter:image" content="http://yoursite.com/2019/06/16/cas单点登陆/cas%E5%8D%95%E7%82%B9%E7%99%BB%E9%99%86/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/16/cas单点登陆/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
   
@@ -95,7 +95,7 @@
         <h2 id="1、结构体系"><a href="#1、结构体系" class="headerlink" title="1、结构体系"></a><strong>1、结构体系</strong></h2><p>在上面的文章中，我们介绍过，在CAS的结构中主要分两部分，一部分是CAS Server，另一部分是CAS Client。</p>
 <p>CAS Server：CAS Server 负责完成对用户的认证工作 , 需要独立部署 , CAS Server 会处理用户名 / 密码等凭证(Credentials)。</p>
 <p>CAS Client：负责处理对客户端受保护资源的访问请求，需要对请求方进行身份认证时，重定向到 CAS Server 进行认证。（原则上，客户端应用不再接受任何的用户名密码等 Credentials ）。</p>
-<p><img src="/2019/06/16/cas单点登陆/cas%E5%8D%95%E7%82%B9%E7%99%BB%E9%99%86/1.png" alt="1"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SSO单点登录访问流程主要有以下步骤：</span><br><span class="line">    1. 访问服务：SSO客户端发送请求访问应用系统提供的服务资源。</span><br><span class="line">    2. 定向认证：SSO客户端会重定向用户请求到SSO服务器。</span><br><span class="line">    3. 用户认证：用户身份认证。</span><br><span class="line">    4. 发放票据：SSO服务器会产生一个随机的Service Ticket。</span><br><span class="line">    5. 验证票据：SSO服务器验证票据Service Ticket的合法性，验证通过后，允许客户端访问服务。</span><br><span class="line">    6. 传输用户信息：SSO服务器验证票据通过后，传输用户认证结果信息给客户端。</span><br></pre></td></tr></table></figure></p>
+<p><img src="/2019/06/16/cas单点登陆/1.png" alt="1"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SSO单点登录访问流程主要有以下步骤：</span><br><span class="line">    1. 访问服务：SSO客户端发送请求访问应用系统提供的服务资源。</span><br><span class="line">    2. 定向认证：SSO客户端会重定向用户请求到SSO服务器。</span><br><span class="line">    3. 用户认证：用户身份认证。</span><br><span class="line">    4. 发放票据：SSO服务器会产生一个随机的Service Ticket。</span><br><span class="line">    5. 验证票据：SSO服务器验证票据Service Ticket的合法性，验证通过后，允许客户端访问服务。</span><br><span class="line">    6. 传输用户信息：SSO服务器验证票据通过后，传输用户认证结果信息给客户端。</span><br></pre></td></tr></table></figure></p>
 <h2 id="2、CAS协议"><a href="#2、CAS协议" class="headerlink" title="2、CAS协议"></a><strong>2、CAS协议</strong></h2><p>CAS协议是一个简单而强大的基于票据的协议，它涉及一个或多个客户端和一台服务器。即在CAS中，通过TGT(Ticket Granting Ticket)来获取 ST(Service Ticket)，通过ST来访问具体服务。</p>
 <p>其中主要的关键概念：</p>
 <p>TGT（Ticket Granting Ticket）是存储在TGCcookie中的代表用户的SSO会话。<br>该ST（Service Ticket），作为参数在GET方法的URL中，代表由CAS服务器授予访问CASified应用程序（包含CAS客户端的应用程序）具体用户的权限。</p>
@@ -111,7 +111,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/16/cas单点登陆/" data-id="cjyvglqp7000ps4ur7kn3uo5c" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/16/cas单点登陆/" data-id="cjyvgp27c000pswur1cynvk1p" class="article-share-link">Share</a>
       
       
     </footer>

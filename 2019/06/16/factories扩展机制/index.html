@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="Actionzh">
 <meta property="og:description" content="写在前面：Spring Boot中有一种非常解耦的扩展机制：Spring Factories。这种扩展机制实际上是仿照Java中的SPI扩展机制来实现的。 什么是 SPI机制  SPI的全名为Service Provider Interface.大多数开发人员可能不熟悉，因为这个是针对厂商或者插件的。在java.util.ServiceLoader的文档里有比较详细的介绍。简单的总结下java S">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/2019/06/16/factories扩展机制/factories%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/1.png">
-<meta property="og:image" content="http://yoursite.com/2019/06/16/factories扩展机制/factories%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/factories扩展机制/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/16/factories扩展机制/2.png">
 <meta property="og:updated_time" content="2019-08-03T11:27:06.647Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring boot factories扩展机制">
 <meta name="twitter:description" content="写在前面：Spring Boot中有一种非常解耦的扩展机制：Spring Factories。这种扩展机制实际上是仿照Java中的SPI扩展机制来实现的。 什么是 SPI机制  SPI的全名为Service Provider Interface.大多数开发人员可能不熟悉，因为这个是针对厂商或者插件的。在java.util.ServiceLoader的文档里有比较详细的介绍。简单的总结下java S">
-<meta name="twitter:image" content="http://yoursite.com/2019/06/16/factories扩展机制/factories%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/1.png">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/16/factories扩展机制/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Actionzh" type="application/atom+xml">
   
@@ -95,7 +95,7 @@
       
         <p>写在前面：Spring Boot中有一种非常解耦的扩展机制：Spring Factories。这种扩展机制实际上是仿照Java中的SPI扩展机制来实现的。</p>
 <h2 id="什么是-SPI机制"><a href="#什么是-SPI机制" class="headerlink" title="什么是 SPI机制"></a>什么是 SPI机制</h2><p>  SPI的全名为Service Provider Interface.大多数开发人员可能不熟悉，因为这个是针对厂商或者插件的。在java.util.ServiceLoader的文档里有比较详细的介绍。<br>简单的总结下java SPI机制的思想。我们系统里抽象的各个模块，往往有很多不同的实现方案，比如日志模块的方案，xml解析模块、jdbc模块的方案等。面向的对象的设计里，我们一般推荐模块之间基于接口编程，模块之间不对实现类进行硬编码。一旦代码里涉及具体的实现类，就违反了可拔插的原则，如果需要替换一种实现，就需要修改代码。为了实现在模块装配的时候能不在程序里动态指明，这就需要一种服务发现机制。<br>java SPI就是提供这样的一个机制：为某个接口寻找服务实现的机制。有点类似IOC的思想，就是将装配的控制权移到程序之外，在模块化设计中这个机制尤其重要。</p>
-<h2 id="Spring-Boot中的SPI机制"><a href="#Spring-Boot中的SPI机制" class="headerlink" title="Spring Boot中的SPI机制"></a>Spring Boot中的SPI机制</h2><p>在Spring中也有一种类似与Java SPI的加载机制。它在META-INF/spring.factories文件中配置接口的实现类名称，然后在程序中读取这些配置文件并实例化。<br>这种自定义的SPI机制是Spring Boot Starter实现的基础。<br><img src="/2019/06/16/factories扩展机制/factories%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/1.png" alt="1"></p>
+<h2 id="Spring-Boot中的SPI机制"><a href="#Spring-Boot中的SPI机制" class="headerlink" title="Spring Boot中的SPI机制"></a>Spring Boot中的SPI机制</h2><p>在Spring中也有一种类似与Java SPI的加载机制。它在META-INF/spring.factories文件中配置接口的实现类名称，然后在程序中读取这些配置文件并实例化。<br>这种自定义的SPI机制是Spring Boot Starter实现的基础。<br><img src="/2019/06/16/factories扩展机制/1.png" alt="1"></p>
 <h2 id="Spring-Factories实现原理是什么"><a href="#Spring-Factories实现原理是什么" class="headerlink" title="Spring Factories实现原理是什么"></a>Spring Factories实现原理是什么</h2><p>spring-core包里定义了SpringFactoriesLoader类，这个类实现了检索META-INF/spring.factories文件，并获取指定接口的配置的功能。在这个类中定义了两个对外的方法：</p>
 <p>loadFactories 根据接口类获取其实现类的实例，这个方法返回的是对象列表。<br>loadFactoryNames 根据接口获取其接口类的名称，这个方法返回的是类名的列表。 </p>
 <p>上面的两个方法的关键都是从指定的ClassLoader中获取spring.factories文件，并解析得到类名列表，具体代码如下:</p>
@@ -104,13 +104,13 @@
 <p>spring.factories的是通过Properties解析得到的，所以我们在写文件中的内容都是安装下面这种方式配置的：</p>
 <p>com.xxx.interface=com.xxx.classname</p>
 <p>如果一个接口希望配置多个实现类，可以使用’,’进行分割。</p>
-<p>Spring Factories在Spring Boot中的应用<br>在Spring Boot的很多包中都能够找到spring.factories文件，接下来我们以spring-boot包为例进行介绍<br><img src="/2019/06/16/factories扩展机制/factories%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6/2.png" alt="2"></p>
+<p>Spring Factories在Spring Boot中的应用<br>在Spring Boot的很多包中都能够找到spring.factories文件，接下来我们以spring-boot包为例进行介绍<br><img src="/2019/06/16/factories扩展机制/2.png" alt="2"></p>
 <p>在日常工作中，我们可能需要实现一些SDK或者Spring Boot Starter给被人使用时，<br>我们就可以使用Factories机制。Factories机制可以让SDK或者Starter的使用只需要很少或者不需要进行配置，只需要在服务中引入我们的jar包即可。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/16/factories扩展机制/" data-id="cjyvglqpc000us4urjsyydkqq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/16/factories扩展机制/" data-id="cjyvgp27g000tswurgo6krqyc" class="article-share-link">Share</a>
       
       
     </footer>
